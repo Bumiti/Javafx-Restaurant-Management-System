@@ -362,16 +362,17 @@
                   </BorderPane>
                </content>
             </Tab>
-            <Tab text="Log">
+            <Tab fx:id="tabLog" text="Log">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
-                        <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <TableView fx:id="tvLogger" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="Id" />
-                            <TableColumn prefWidth="75.0" text="Datetime" />
-                              <TableColumn prefWidth="75.0" text="Level" />
-                              <TableColumn prefWidth="75.0" text="Message" />
+                            <TableColumn fx:id="colLoggerID" prefWidth="40.000001311302185" resizable="false" text="Id" />
+                            <TableColumn fx:id="colLoggerDateTime" prefWidth="135.33333206176758" resizable="false" text="Datetime" />
+                              <TableColumn fx:id="colLoggerMethod" prefWidth="163.3333282470703" resizable="false" text="Method" />
+                              <TableColumn fx:id="colLoggerLevel" prefWidth="94.66668701171875" resizable="false" text="Level" />
+                              <TableColumn fx:id="colLoggerMessage" prefWidth="190.66677856445312" resizable="false" text="Message" />
                           </columns>
                         </TableView>
                      </center>
