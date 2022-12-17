@@ -89,7 +89,7 @@
                   </StackPane>
                </center>
             </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" visible="false">
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
                <center>
                   <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                     <tabs>
@@ -306,7 +306,7 @@
                </center>
             </BorderPane>
             <BorderPane prefHeight="200.0" prefWidth="200.0" visible="false" />
-            <BorderPane prefHeight="200.0" prefWidth="200.0">
+            <BorderPane prefHeight="200.0" prefWidth="200.0" visible="false">
                <center>
                   <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
