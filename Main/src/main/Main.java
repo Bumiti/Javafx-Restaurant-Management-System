@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.log4j.PropertyConfigurator;
+import FXMLFile.*;
 import static FXMLController.StaffSceneController.log;
 import org.apache.log4j.Logger;
 
@@ -25,9 +26,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene1.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene.fxml"));
         PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
-//        log.info("Add");
+        log.info("Add");
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
