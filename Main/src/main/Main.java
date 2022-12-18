@@ -24,14 +24,11 @@ public class Main extends Application {
     //FXMLDocument
     @Override
     public void start(Stage stage) throws Exception {
-<<<<<<< HEAD
-        Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/CustomerSceneMenu.fxml"));
-        
-=======
+
         Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene1.fxml"));
         PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
 //        log.info("Add");
->>>>>>> fe853d9f2ffb8b486cec9cd1f91c7de5c5651b10
+
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
