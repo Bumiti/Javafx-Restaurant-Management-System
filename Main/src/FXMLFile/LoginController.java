@@ -43,15 +43,15 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        if(event.getSource()== btnLogin){
+        if (event.getSource() == btnLogin) {
             login();
         }
     }
-    
+
     public static Connection getConnect() {
         Connection cn = null;
         String url = "jdbc:sqlserver://127.0.0.1:1433;database=Project";
@@ -67,17 +67,18 @@ public class LoginController implements Initializable {
         }
         return cn;
     }
-    
+
     private void getScene(String fxmlFile, String Title) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
-        Scene scene = new Scene(root);
         Stage window = new Stage();
+        Scene scene = new Scene(root);
+//        window.getScene().setRoot(root);
         window.setScene(scene);
-        window.initModality(Modality.APPLICATION_MODAL);
+//        window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(Title);
         window.showAndWait();
     }
-    
+
     private void login() {
         String sql = "select accountRoll from Account where accountUserName='" + tfUsername.getText() + "' and accountPassWord='" + tfPassword.getText() + "'";
         Connection cn = getConnect();
@@ -96,7 +97,7 @@ public class LoginController implements Initializable {
                         getScene("/FXMLFile/CustomerScene.fxml", "Customer");
                     }
                 }
-            } 
+            }
 //            else {
 //                lbCheck.setText("Your account not exits");
 //            }
