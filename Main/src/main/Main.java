@@ -27,9 +27,16 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+
+        Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene1.fxml"));
+        PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
+//        log.info("Add");
+
+
         Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene.fxml"));
         PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
 //        log.info("Add");
+
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();     
