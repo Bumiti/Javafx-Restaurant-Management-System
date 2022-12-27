@@ -46,7 +46,7 @@
             <Button fx:id="btnAboutUS" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="250.0" text="About Us" />
             <Pane prefHeight="100.0" prefWidth="230.0">
                <children>
-                  <Button layoutX="33.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="btnBookTable" layoutX="33.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#handleClickAction" text="Button" />
                   <Label layoutX="43.0" layoutY="50.0" text="Login" />
                </children>
                <opaqueInsets>

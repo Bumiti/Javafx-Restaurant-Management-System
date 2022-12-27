@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.log4j.PropertyConfigurator;
 import FXMLFile.*;
-import static FXMLController.StaffSceneController.log;
+import static FXMLFile.StaffSceneController.log;
 import org.apache.log4j.Logger;
 
 
@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 public class Main extends Application {
 
     //FXMLDocument
+    
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -31,8 +32,7 @@ public class Main extends Application {
 //        log.info("Add");
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
-
+        stage.show();     
     }
 
     /**

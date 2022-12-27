@@ -37,6 +37,8 @@ public class CustomerSceneController implements Initializable {
     private Button btnMyRestaurant;
     @FXML
     private Button btnAboutUS;
+    @FXML
+    private Button btnBookTable;
 
     /**
      * Initializes the controller class.
@@ -82,6 +84,13 @@ public class CustomerSceneController implements Initializable {
             bpBook.setVisible(false);
             bpMyRestaurant.setVisible(false);
             bpAboutUs.setVisible(true);
+        }
+        if (event.getSource() == btnBookTable) {
+            bpHomepage.setVisible(false);
+            bpMenu.setVisible(false);
+            bpBook.setVisible(true);
+            bpMyRestaurant.setVisible(false);
+            bpAboutUs.setVisible(false);
         }
     }
 

@@ -17,11 +17,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.*;
 
 /**
  * FXML Controller class
@@ -36,17 +41,25 @@ public class LoginController implements Initializable {
     private TextField tfPassword;
     @FXML
     private Button btnLogin;
+    @FXML
+    private BorderPane bpLogin;
+    @FXML
+    public Label lbRole;
 
     /**
      * Initializes the controller class.
      */
+    public String getLbRole() {
+        return lbRole.getText();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
 
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    public void handleButtonAction(ActionEvent event) {
         if (event.getSource() == btnLogin) {
             login();
         }
@@ -68,33 +81,57 @@ public class LoginController implements Initializable {
         return cn;
     }
 
-    private void getScene(String fxmlFile, String Title) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+    private void getStaffScene(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        StaffSceneController userRole = loader.getController();
+        userRole.setName(lbRole.getText());
         Stage window = new Stage();
         Scene scene = new Scene(root);
-//        window.getScene().setRoot(root);
         window.setScene(scene);
-//        window.initModality(Modality.APPLICATION_MODAL);
+        window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(Title);
         window.showAndWait();
     }
 
-    private void login() {
-        String sql = "select accountRoll from Account where accountUserName='" + tfUsername.getText() + "' and accountPassWord='" + tfPassword.getText() + "'";
+    private void getCusScene(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+//        StaffSceneController userRole = loader.getController();
+//        userRole.setName(lbRole.getText());
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.showAndWait();
+    }
+//    public void changeScene(String fxml) throws IOException {
+//        Parent pane = FXMLLoader.load(getClass().getResource(fxml));
+//
+//        Scene scene = new Scene(pane);
+//        
+//    }
+    public void login() {
+        String sql = "select accountRole,accountFullname from Account where accountUserName='" + tfUsername.getText() + "' and accountPassWord='" + tfPassword.getText() + "'";
         Connection cn = getConnect();
         Statement st;
         try {
             st = cn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             if (rs.next()) {
+                Stage stage = (Stage) bpLogin.getScene().getWindow();
+                stage.close();
 //                lbCheck.setText("");
-                String role = rs.getString("accountRoll");
+                String userName = rs.getString("accountFullname");
+                lbRole.setText(userName);
+                String role = rs.getString("accountRole");
                 switch (role) {
-                    case "M","S","W" -> {
-                        getScene("/FXMLFile/StaffScene.fxml", "Staff");
+                    case "Manager","Supervior","Waiter" -> {
+                        getStaffScene("/FXMLFile/StaffScene.fxml", "Staff");
                     }
-                    case "C" -> {
-                        getScene("/FXMLFile/CustomerScene.fxml", "Customer");
+                    case "Customer" -> {
+                        getCusScene("/FXMLFile/CustomerScene.fxml", "Customer");
                     }
                 }
             }
