@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.gluonhq.charm.glisten.control.Icon?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -21,376 +24,604 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.CustomerSceneController">
-   <top>
-      <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="TOP_CENTER">
-         <children>
-            <Pane prefHeight="100.0" prefWidth="230.0">
+<StackPane fx:id="spCustomer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.CustomerSceneController">
+   <children>
+      <BorderPane prefHeight="600.0" prefWidth="900.0">
+         <top>
+            <StackPane BorderPane.alignment="CENTER">
                <children>
-                  <Icon content="HELP_OUTLINE" layoutX="12.0" layoutY="14.0" prefHeight="26.0" prefWidth="57.0" />
-                  <Text layoutX="6.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Welcome" textAlignment="CENTER" wrappingWidth="68.26222610473633" />
-                  <Text layoutX="9.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Customer" wrappingWidth="62.124996185302734" />
-               </children>
-               <HBox.margin>
-                  <Insets right="80.0" />
-               </HBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Pane>
-            <Button fx:id="btnHomepage" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="250.0" text="Homepage" />
-            <Button fx:id="btnMenu" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="250.0" text="Menu" />
-            <Button fx:id="btnMyRestaurant" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="250.0" text="Tin's Restaurant" />
-            <Button fx:id="btnAboutUS" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="250.0" text="About Us" />
-            <Pane prefHeight="100.0" prefWidth="230.0">
-               <children>
-                  <Button fx:id="btnBookTable" layoutX="33.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#handleClickAction" text="Button" />
-                  <Label layoutX="43.0" layoutY="50.0" text="Login" />
-               </children>
-               <opaqueInsets>
-                  <Insets left="80.0" />
-               </opaqueInsets>
-               <HBox.margin>
-                  <Insets left="80.0" />
-               </HBox.margin>
-            </Pane>
-            <Pane prefHeight="100.0" prefWidth="230.0">
-               <children>
-                  <Button layoutX="33.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
-                  <Label layoutX="31.0" layoutY="50.0" text="View Cart" />
-               </children>
-               <opaqueInsets>
-                  <Insets left="80.0" />
-               </opaqueInsets>
-            </Pane>
-         </children>
-      </HBox>
-   </top>
-   <center>
-      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <BorderPane fx:id="bpHomepage" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="200.0">
-               <left>
-                  <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
-               </left>
-               <right>
-                  <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
-               </right>
-               <center>
-                  <StackPane prefHeight="700.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="900.0">
                      <children>
-                        <ImageView fitHeight="700.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fitHeight="700.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fitHeight="700.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fitHeight="700.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true" />
+                        <Pane prefHeight="100.0" prefWidth="150.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="100.0" prefWidth="150.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../Wallpaper/Overwatch_%20(2).jpg" />
+                                       </image>
+                                    </ImageView>
+                                    <Label fx:id="lbTime" />
+                                    <Label fx:id="lbChangeCheck" alignment="CENTER" prefHeight="25.0" prefWidth="75.0" text="%Welcome" textAlignment="CENTER" />
+                                    <Label fx:id="lbCusName" alignment="CENTER" layoutX="10.0" layoutY="28.0" prefHeight="25.0" prefWidth="75.0" textAlignment="CENTER" />
+                                    <HBox alignment="TOP_CENTER" prefHeight="25.0" prefWidth="150.0">
+                                       <children>
+                                          <Button fx:id="btnChangeInfo" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="25.0" prefWidth="75.0" text="%Change" />
+                                          <Button fx:id="btnLogOut" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleMouseAction" prefHeight="25.0" prefWidth="75.0" text="%LogOut" />
+                                          <Label fx:id="lbCusUserName" visible="false" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="600.0">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="600.0">
+                                 <children>
+                                    <Button fx:id="btnHomepage" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="100.0" prefWidth="150.0" text="%Homepage" />
+                                    <Button fx:id="btnMenu" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="100.0" prefWidth="150.0" text="%Menu" />
+                                    <Button fx:id="btnMyRestaurant" layoutX="160.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="100.0" prefWidth="150.0" text="%Restaurant" />
+                                    <Button fx:id="btnAboutUS" layoutX="311.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="100.0" prefWidth="150.0" text="%AboutUs" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="150.0">
+                           <children>
+                              <VBox prefHeight="100.0" prefWidth="150.0">
+                                 <children>
+                                    <Button fx:id="btnLanguage" layoutX="10.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="50.0" prefWidth="150.0" text="%Language" />
+                                    <Button fx:id="btnDarkMode" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="50.0" prefWidth="150.0" text="%DarkMode" />
+                                    <Button fx:id="btnHistory" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefHeight="50.0" prefWidth="150.0" text="%History" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </Pane>
                      </children>
-                  </StackPane>
-               </center>
-            </BorderPane>
-            <BorderPane fx:id="bpMenu" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="200.0" visible="false">
-               <center>
-                  <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-                    <tabs>
-                      <Tab text="Menu">
-                           <content>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                 <left>
-                                    <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <ImageView fitHeight="211.0" fitWidth="200.0" pickOnBounds="true">
-                                             <image>
-                                                <Image url="@../Wallpaper/Ahri_%20(24).jpg" />
-                                             </image>
-                                          </ImageView>
-                                          <VBox alignment="TOP_CENTER" layoutX="4.0" layoutY="211.0" prefHeight="430.0" prefWidth="196.0">
-                                             <children>
-                                                <HBox alignment="CENTER" prefHeight="41.0" prefWidth="196.0" spacing="50.0">
-                                                   <children>
-                                                      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="50.0" text="Name" />
-                                                      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="50.0" text="Label" />
-                                                   </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER" prefHeight="41.0" prefWidth="196.0" spacing="50.0">
-                                                   <children>
-                                                      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="50.0" text="Price" />
-                                                      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="50.0" text="Label" />
-                                                   </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER" prefHeight="41.0" prefWidth="196.0" spacing="50.0">
-                                                   <children>
-                                                      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="50.0" text="Unit" />
-                                                      <Spinner prefWidth="50.0" />
-                                                   </children>
-                                                </HBox>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Add" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Update" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Delete" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </Pane>
-                                 </left>
-                                 <right>
-                                    <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <VBox prefHeight="642.0" prefWidth="196.0">
-                                             <children>
-                                                <HBox prefHeight="367.0" prefWidth="196.0">
-                                                   <children>
-                                                      <TableView prefHeight="221.0" prefWidth="196.0">
-                                                        <columns>
-                                                          <TableColumn prefWidth="75.0" text="Name" />
-                                                          <TableColumn prefWidth="75.0" text="Price" />
-                                                            <TableColumn prefWidth="75.0" text="Unit" />
-                                                        </columns>
-                                                      </TableView>
-                                                   </children>
-                                                </HBox>
-                                                <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
-                                                   <children>
-                                                      <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Order" />
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </Pane>
-                                 </right>
+                  </HBox>
+               </children>
+            </StackPane>
+         </top>
+         <center>
+            <StackPane prefHeight="500.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+               <children>
+                  <BorderPane fx:id="bpHomepage" prefHeight="500.0" prefWidth="900.0">
+                     <center>
+                        <StackPane prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <ImageView fx:id="img1" fitHeight="500.0" fitWidth="800.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../Wallpaper/Ghostblade_%20(3).jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="img2" fitHeight="500.0" fitWidth="800.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" visible="false">
+                                 <image>
+                                    <Image url="@../Wallpaper/Ahri_%20(5).jpg" />
+                                 </image></ImageView>
+                              <ImageView fx:id="img3" fitHeight="500.0" fitWidth="800.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" visible="false">
+                                 <image>
+                                    <Image url="@../Wallpaper/Ahri_%20(6).jpg" />
+                                 </image></ImageView>
+                              <ImageView fx:id="img4" fitHeight="500.0" fitWidth="800.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" visible="false">
+                                 <image>
+                                    <Image url="@../Wallpaper/Caitlyn_%20(5).jpg" />
+                                 </image></ImageView>
+                           </children>
+                        </StackPane>
+                     </center>
+                     <left>
+                        <Button fx:id="btnLeft" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefWidth="50.0" text="&lt;" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+                     </left>
+                     <right>
+                        <Button fx:id="btnRight" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefWidth="50.0" text="&gt;" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+                  <BorderPane fx:id="bpMenu" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="900.0" visible="false" StackPane.alignment="CENTER">
+                     <center>
+                        <StackPane prefHeight="500.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <BorderPane prefHeight="500.0" prefWidth="900.0" StackPane.alignment="CENTER">
+                                 <top>
+                                    <Label alignment="CENTER" prefHeight="25.0" text="%Order" BorderPane.alignment="CENTER">
+                                       <font>
+                                          <Font size="25.0" />
+                                       </font>
+                                    </Label>
+                                 </top>
                                  <center>
-                                    <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <StackPane prefHeight="475.0" prefWidth="900.0" BorderPane.alignment="CENTER">
                                        <children>
-                                          <TableView prefHeight="200.0" prefWidth="200.0">
-                                            <columns>
-                                              <TableColumn prefWidth="468.80006408691406" text="Name" />
-                                              <TableColumn prefWidth="139.199951171875" text="Price" />
-                                            </columns>
-                                          </TableView>
+                                          <HBox alignment="TOP_CENTER" prefHeight="475.0" prefWidth="900.0" StackPane.alignment="CENTER">
+                                             <children>
+                                                <StackPane>
+                                                   <children>
+                                                      <SplitPane prefHeight="475.0" prefWidth="200.0">
+                                                         <items>
+                                                            <VBox alignment="TOP_CENTER" prefHeight="475.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <ImageView fx:id="imgDish" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                                                                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
+                                                                     <children>
+                                                                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="100.0" text="%Name" textAlignment="CENTER" />
+                                                                        <Label fx:id="lbDishName" alignment="CENTER" prefHeight="50.0" prefWidth="100.0" text="Label" />
+                                                                     </children>
+                                                                  </HBox>
+                                                                  <HBox alignment="CENTER" layoutX="10.0" layoutY="110.0" prefHeight="50.0" prefWidth="200.0">
+                                                                     <children>
+                                                                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="100.0" text="%Price" textAlignment="CENTER" />
+                                                                        <Label fx:id="lbDishPrice" alignment="CENTER" prefHeight="50.0" prefWidth="100.0" text="Label" />
+                                                                     </children>
+                                                                  </HBox>
+                                                                  <HBox alignment="CENTER" layoutX="10.0" layoutY="160.0" prefHeight="50.0" prefWidth="200.0">
+                                                                     <children>
+                                                                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="100.0" text="%Quantity" textAlignment="CENTER" />
+                                                                        <Spinner fx:id="snDishQuantity" prefHeight="25.0" prefWidth="100.0" />
+                                                                     </children>
+                                                                  </HBox>
+                                                                  <TextArea fx:id="taDescription" prefHeight="200.0" prefWidth="200.0" />
+                                                                  <Button fx:id="btnAdd" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleMouseAction" prefHeight="50.0" prefWidth="100.0" text="%Add" textAlignment="CENTER" />
+                                                               </children>
+                                                            </VBox>
+                                                         </items>
+                                                      </SplitPane>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane>
+                                                   <children>
+                                                      <SplitPane prefHeight="475.0" prefWidth="500.0">
+                                                         <items>
+                                                            <BorderPane prefHeight="475.0" prefWidth="500.0">
+                                                               <left>
+                                                                  <SplitPane prefHeight="475.0" prefWidth="125.0" BorderPane.alignment="CENTER">
+                                                                     <items>
+                                                                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                                           <children>
+                                                                              <Label fx:id="lbOrderMenuAll" alignment="CENTER" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%All" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuHors" alignment="CENTER" layoutX="46.0" layoutY="10.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%Hors" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuSoup" alignment="CENTER" layoutX="46.0" layoutY="36.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%Soup" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuFishDish" alignment="CENTER" layoutX="46.0" layoutY="10.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%FishDish" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuMeatDish" alignment="CENTER" layoutX="46.0" layoutY="36.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%MeatDish" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuMainCourse" alignment="CENTER" layoutX="46.0" layoutY="61.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%MainCourse" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuSalad" alignment="CENTER" layoutX="46.0" layoutY="87.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%Salad" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuDessert" alignment="CENTER" layoutX="46.0" layoutY="112.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%Dessert" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label fx:id="lbOrderMenuDrink" alignment="CENTER" layoutX="46.0" layoutY="138.0" onMouseClicked="#handleMouseAction" prefHeight="30.0" prefWidth="100.0" text="%Drink" textAlignment="CENTER">
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="15.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                           </children>
+                                                                        </VBox>
+                                                                     </items>
+                                                                  </SplitPane>
+                                                               </left>
+                                                               <center>
+                                                                  <TableView fx:id="tvMenu" onMouseClicked="#handleMouseAction" prefHeight="475.0" prefWidth="275.0" BorderPane.alignment="CENTER">
+                                                                     <columns>
+                                                                        <TableColumn fx:id="colMenuDishName" prefWidth="155.9999405145645" text="%Name" />
+                                                                        <TableColumn fx:id="colMenuDishPrice" prefWidth="68.00003051757812" text="%Price" />
+                                                                        <TableColumn fx:id="colMenuDishDescription" prefWidth="144.7999267578125" text="%Description" />
+                                                                        <TableColumn fx:id="colMenuDishAvailable" prefWidth="144.7999267578125" text="Available" visible="false" />
+                                                                     </columns>
+                                                                  </TableView>
+                                                               </center>
+                                                            </BorderPane>
+                                                         </items>
+                                                      </SplitPane>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane>
+                                                   <children>
+                                                      <SplitPane prefHeight="475.0" prefWidth="200.0">
+                                                         <items>
+                                                            <VBox alignment="TOP_CENTER" prefHeight="475.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <TableView fx:id="tvOrderMini" prefHeight="200.0" prefWidth="200.0">
+                                                                     <columns>
+                                                                        <TableColumn fx:id="colOrderName" prefWidth="70.0" text="%Name" />
+                                                                        <TableColumn fx:id="colOrderPrice" prefWidth="60.0" text="%Price" />
+                                                                        <TableColumn fx:id="colOrderQuantity" prefWidth="70.0" text="%Quantity" />
+                                                                     </columns>
+                                                                  </TableView>
+                                                                  <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+                                                                     <items>
+                                                                        <VBox prefHeight="200.0" prefWidth="200.0">
+                                                                           <children>
+                                                                              <Label text="%Date" />
+                                                                              <DatePicker fx:id="dpDate" prefHeight="25.0" prefWidth="291.0" />
+                                                                              <Label text="%Time" />
+                                                                              <Spinner fx:id="snTime" prefHeight="25.0" prefWidth="280.0" />
+                                                                              <Label layoutX="10.0" layoutY="10.0" prefHeight="22.0" prefWidth="104.0" text="%Catalogies">
+                                                                                 <font>
+                                                                                    <Font size="15.0" />
+                                                                                 </font>
+                                                                              </Label>
+                                                                              <ComboBox fx:id="cbCatalogies" prefHeight="27.0" prefWidth="275.0" />
+                                                                              <Label prefHeight="18.0" prefWidth="55.0" text="%Note" />
+                                                                              <TextArea fx:id="taNote" prefHeight="70.0" prefWidth="196.0" />
+                                                                              <HBox prefHeight="49.0" prefWidth="196.0">
+                                                                                 <children>
+                                                                                    <Label text="%Total" />
+                                                                                    <Label fx:id="lbTotal" text="0">
+                                                                                       <HBox.margin>
+                                                                                          <Insets left="20.0" />
+                                                                                       </HBox.margin>
+                                                                                    </Label>
+                                                                                    <Label fx:id="lbOrderID" text="Label" visible="false" />
+                                                                                 </children>
+                                                                              </HBox>
+                                                                              <HBox prefHeight="39.0" prefWidth="196.0">
+                                                                                 <children>
+                                                                                    <Button fx:id="btnRemove" mnemonicParsing="false" onMouseClicked="#handleMouseAction" prefWidth="127.0" text="%Remove" />
+                                                                                    <Button fx:id="btnDelete" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleMouseAction" prefWidth="127.0" text="%Delete" />
+                                                                                 </children>
+                                                                              </HBox>
+                                                                           </children>
+                                                                        </VBox>
+                                                                     </items>
+                                                                  </SplitPane>
+                                                                  <Button fx:id="btnOrder" mnemonicParsing="false" onMouseClicked="#handleMouseAction" prefHeight="75.0" prefWidth="200.0" text="%Order" />
+                                                               </children>
+                                                            </VBox>
+                                                         </items>
+                                                      </SplitPane>
+                                                   </children>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
                                        </children>
                                     </StackPane>
                                  </center>
                               </BorderPane>
-                           </content>
-                        </Tab>
-                    </tabs>
-                  </TabPane>
-               </center>
-               <bottom>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="1000.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@../Wallpaper/Ahri_%20(6).jpg" />
-                           </image>
-                        </ImageView>
-                        <TextField alignment="CENTER" prefHeight="58.0" prefWidth="1009.0" text="Click to booking">
-                           <font>
-                              <Font size="71.0" />
-                           </font>
-                        </TextField>
-                     </children>
-                  </StackPane>
-               </bottom>
-            </BorderPane>
-            <BorderPane fx:id="bpBook" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="200.0" visible="false">
-               <center>
-                  <TabPane prefHeight="200.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-                    <tabs>
-                      <Tab text="Table">
-                           <content>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                 <left>
-                                    <VBox prefHeight="642.0" prefWidth="261.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <HBox prefHeight="120.0" prefWidth="200.0">
-                                             <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 1" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 2" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 3" />
-                                             </children>
-                                          </HBox>
-                                          <HBox layoutX="10.0" layoutY="10.0" prefHeight="120.0" prefWidth="200.0">
-                                             <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 4" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 5" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 6" />
-                                             </children>
-                                          </HBox>
-                                          <HBox layoutX="10.0" layoutY="110.0" prefHeight="120.0" prefWidth="200.0">
-                                             <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 7" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 8" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 9" />
-                                             </children>
-                                          </HBox>
-                                          <HBox layoutX="10.0" layoutY="210.0" prefHeight="120.0" prefWidth="200.0">
-                                             <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 10" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 11" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 12" />
-                                             </children>
-                                          </HBox>
-                                          <HBox layoutX="10.0" layoutY="210.0" prefHeight="120.0" prefWidth="200.0">
-                                             <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 13" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 14" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 15" />
-                                             </children>
-                                          </HBox>
-                                          <HBox layoutX="10.0" layoutY="410.0" prefHeight="120.0" prefWidth="200.0">
-                                             <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 16" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 17" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Table 18" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                 </left>
-                                 <right>
-                                    <VBox prefHeight="642.0" prefWidth="232.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <HBox prefHeight="323.0" prefWidth="232.0">
-                                             <children>
-                                                <TableView prefHeight="317.0" prefWidth="227.0">
-                                                  <columns>
-                                                    <TableColumn prefWidth="75.0" text="Name" />
-                                                    <TableColumn prefWidth="75.0" text="Price" />
-                                                      <TableColumn prefWidth="75.0" text="Unit" />
-                                                  </columns>
-                                                </TableView>
-                                             </children>
-                                          </HBox>
-                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
-                                             <children>
-                                                <DatePicker />
-                                                <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="178.0" text="Update" />
-                                                <Button layoutX="37.0" layoutY="36.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="178.0" text="Delete" />
-                                                <Button layoutX="37.0" layoutY="66.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="178.0" text="Book" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </VBox>
-                                 </right>
-                                 <center>
-                                    <TableView prefHeight="349.0" prefWidth="515.0" BorderPane.alignment="CENTER">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="C1" />
-                                        <TableColumn prefWidth="75.0" text="C2" />
-                                      </columns>
-                                    </TableView>
-                                 </center>
-                                 <bottom>
-                                    <VBox BorderPane.alignment="CENTER">
-                                       <children>
-                                          <HBox alignment="CENTER" prefHeight="35.0" prefWidth="1009.0">
-                                             <children>
-                                                <Label alignment="CENTER" prefWidth="200.0" text="Unit" />
-                                                <Spinner prefWidth="100.0" />
-                                             </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="1009.0">
-                                             <children>
-                                                <Button mnemonicParsing="false" prefWidth="200.0" text="Add" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                 </bottom>
-                              </BorderPane>
-                           </content>
-                        </Tab>
-                    </tabs>
-                  </TabPane>
-               </center>
-            </BorderPane>
-            <BorderPane fx:id="bpMyRestaurant" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="200.0" visible="false" />
-            <BorderPane fx:id="bpAboutUs" onMouseClicked="#handleClickAction" prefHeight="200.0" prefWidth="200.0" visible="false">
-               <center>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                           </children>
+                        </StackPane>
+                     </center>
+                  </BorderPane>
+                  <BorderPane fx:id="bpMyRestaurant" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="900.0" visible="false">
+                     <center>
+                        <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                     </center></BorderPane>
+                  <BorderPane fx:id="bpAboutUs" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="900.0" visible="false">
+                     <center>
+                        <StackPane prefHeight="500.0" prefWidth="900.0" BorderPane.alignment="CENTER">
                            <children>
-                              <TextArea prefHeight="200.0" prefWidth="200.0" text="Located on the 09th floor, the Gourmet Corner is  first ever restaurant, dating back to 2010. &#10;At the time, Hanoi’s restaurant scene lacked the concept of small sized restaurants which offered a casual fine dining service and &#10;outstanding attention to detail. Ever since its launch, this venue has been a leading trendsetter in Vietnam’s boutique dining scene.&#10;&#10;A color scheme of steel blue and warm greys complementing dark brown dining furniture and warm &#10;lighting engender a cozy sophisticated atmosphere. &#10;Stunning city views across Hoan Kiem Lake, stretches of the Red River and its bridges as well as the Hanoi’s ever-expanding skyline&#10;create the perfect backdrop, particularly at night.&#10;&#10;The Gourmet Corner&#10;09th floor 22 Tạ Hien Street&#10;Seating capacity: 50&#10;Breakfast – 06:30-10:00&#10;Lunch through to dinner 11:30 – 22:00&#10;Last orders: 21:45&#10;Open daily&#10;&#10;The Gourmet Corner leads to Diamond Sky Bar 09th-10th floors.&#10;&#10;Note: during holiday periods such as Christmas, New Year, Tet Lunar New Year there will be selected set special menus &#10;and we recommend booking in advance." />
-                              <HBox alignment="TOP_CENTER" prefHeight="237.0" prefWidth="1009.0" spacing="60.0">
+                              <VBox alignment="CENTER" prefHeight="500.0" prefWidth="900.0" style="-fx-background-color: silver;">
                                  <children>
-                                    <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0">
+                                    <SplitPane prefHeight="200.0" prefWidth="900.0">
+                                       <items>
+                                          <TextArea editable="false" prefHeight="100.0" prefWidth="900.0" text="%a" />
+                                       </items>
+                                    </SplitPane>
+                                    <SplitPane prefHeight="150.0" prefWidth="900.0">
+                                       <items>
+                                          <HBox alignment="CENTER" prefHeight="150.0" prefWidth="900.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="150.0" prefWidth="300.0">
+                                                   <children>
+                                                      <ImageView fitHeight="125.0" fitWidth="250.0" pickOnBounds="true">
+                                                         <image>
+                                                            <Image url="@../Wallpaper/Lux_%20(27).jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <Label alignment="CENTER" prefHeight="25.0" prefWidth="250.0" text="Bui Minh Tin" textAlignment="CENTER" />
+                                                      <Label text="Student1370240" />
+                                                      <Label text="CEO" />
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" layoutX="310.0" layoutY="10.0" prefHeight="150.0" prefWidth="300.0">
+                                                   <children>
+                                                      <ImageView fitHeight="125.0" fitWidth="250.0" pickOnBounds="true">
+                                                         <image>
+                                                            <Image url="@../Wallpaper/Lux_%20(27).jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <Label alignment="CENTER" prefHeight="25.0" prefWidth="250.0" text="Nguyen Ngoc Minh" textAlignment="CENTER" />
+                                                      <Label text="Student1370242" />
+                                                      <Label text="Chef" />
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" layoutX="160.0" layoutY="10.0" prefHeight="150.0" prefWidth="300.0">
+                                                   <children>
+                                                      <ImageView fitHeight="125.0" fitWidth="250.0" pickOnBounds="true">
+                                                         <image>
+                                                            <Image url="@../Wallpaper/Lux_%20(27).jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <Label alignment="CENTER" prefHeight="25.0" prefWidth="250.0" text="Le Hoang Thanh Phat" textAlignment="CENTER" />
+                                                      <Label text="Student1372898" />
+                                                      <Label text="Manager" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </items>
+                                    </SplitPane>
+                                    <SplitPane prefHeight="150.0" prefWidth="900.0">
+                                       <items>
+                                          <HBox alignment="CENTER" prefHeight="150.0" prefWidth="900.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="150.0" prefWidth="450.0">
+                                                   <children>
+                                                      <TextArea editable="false" prefHeight="150.0" prefWidth="433.0" text="%b" />
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="450.0">
+                                                   <children>
+                                                      <TextArea editable="false" prefHeight="100.0" prefWidth="450.0" text="%c" />
+                                                      <Line endX="381.0787658691406" endY="-29.27173614501953" startX="-91.28083801269531" startY="-29.271324157714844" />
+                                                      <TextField alignment="CENTER" text="%Find" />
+                                                      <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+                                                         <children>
+                                                            <Icon content="HELP_OUTLINE" prefHeight="68.0" prefWidth="76.0" />
+                                                            <Icon content="HELP_OUTLINE" layoutX="10.0" layoutY="10.0" prefHeight="68.0" prefWidth="76.0" />
+                                                            <Icon content="HELP_OUTLINE" layoutX="10.0" layoutY="10.0" prefHeight="68.0" prefWidth="76.0" />
+                                                            <Icon content="HELP_OUTLINE" layoutX="10.0" layoutY="10.0" prefHeight="68.0" prefWidth="76.0" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </items>
+                                    </SplitPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                     </center>
+                  </BorderPane>
+                  <BorderPane fx:id="bpChangeInfo" prefHeight="200.0" prefWidth="200.0" visible="false">
+                     <left>
+                        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="284.0" spacing="40.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <ImageView fx:id="imgCustomer" fitHeight="150.0" fitWidth="224.0" pickOnBounds="true" />
+                              <Button fx:id="btnImageBrowser" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Choose Image" />
+                           </children>
+                        </VBox>
+                     </left>
+                     <center>
+                        <VBox id="Forgotpassword" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../main/application.css" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label fx:id="lbCusID" visible="false" />
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
                                        <children>
-                                          <ImageView fitHeight="212.0" fitWidth="200.0" pickOnBounds="true">
-                                             <image>
-                                                <Image url="@../Wallpaper/Caitlyn_%20(14).jpg" />
-                                             </image>
-                                          </ImageView>
-                                          <TextField alignment="CENTER" text="Bùi Minh Tín" />
+                                          <FontAwesomeIconView glyphName="USER" />
+                                          <Label alignment="CENTER" text="Fullname" />
                                        </children>
                                     </VBox>
-                                    <VBox alignment="TOP_CENTER" layoutX="415.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+                                    <VBox alignment="CENTER_RIGHT" prefHeight="70.0" prefWidth="368.0">
                                        <children>
-                                          <ImageView fitHeight="212.0" fitWidth="200.0" pickOnBounds="true">
-                                             <image>
-                                                <Image url="@../Wallpaper/Caitlyn_%20(14).jpg" />
-                                             </image>
-                                          </ImageView>
-                                          <TextField alignment="CENTER" text="Nguyễn Ngọc Minh" />
-                                       </children>
-                                    </VBox>
-                                    <VBox alignment="TOP_CENTER" layoutX="544.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
-                                       <children>
-                                          <ImageView fitHeight="212.0" fitWidth="200.0" pickOnBounds="true">
-                                             <image>
-                                                <Image url="@../Wallpaper/Caitlyn_%20(14).jpg" />
-                                             </image>
-                                          </ImageView>
-                                          <TextField alignment="CENTER" text="Lê Hoàng Thành Phát" />
-                                       </children>
-                                    </VBox>
-                                    <VBox alignment="TOP_CENTER" layoutX="415.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
-                                       <children>
-                                          <ImageView fitHeight="212.0" fitWidth="200.0" pickOnBounds="true">
-                                             <image>
-                                                <Image url="@../Wallpaper/Caitlyn_%20(14).jpg" />
-                                             </image>
-                                          </ImageView>
-                                          <TextField alignment="CENTER" text="Nguyễn Trần Thế Dân" />
+                                          <TextField fx:id="tfSignUpFullName" promptText="Your fullname" />
                                        </children>
                                     </VBox>
                                  </children>
                               </HBox>
-                              <HBox alignment="TOP_CENTER" prefHeight="263.0" prefWidth="1009.0">
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
                                  <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
                                        <children>
-                                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" />
-                                          <TextArea prefHeight="200.0" prefWidth="200.0" text="OPEN TIME:&#10;Breakfast – 06:30-10:00&#10;Lunch through to dinner from &#10;11.30&#10;to last orders 21:45" />
+                                          <FontAwesomeIconView glyphName="CALENDAR" />
+                                          <Label alignment="CENTER" text="Day Of Birth" />
                                        </children>
                                     </VBox>
-                                    <VBox layoutX="464.0" layoutY="10.0" prefHeight="263.0" prefWidth="386.0">
+                                    <VBox alignment="CENTER" prefHeight="79.0" prefWidth="368.0">
                                        <children>
-                                          <TextArea prefHeight="152.0" prefWidth="350.0" text="CONTACTS US&#10;Address: The Gourmet Corner Restaurant, No.22 Ta Hien Street, &#10;Hoan Kiem Dist, Hanoi, Vietnam&#10;&#10;Phone: +84 915533320Hotline: +84 915533320&#10;&#10;Email: gourmetcorner@lamejorhotel.com" />
-                                          <Line endX="381.0787658691406" endY="-29.27173614501953" startX="-91.28083801269531" startY="-29.271324157714844" />
-                                          <TextField text="Find us on" />
-                                          <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+                                          <DatePicker fx:id="tfSignUpDOB" prefHeight="26.0" prefWidth="368.0" promptText="The day you was born" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                                       <children>
+                                          <FontAwesomeIconView glyphName="PENCIL" />
+                                          <Label alignment="CENTER" text="Gender" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="79.0" prefWidth="369.0">
+                                       <children>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="80.0">
                                              <children>
-                                                <Icon content="HELP_OUTLINE" prefHeight="68.0" prefWidth="76.0" />
-                                                <Icon content="HELP_OUTLINE" layoutX="10.0" layoutY="10.0" prefHeight="68.0" prefWidth="76.0" />
-                                                <Icon content="HELP_OUTLINE" layoutX="10.0" layoutY="10.0" prefHeight="68.0" prefWidth="76.0" />
-                                                <Icon content="HELP_OUTLINE" layoutX="10.0" layoutY="10.0" prefHeight="68.0" prefWidth="76.0" />
+                                                <RadioButton fx:id="rbMale" mnemonicParsing="false" selected="true" text="Male">
+                                                   <graphic>
+                                                      <FontAwesomeIconView glyphName="MALE" />
+                                                   </graphic>
+                                                </RadioButton>
+                                                <RadioButton fx:id="rbFemale" mnemonicParsing="false" text="Female">
+                                                   <graphic>
+                                                      <FontAwesomeIconView glyphName="FEMALE" />
+                                                   </graphic>
+                                                </RadioButton>
                                              </children>
                                           </HBox>
-                                          <TextField text="© Copyright 2016 - 2022. The Gourmet Corner. All rights reserved." />
                                        </children>
                                     </VBox>
-                                    <VBox layoutX="515.0" layoutY="10.0" prefHeight="263.0" prefWidth="160.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                                       <children>
+                                          <FontAwesomeIconView glyphName="ENVELOPE" />
+                                          <Label alignment="CENTER" text="E-mail" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                                       <children>
+                                          <TextField fx:id="tfSignUpMail" promptText="E-mail, G-mail or any mail you have" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="200.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                                       <children>
+                                          <FontAwesomeIconView glyphName="MAP_MARKER" />
+                                          <Label contentDisplay="CENTER" text="Address" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="26.0" prefWidth="368.0">
+                                       <children>
+                                          <TextField fx:id="tfSignUpAddress" promptText="Where do you at now ?" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                                       <children>
+                                          <FontAwesomeIconView glyphName="PHONE" />
+                                          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="126.0" text="Number Phone" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                                       <children>
+                                          <TextField fx:id="tfSignUpPhone" prefHeight="26.0" prefWidth="368.0" promptText="+84" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                                       <children>
+                                          <FontAwesomeIconView glyphName="EDIT" />
+                                          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="126.0" text="Username" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                                       <children>
+                                          <TextField fx:id="tfSignUpUserName" editable="false" onKeyTyped="#handleTypeAction" prefHeight="26.0" prefWidth="368.0" promptText="Username" />
+                                          <Label fx:id="lbCheck" textFill="#eb0505" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                                       <children>
+                                          <FontAwesomeIconView glyphName="KEY" />
+                                          <Label alignment="CENTER" text="Password" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                                       <children>
+                                          <PasswordField fx:id="tfSignUpPassWord1" prefHeight="26.0" prefWidth="368.0" promptText="Password" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                                       <children>
+                                          <FontAwesomeIconView glyphName="KEY" />
+                                          <Label alignment="CENTER" prefHeight="18.0" prefWidth="150.0" text="Confim Password" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                                       <children>
+                                          <PasswordField fx:id="tfSignUpPassWord2" prefHeight="26.0" prefWidth="369.0" promptText="Enter your Password again" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox id="buto" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="150.0" stylesheets="@../main/application.css">
+                                 <children>
+                                    <Button id="button" fx:id="btnAccountUpdate" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleMouseAction" stylesheets="@../main/application.css" text="Update" />
                                  </children>
                               </HBox>
                            </children>
                         </VBox>
-                     </children>
-                  </StackPane>
-               </center>
-            </BorderPane>
-         </children>
-      </StackPane>
-   </center>
-</BorderPane>
+                     </center>
+                  </BorderPane>
+                  <BorderPane fx:id="bpHistory" prefHeight="200.0" prefWidth="200.0" visible="false">
+                     <center>
+                        <TableView fx:id="tvBookInfo" onMouseClicked="#handleMouseAction" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <columns>
+                              <TableColumn fx:id="colBookInfoID" prefWidth="75.0" text="BookID" />
+                              <TableColumn fx:id="colBookInfoDate" prefWidth="77.77783966064453" text="BookDate" />
+                              <TableColumn fx:id="colBookInfoTime" prefWidth="77.77783966064453" text="BookTime" />
+                              <TableColumn fx:id="colBookInfoCusName" prefWidth="122.88880920410156" text="CustomerName" />
+                              <TableColumn fx:id="colBookInfoCatalogies" minWidth="6.0" prefWidth="103.11117553710938" text="BookCatalogies" />
+                              <TableColumn fx:id="colBookInfoNote" minWidth="6.0" prefWidth="103.11117553710938" text="BookNote" />
+                           </columns>
+                        </TableView>
+                     </center>
+                     <bottom>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <center>
+                              <TableView fx:id="tvBookDetail" onMouseClicked="#handleMouseAction" prefHeight="163.0" prefWidth="907.0" BorderPane.alignment="CENTER">
+                                 <columns>
+                                    <TableColumn fx:id="colBookDetailName" prefWidth="75.0" text="DishName" />
+                                    <TableColumn fx:id="colBookDetailQuantity" prefWidth="111.77777862548828" text="DishQuantity" />
+                                    <TableColumn fx:id="colBookDetailPrice" prefWidth="110.44441223144531" text="DishPrice" />
+                                 </columns>
+                              </TableView>
+                           </center>
+                           <bottom>
+                              <HBox prefHeight="23.0" prefWidth="907.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Label text="Total: " />
+                                    <Label fx:id="lbBookTotal" text="0" />
+                                 </children>
+                              </HBox>
+                           </bottom>
+                        </BorderPane>
+                     </bottom>
+                  </BorderPane>
+               </children>
+            </StackPane>
+         </center>
+      </BorderPane>
+   </children>
+</StackPane>

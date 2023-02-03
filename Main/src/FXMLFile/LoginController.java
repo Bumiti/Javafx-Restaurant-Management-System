@@ -12,6 +12,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,8 +22,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import javafx.scene.control.ButtonType;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -36,15 +48,25 @@ import main.*;
 public class LoginController implements Initializable {
 
     @FXML
-    private TextField tfUsername;
+    private javafx.scene.control.TextField tfUsername;
     @FXML
-    private TextField tfPassword;
+    private PasswordField tfPassword;
     @FXML
     private Button btnLogin;
     @FXML
     private BorderPane bpLogin;
     @FXML
     public Label lbRole;
+    @FXML
+    private Hyperlink btnSignUp;
+    @FXML
+    private Hyperlink btnForgotPassword;
+    @FXML
+    private Label lbCheck;
+    @FXML
+    private Label lbStaffRole1;
+    @FXML
+    private Label lbUserName;
 
     /**
      * Initializes the controller class.
@@ -59,9 +81,19 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    public void handleButtonAction(ActionEvent event) {
+    public void handleButtonAction(ActionEvent event) throws IOException {
         if (event.getSource() == btnLogin) {
             login();
+        }
+    }
+
+    @FXML
+    private void handleClickAction(MouseEvent event) throws IOException {
+        if (event.getSource() == btnSignUp) {
+            modalBox("/FXMLFile/SignUp.fxml", "Sign Up");
+        }
+        if (event.getSource() == btnForgotPassword) {
+            modalBox("/FXMLFile/ResetPassword.fxml", "Forget Password");
         }
     }
 
@@ -81,11 +113,73 @@ public class LoginController implements Initializable {
         return cn;
     }
 
-    private void getStaffScene(String fxmlFile, String Title) throws IOException {
+    private void modalBox(String fxmlFile, String Title) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.showAndWait();
+    }
+
+    private void getManagerScene(String fxmlFile, String Title) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent root = loader.load();
+
         StaffSceneController userRole = loader.getController();
         userRole.setName(lbRole.getText());
+        StaffSceneController userStaffRole = loader.getController();
+        userStaffRole.setRole(lbStaffRole1.getText());
+
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.showAndWait();
+    }
+
+    private void getSupervisorScene(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+
+        StaffSceneController userRole = loader.getController();
+        userRole.setName(lbRole.getText());
+        StaffSceneController userStaffRole = loader.getController();
+        userStaffRole.setRole(lbStaffRole1.getText());
+        userStaffRole.btnInventoryDelete.setVisible(false);
+        userStaffRole.btnStaffDelete.setVisible(false);
+        userStaffRole.btnReceiptDelete.setVisible(false);
+        userStaffRole.btnPaymentDelete.setVisible(false);
+        userStaffRole.tabReport.setClosable(false);
+        userStaffRole.btnAccountDelete.setVisible(false);
+        userStaffRole.tabLog.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.tabDisCode.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.showAndWait();
+    }
+
+    private void getWaiterScene(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+
+        StaffSceneController userRole = loader.getController();
+        userRole.setName(lbRole.getText());
+        StaffSceneController userStaffRole = loader.getController();
+        userStaffRole.setRole(lbStaffRole1.getText());
+        userStaffRole.tabInventory.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.tabStaff.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.tabReport.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.tabAccount.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.tabAccount.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.tabLog.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+
         Stage window = new Stage();
         Scene scene = new Scene(root);
         window.setScene(scene);
@@ -95,50 +189,69 @@ public class LoginController implements Initializable {
     }
 
     private void getCusScene(String fxmlFile, String Title) throws IOException {
+        Locale locale = new Locale("en_US");
+        ResourceBundle bundle = ResourceBundle.getBundle("resources.labelText", locale);
+        FXMLLoader fXmlLoader = new FXMLLoader(getClass().getResource(fxmlFile), bundle);
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-        Parent root = loader.load();
-//        StaffSceneController userRole = loader.getController();
-//        userRole.setName(lbRole.getText());
-        Stage window = new Stage();
+        //Parent root = fXmlLoader.load(getClass().getResource(fxmlFile), bundle);
+        Parent root = fXmlLoader.load();
+        Locale currentLocale = Locale.getDefault();
+
+        CustomerSceneController userRole = fXmlLoader.getController();
+        userRole.setName(lbRole.getText());
+        userRole.setUserName(lbUserName.getText());
+        
+        Stage primaryStage = new Stage();
         Scene scene = new Scene(root);
-        window.setScene(scene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(Title);
-        window.showAndWait();
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(Title);
+        primaryStage.show();
     }
-//    public void changeScene(String fxml) throws IOException {
-//        Parent pane = FXMLLoader.load(getClass().getResource(fxml));
-//
-//        Scene scene = new Scene(pane);
-//        
-//    }
+
+    private void alertSuccess(String mess) {
+        Alert alert = new Alert(Alert.AlertType.WARNING, mess, ButtonType.OK);
+        Optional<ButtonType> result = alert.showAndWait();
+    }
+
+    private void alert(String mess) {
+        Alert alert = new Alert(Alert.AlertType.WARNING, mess, ButtonType.OK);
+        Optional<ButtonType> result = alert.showAndWait();
+    }
+
     public void login() {
-        String sql = "select accountRole,accountFullname from Account where accountUserName='" + tfUsername.getText() + "' and accountPassWord='" + tfPassword.getText() + "'";
+        String sql = "select accountRole,accountFullname,accountUserName from Account where accountUserName='" + tfUsername.getText() + "' and accountPassWord='" + tfPassword.getText() + "'";
         Connection cn = getConnect();
         Statement st;
         try {
             st = cn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             if (rs.next()) {
-                Stage stage = (Stage) bpLogin.getScene().getWindow();
-                stage.close();
 //                lbCheck.setText("");
                 String userName = rs.getString("accountFullname");
                 lbRole.setText(userName);
                 String role = rs.getString("accountRole");
+                lbStaffRole1.setText(role);
+                String cusUserName = rs.getString("accountUserName");
+                lbUserName.setText(cusUserName);
+                Stage stage = (Stage) bpLogin.getScene().getWindow();
+                stage.close();
                 switch (role) {
-                    case "Manager","Supervior","Waiter" -> {
-                        getStaffScene("/FXMLFile/StaffScene.fxml", "Staff");
+                    case "Manager" -> {
+                        getManagerScene("/FXMLFile/StaffScene.fxml", "Staff");
+                    }
+                    case "Supervisor" -> {
+                        getSupervisorScene("/FXMLFile/StaffScene.fxml", "Staff");
+                    }
+                    case "Waiter" -> {
+                        getWaiterScene("/FXMLFile/StaffScene.fxml", "Staff");
                     }
                     case "Customer" -> {
                         getCusScene("/FXMLFile/CustomerScene.fxml", "Customer");
                     }
                 }
+            } else {
+                alert("Invalid Account!");
             }
-//            else {
-//                lbCheck.setText("Your account not exits");
-//            }
-            //close?
         } catch (Exception e) {
             e.printStackTrace();
         }

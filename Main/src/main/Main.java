@@ -14,8 +14,6 @@ import FXMLFile.*;
 import static FXMLFile.StaffSceneController.log;
 import org.apache.log4j.Logger;
 
-
-
 /**
  *
  * @author Admin
@@ -23,23 +21,15 @@ import org.apache.log4j.Logger;
 public class Main extends Application {
 
     //FXMLDocument
-    
     @Override
     public void start(Stage stage) throws Exception {
-
-
-        Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene1.fxml"));
-        PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
-//        log.info("Add");
-
-
         Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene.fxml"));
         PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
 //        log.info("Add");
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();     
+        stage.show();
     }
 
     /**
@@ -48,7 +38,5 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-    
 
 }

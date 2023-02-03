@@ -4,6 +4,8 @@
  */
 package FXMLFile;
 
+import report.InvoiceDB;
+import static FXMLFile.LoginController.getConnect;
 import com.gluonhq.charm.glisten.control.TextField;
 import java.awt.Desktop;
 import java.io.File;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,20 +26,36 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
@@ -45,6 +64,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -52,10 +73,28 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import jdbcDAO.*;
+import main.Main;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JRViewer;
+import net.sf.jasperreports.view.JasperViewer;
+import org.apache.log4j.PropertyConfigurator;
+import report.*;
 
 /**
  * FXML Controller class
@@ -71,7 +110,7 @@ public class StaffSceneController implements Initializable {
      * Initializes the controller class.
      */
     @FXML
-    private Tab tabLog;
+    public Tab tabLog;
     @FXML
     private TableView<LogDB> tvLogger;
     @FXML
@@ -125,6 +164,7 @@ public class StaffSceneController implements Initializable {
     private final Desktop deskTop = Desktop.getDesktop();
     private Image image;
     private FileInputStream fis;
+    private FileOutputStream fos;
     private Button btnUpdateStaff;
     private Label lbID;
     @FXML
@@ -154,7 +194,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private Button btnStaffUpdate;
     @FXML
-    private Button btnStaffDelete;
+    public Button btnStaffDelete;
     @FXML
     private TableView<CodeDB> tvCodeDiscount;
     @FXML
@@ -196,12 +236,6 @@ public class StaffSceneController implements Initializable {
     @FXML
     private javafx.scene.control.TextField tfInventoryName;
     @FXML
-    private Spinner<Integer> snInventoryQOH;
-    @FXML
-    private ComboBox<String> cbInventoryUnit;
-    @FXML
-    private javafx.scene.control.TextField tfInventoryPrice;
-    @FXML
     private ComboBox<String> cbInventoryCatalogies;
     @FXML
     private Button btnInventoryBrowser;
@@ -212,7 +246,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private Button btnInventoryUpdate;
     @FXML
-    private Button btnInventoryDelete;
+    public Button btnInventoryDelete;
     @FXML
     private Button btnStaffBrowser;
     @FXML
@@ -222,7 +256,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private Button btnAccountUpdate;
     @FXML
-    private Button btnAccountDelete;
+    public Button btnAccountDelete;
     @FXML
     private Button btnAccountClear;
     @FXML
@@ -398,7 +432,6 @@ public class StaffSceneController implements Initializable {
     private Button btnOrderMiniDelete;
     @FXML
     private ComboBox<String> cbBillTable;
-    @FXML
     private ComboBox<Integer> cbBillTakeAway;
     @FXML
     private TableColumn<BillDB, String> colBillDishName;
@@ -421,17 +454,168 @@ public class StaffSceneController implements Initializable {
     private TextArea taOrderNote;
     @FXML
     private TableColumn<OrderList, Boolean> colOrderCheck;
+    @FXML
+    private Label lbBillTotal;
+    @FXML
+    private Label lbBookCount;
+    @FXML
+    private TableView<BookDetail> tvBookDetail;
+    @FXML
+    private TableColumn<BookDetail, String> colBookDetailName;
+    @FXML
+    private TableColumn<BookDetail, Integer> colBookDetailQuantity;
+    @FXML
+    private TableColumn<BookDetail, Integer> colBookDetailPrice;
+    @FXML
+    private TableView<BookInfo> tvBookInfo;
+    @FXML
+    private TableColumn<BookInfo, Integer> colBookInfoID;
+    @FXML
+    private TableColumn<BookInfo, LocalDate> colBookInfoDate;
+    @FXML
+    private TableColumn<BookInfo, String> colBookInfoTime;
+    @FXML
+    private TableColumn<BookInfo, String> colBookInfoCusName;
+    @FXML
+    private TableColumn<BookInfo, String> colBookInfoCatalogies;
+    @FXML
+    private TableColumn<BookInfo, String> colBookInfoNote;
+    @FXML
+    private Button btnGetBookDetail;
+    @FXML
+    private Label lbBookTotal;
+    @FXML
+    public Tab tabMenu;
+    @FXML
+    private Tab tabOrder;
+    @FXML
+    private Tab tabOrderList;
+    @FXML
+    private Tab tabTable;
+    @FXML
+    private Tab tabBook;
+    @FXML
+    public Tab tabInventory;
+    @FXML
+    public Tab tabStaff;
+    @FXML
+    private Tab tabCustomer;
+    @FXML
+    public Tab tabDisCode;
+    @FXML
+    private Tab tabReceipts;
+    @FXML
+    private Tab tabPayments;
+    @FXML
+    public Tab tabReport;
+    @FXML
+    public Tab tabAccount;
+    @FXML
+    private Label lbOrderMenuOther;
+    @FXML
+    private TextArea taBillNote;
+    @FXML
+    private Button btnBillPrint;
+    @FXML
+    private Button btnBillCheckOut;
+    @FXML
+    private Label lbTotalReceipt;
+    @FXML
+    private TableView<ReceiptDB> tvReceipt;
+    @FXML
+    private TableColumn<ReceiptDB, Integer> colReceiptID;
+    @FXML
+    private TableColumn<ReceiptDB, String> colReceiptTime;
+    @FXML
+    private TableColumn<ReceiptDB, String> colReceiptCatalog;
+    @FXML
+    private TableColumn<ReceiptDB, Integer> colReceiptPrice;
+    @FXML
+    private TableColumn<ReceiptDB, String> colReceiptNote;
+    @FXML
+    private ComboBox<String> cbReceiptCatalog;
+    @FXML
+    private javafx.scene.control.TextField tfReceiptPrice;
+    @FXML
+    private TextArea taReceiptNote;
+    @FXML
+    private Button btnReceiptCreate;
+    @FXML
+    private Button btnReceiptUpdate;
+    @FXML
+    public Button btnReceiptDelete;
+    @FXML
+    private Label lbTotalPayment;
+    @FXML
+    private TableView<PaymentDB> tvPayment;
+    @FXML
+    private TableColumn<PaymentDB, Integer> colPaymentID;
+    @FXML
+    private TableColumn<PaymentDB, String> colPaymentTime;
+    @FXML
+    private TableColumn<PaymentDB, String> colPaymentCatalog;
+    @FXML
+    private TableColumn<PaymentDB, Integer> colPaymentPrice;
+    @FXML
+    private TableColumn<PaymentDB, String> colPaymentNote;
+    @FXML
+    private javafx.scene.control.TextField tfPaymentPrice;
+    @FXML
+    private TextArea taPaymentNote;
+    @FXML
+    private Button btnPaymentCreate;
+    @FXML
+    public Button btnPaymentUpdate;
+    @FXML
+    public Button btnPaymentDelete;
+    @FXML
+    private javafx.scene.control.TextField tfInventoryUnit;
+    @FXML
+    private Label lbStaffRole;
+    @FXML
+    private Button btnLogOut;
+    @FXML
+    private Label lbOrderMiniDishName;
+    @FXML
+    private TableColumn<BillDB, Integer> colBillDishAmount;
+
+    private ObservableList<BillDB> orderList;
+    @FXML
+    private Label lbBillDiscount;
+    @FXML
+    private Label lbBillAfter;
+    @FXML
+    private TextArea taOrderDishDescription;
+    @FXML
+    private Button btnChangePassword;
+    @FXML
+    private ComboBox<String> cbSendTable;
+    @FXML
+    private Button btnSendBook;
+    @FXML
+    private Button btnDeleteBook;
+    @FXML
+    private Button btnInventoryAdd;
+    @FXML
+    private Button btnRefresh;
+    @FXML
+    private PieChart pChart;
+    @FXML
+    private ComboBox<String> cbPaymentCatalog;
+    @FXML
+    private Button btnDayReport;
+    @FXML
+    private Button btnReceiptClear;
+    @FXML
+    private Button btnPaymentClear;
+    @FXML
+    private TextArea taSendTable;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
         if (event.getSource() == btnStaffBrowser) {
             stage = (Stage) bpStaff.getScene().getWindow();
             file = fileChooser.showOpenDialog(stage);
-            /*try {
-                deskTop.open(file);
-            } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
             if (file != null) {
                 System.out.println("" + file.getAbsolutePath());
                 image = new Image(file.getAbsoluteFile().toURI().toString(), imgStaffImage.getFitWidth(), imgStaffImage.getFitHeight(), true, true);
@@ -471,8 +655,12 @@ public class StaffSceneController implements Initializable {
         }
     }
 
+//    @FXML
     @FXML
-    private void handleMouseAction(MouseEvent event) {
+    private void handleMouseAction(MouseEvent event) throws IOException {
+        if (event.getSource() == btnLogOut) {
+            modalBox("/FXMLFile/LoginScene.fxml", "Sign In");
+        }
         if (event.getSource() == tvStaff) {
             selectStaff();
         }
@@ -480,16 +668,74 @@ public class StaffSceneController implements Initializable {
             clearStaff();
         }
         if (event.getSource() == btnStaffCreate) {
-            insertStaff();
-            clearStaff();
+            if (!Pattern.matches("\\w{1,}", tfStaffName.getText())) {
+                alert("Please fill Staff name");
+            } else if (tfStaffDOB.getValue() == null) {
+                alert("Please fill Staff DOB in right form");
+            } else if (!Pattern.matches("\\w{1,}", tfStaffAddress.getText())) {
+                alert("Please fill Staff Address");
+            } else if (cbStaffPossition.getValue() == null) {
+                alert("Please fill choose Staff possition");
+            } else if (!Pattern.matches("\\w{8,12}", tfStaffPhone.getText())) {
+                alert("Please fill Staff phone in right form");
+            } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfStaffMail.getText())) {
+                alert("Please fill Staff mail in right form");
+            } else if (!Pattern.matches("\\d{1,}", tfStaffSalary.getText())) {
+                alert("Please fill Staff salary");
+            } else if (imgStaffImage.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to create new staff?") == true) {
+                    insertStaff();
+                    insert("insert into Chi values(1,'" + lbTime.getText() + "','Salary' , " + tfStaffSalary.getText() + ",'Salary for " + tfStaffName.getText() + "," + lbUser.getText() + " have edit')");
+                    clearStaff();
+                    log("" + lbUser.getText() + " have create new staff!");
+                    showLogDB();
+                    showPaymentDB();
+                    alertSuccess("Create Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnStaffUpdate) {
-            updateStaff();
-            clearStaff();
+            if (!Pattern.matches("\\w{1,}", tfStaffName.getText())) {
+                alert("Please fill Staff name");
+            } else if (tfStaffDOB.getValue() == null) {
+                alert("Please fill Staff DOB in right form");
+            } else if (!Pattern.matches("\\w{1,}", tfStaffAddress.getText())) {
+                alert("Please fill Staff Address");
+            } else if (cbStaffPossition.getValue() == null) {
+                alert("Please fill choose Staff possition");
+            } else if (!Pattern.matches("\\w{8,12}", tfStaffPhone.getText())) {
+                alert("Please fill Staff phone in right form");
+            } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfStaffMail.getText())) {
+                alert("Please fill Staff mail in right form");
+            } else if (!Pattern.matches("\\d{1,}", tfStaffSalary.getText())) {
+                alert("Please fill Staff salary");
+            } else if (imgStaffImage.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to update staff?") == true) {
+                    updateStaff();
+                    update("update Chi set chiPrice=" + tfStaffSalary.getText() + " where chiNote like 'Salary for " + tfStaffName.getText() + "%'");
+                    clearStaff();
+                    log("" + lbUser.getText() + " have update staff!");
+                    showLogDB();
+                    showPaymentDB();
+                    alertSuccess("Update Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnStaffDelete) {
-            deleteStaff();
-            clearCode();
+            if (alertConFirm("Are you want to delete staff?") == true) {
+                deleteStaff();
+                delete("delete from Chi where chiNote like 'Salary for " + tfStaffName.getText() + "%'");
+                clearCode();
+                log("" + lbUser.getText() + " have delete staff!");
+                showLogDB();
+                showPaymentDB();
+                alertSuccess("Delete Successfully!");
+
+            }
         }
         if (event.getSource() == tvAccount) {
             selectAccount();
@@ -498,20 +744,54 @@ public class StaffSceneController implements Initializable {
             clearAccount();
         }
         if (event.getSource() == btnAccountCreate) {
-            insert("insert into Account values ('" + tfAccountUsername.getText() + "','" + tfAccountPassword.getText() + "','" + cbAccountRole.getValue() + "','" + tfAccountFullname.getText() + "')");
-            showAccountDB();
-            clearAccount();
+            if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountUsername.getText())) {
+                alert("Please fill Account username");
+            } else if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountPassword.getText())) {
+                alert("Please fill Account password");
+            } else if (cbAccountRole.getValue() == null) {
+                alert("Please fill Account role");
+            } else if (!Pattern.matches("\\w{1,}", tfAccountFullname.getText())) {
+                alert("Please fill Account fullname");
+            } else {
+                if (alertConFirm("Are you want to create new account?") == true) {
+                    insert("insert into Account values ('" + tfAccountUsername.getText() + "','" + tfAccountPassword.getText() + "','" + cbAccountRole.getValue() + "','" + tfAccountFullname.getText() + "')");
+                    showAccountDB();
+                    clearAccount();
+                    log("" + lbUser.getText() + " have create new account!");
+                    showLogDB();
+                    alertSuccess("Create Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnAccountUpdate) {
-            update("update Account set accountUserName='" + tfAccountUsername.getText() + "',accountPassWord=" + tfAccountPassword.getText() + ",accountRole='" + cbAccountRole.getValue() + "',accountFullname='" + tfAccountFullname.getText() + "' where accountID=" + Integer.valueOf(lbAccountID.getText()) + "");
-            showAccountDB();
-            clearAccount();
-
+            if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountUsername.getText())) {
+                alert("Please fill Account username");
+            } else if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountPassword.getText())) {
+                alert("Please fill Account password");
+            } else if (cbAccountRole.getValue() == null) {
+                alert("Please fill Account role");
+            } else if (!Pattern.matches("\\w{1,}", tfAccountFullname.getText())) {
+                alert("Please fill Account fullname");
+            } else {
+                if (alertConFirm("Are you want to update account?") == true) {
+                    update("update Account set accountUserName='" + tfAccountUsername.getText() + "',accountPassWord=" + tfAccountPassword.getText() + ",accountRole='" + cbAccountRole.getValue() + "',accountFullname='" + tfAccountFullname.getText() + "' where accountID=" + Integer.valueOf(lbAccountID.getText()) + "");
+                    showAccountDB();
+                    clearAccount();
+                    log("" + lbUser.getText() + " have update account!");
+                    showLogDB();
+                    alertSuccess("Update Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnAccountDelete) {
-            delete("delete from Account where accountID=" + Integer.valueOf(lbAccountID.getText()) + "");
-            showAccountDB();
-            clearAccount();
+            if (alertConFirm("Are you want to delete account?") == true) {
+                delete("delete from Account where accountID=" + Integer.valueOf(lbAccountID.getText()) + "");
+                showAccountDB();
+                clearAccount();
+                log("" + lbUser.getText() + " have delete account!");
+                showLogDB();
+                alertSuccess("Delete Successfully!");
+            }
         }
         if (event.getSource() == tvCodeDiscount) {
             selectCode();
@@ -520,19 +800,57 @@ public class StaffSceneController implements Initializable {
             clearCode();
         }
         if (event.getSource() == btnCodeCreate) {
-            insert("insert into codeDiscount values (1,'" + tfCodeValue.getText() + "'," + tfCodeQuantity.getText() + "," + tfCodeDiscountPercent.getText() + ")");
-            showCodeDB();
-            clearCode();
+            if (!Pattern.matches("\\w{1,}", tfCodeValue.getText())) {
+                alert("Please fill Code name");
+            } else if (!Pattern.matches("\\d{1,}", tfCodeQuantity.getText())) {
+                alert("Please fill Code quantity");
+            } else if (!Pattern.matches("\\d{1,}", tfCodeDiscountPercent.getText())) {
+                alert("Please fill Code discount percent");
+            } else if (getMaGiamGia() == false) {
+                alert("Code is exits");
+            } else {
+                if (alertConFirm("Are you want to create new code?") == true) {
+                    insert("insert into codeDiscount values (1,'" + tfCodeValue.getText().toUpperCase() + "'," + tfCodeQuantity.getText() + "," + tfCodeDiscountPercent.getText() + ")");
+                    showCodeDB();
+                    clearCode();
+                    log("" + lbUser.getText() + " have create new code!");
+                    showLogDB();
+                    alertSuccess("Create Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnCodeUpdate) {
-            update("update codeDiscount set codeValue='" + tfCodeValue.getText() + "',codeQuantity=" + Integer.valueOf(tfCodeQuantity.getText()) + " ,discountPercent=" + Integer.valueOf(tfCodeDiscountPercent.getText()) + "where codeID=" + Integer.valueOf(lbCodeID.getText()) + "");
-            showCodeDB();
-            clearCode();
+            CodeDB i = tvCodeDiscount.getSelectionModel().getSelectedItem();
+            if (!Pattern.matches("\\w{1,}", tfCodeValue.getText())) {
+                alert("Please fill Code name");
+            } else if (!Pattern.matches("\\d{1,}", tfCodeQuantity.getText())) {
+                alert("Please fill Code quantity");
+            } else if (!Pattern.matches("\\d{1,}", tfCodeDiscountPercent.getText())) {
+                alert("Please fill Code discount percent");
+            } else if (!Pattern.matches("\\d{1,}", tfCodeDiscountPercent.getText())) {
+                alert("Please fill Code discount percent");
+            } else if (!Pattern.matches(i.getCodeValue(), tfCodeValue.getText())) {
+                alert("Can't update code value");
+            } else {
+                if (alertConFirm("Are you want to update code?") == true) {
+                    update("update codeDiscount set codeQuantity=" + Integer.valueOf(tfCodeQuantity.getText()) + " ,discountPercent=" + Integer.valueOf(tfCodeDiscountPercent.getText()) + "where codeID=" + Integer.valueOf(lbCodeID.getText()) + "");
+                    showCodeDB();
+                    clearCode();
+                    log("" + lbUser.getText() + " have update code!");
+                    showLogDB();
+                    alertSuccess("Update Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnCodeDelete) {
-            delete("delete from codeDiscount where codeID=" + Integer.valueOf(lbCodeID.getText()) + "");
-            showCodeDB();
-            clearCode();
+            if (alertConFirm("Are you want to delete code?") == true) {
+                delete("delete from codeDiscount where codeID=" + Integer.valueOf(lbCodeID.getText()) + "");
+                showCodeDB();
+                clearCode();
+                log("" + lbUser.getText() + " have delete code!");
+                showLogDB();
+                alertSuccess("Delete Successfully!");
+            }
         }
         if (event.getSource() == tvInventory) {
             selectInventory();
@@ -541,16 +859,55 @@ public class StaffSceneController implements Initializable {
             clearInventory();
         }
         if (event.getSource() == btnInventoryCreate) {
-            insertInventory();
-            clearInventory();
+            if (!Pattern.matches("\\w{1,}", tfInventoryName.getText())) {
+                alert("Please fill Product name");
+            } else if (!Pattern.matches("\\w{1,}", tfInventoryUnit.getText())) {
+                alert("Please fill Product Unit");
+            } else if (cbInventoryCatalogies.getValue() == null) {
+                alert("Please fill Product Catalogies");
+            } else if (imgInventory.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to create new product?") == true) {
+                    insertInventory();
+                    clearInventory();
+                    getIngredient();
+                    showOrderMenuDB();
+                    log("" + lbUser.getText() + " have create new product!");
+                    showLogDB();
+                    alertSuccess("Create Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnInventoryUpdate) {
-            updateInventory();
-            clearInventory();
+            if (!Pattern.matches("\\w{1,}", tfInventoryName.getText())) {
+                alert("Please fill Product name");
+            } else if (!Pattern.matches("\\w{1,}", tfInventoryUnit.getText())) {
+                alert("Please fill Product Unit");
+            } else if (cbInventoryCatalogies.getValue() == null) {
+                alert("Please fill Product Catalogies");
+            } else if (imgInventory.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to update product?") == true) {
+                    updateInventory();
+                    clearInventory();
+                    showOrderMenuDB();
+                    log("" + lbUser.getText() + " have update product!");
+                    showLogDB();
+                    alertSuccess("Update Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnInventoryDelete) {
-            deleteInventory();
-            clearInventory();
+            InventoryDB i = tvInventory.getSelectionModel().getSelectedItem();
+            if (textDialog("Confirm", "Reason", "" + lbUser.getText() + " have delete " + i.getProductName() + " product for ") == true) {
+                deleteInventory();
+                clearInventory();
+                showOrderMenuDB();
+                showLogDB();
+                alertSuccess("Delete Successfully!");
+            }
         }
         if (event.getSource() == tvMenu) {
             selectMenu();
@@ -559,16 +916,66 @@ public class StaffSceneController implements Initializable {
             clearMenu();
         }
         if (event.getSource() == btnDishCreate) {
-            insertMenu();
-            clearMenu();
+            if (!Pattern.matches("\\w{1,}", tfDishName.getText())) {
+                alert("Please fill DishName");
+            } else if (!Pattern.matches("\\d{1,}", tfDishPrice.getText())) {
+                alert("Please fill DishPrice in right form");
+            } else if (cbDishIngredient.getValue() == null) {
+                alert("Please fill DishIngredient");
+            } else if (!Pattern.matches("\\d{1,}", tfDishConsume.getText())) {
+                alert("Please fill DishConsume in right form");
+            } else if (cbDishCatalogies.getValue() == null) {
+                alert("Please fill DishCatalogies");
+            } else if (cbDishStatus.getValue() == null) {
+                alert("Please fill DishStatus");
+            } else if (imgDish.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to create new dish?") == true) {
+                    insertMenu();
+                    clearMenu();
+                    showOrderMenuDB();
+                    log("" + lbUser.getText() + " have create new dish!");
+                    showLogDB();
+                    alertSuccess("Create Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnDishUpdate) {
-            updateMenu();
-            clearMenu();
+            if (!Pattern.matches("\\w{1,}", tfDishName.getText())) {
+                alert("Please fill DishName");
+            } else if (!Pattern.matches("\\d{1,}", tfDishPrice.getText())) {
+                alert("Please fill DishPrice in right form");
+            } else if (cbDishIngredient.getValue() == null) {
+                alert("Please fill DishIngredient");
+            } else if (!Pattern.matches("\\d{1,}", tfDishConsume.getText())) {
+                alert("Please fill DishConsume in right form");
+            } else if (cbDishCatalogies.getValue() == null) {
+                alert("Please fill DishCatalogies");
+            } else if (cbDishStatus.getValue() == null) {
+                alert("Please fill DishStatus");
+            } else if (imgDish.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to update dish?") == true) {
+                    updateMenu();
+                    clearMenu();
+                    showOrderMenuDB();
+                    log("" + lbUser.getText() + " have update dish!");
+                    showLogDB();
+                    alertSuccess("Update Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnDishDelete) {
-            deleteMenu();
-            clearMenu();
+            if (alertConFirm("Are you want to delete dish?") == true) {
+                deleteMenu();
+                clearMenu();
+                showOrderMenuDB();
+                log("" + lbUser.getText() + " have delete dish!");
+                showLogDB();
+                alertSuccess("Delete Successfully!");
+            }
         }
         if (event.getSource() == tvCustomer) {
             selectCustomer();
@@ -577,16 +984,63 @@ public class StaffSceneController implements Initializable {
             clearCustomer();
         }
         if (event.getSource() == btnCustomerCreate) {
-            insertCustomer();
-            clearCustomer();
+            if (!Pattern.matches("\\w{1,}", tfCustomerName.getText())) {
+                alert("Please fill Customer name");
+            } else if (tfCustomerDOB.getValue() == null) {
+                alert("Please fill Customer DOB in right form");
+            } else if (!Pattern.matches("\\w{1,}", tfCustomerAddress.getText())) {
+                alert("Please fill Customer Address");
+            } else if (!Pattern.matches("\\w{8,12}", tfCustomerPhone.getText())) {
+                alert("Please fill Customer phone in right form");
+            } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfCustomerMail.getText())) {
+                alert("Please fill Customer mail in right form");
+            } else if (cbCustomerGender.getValue() == null) {
+                alert("Please fill choose Customer gender");
+            } else if (imgCustomer.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to create new customer?") == true) {
+                    insertCustomer();
+                    clearCustomer();
+                    log("" + lbUser.getText() + " have create new customer!");
+                    showLogDB();
+                    alertSuccess("Create Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnCustomerUpdate) {
-            updateCustomer();
-            clearCustomer();
+            if (!Pattern.matches("\\w{1,}", tfCustomerName.getText())) {
+                alert("Please fill Customer name");
+            } else if (tfCustomerDOB.getValue() == null) {
+                alert("Please fill Customer DOB in right form");
+            } else if (!Pattern.matches("\\w{1,}", tfCustomerAddress.getText())) {
+                alert("Please fill Customer Address");
+            } else if (!Pattern.matches("\\w{8,12}", tfCustomerPhone.getText())) {
+                alert("Please fill Customer phone in right form");
+            } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfCustomerMail.getText())) {
+                alert("Please fill Customer mail in right form");
+            } else if (cbCustomerGender.getValue() == null) {
+                alert("Please fill choose Customer gender");
+            } else if (imgCustomer.getImage() == null) {
+                alert("Please Choose image");
+            } else {
+                if (alertConFirm("Are you want to update customer?") == true) {
+                    updateCustomer();
+                    clearCustomer();
+                    log("" + lbUser.getText() + " have update customer!");
+                    showLogDB();
+                    alertSuccess("Update Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnCustomerDelete) {
-            deleteCustomer();
-            clearCustomer();
+            if (alertConFirm("Are you want to delete customer?") == true) {
+                deleteCustomer();
+                clearCustomer();
+                log("" + lbUser.getText() + " have delete customer!");
+                showLogDB();
+                alertSuccess("Delete Successfully!");
+            }
         }
         if (event.getSource() == lbOrderMenuAll) {
             showOrderMenuDB();
@@ -615,33 +1069,312 @@ public class StaffSceneController implements Initializable {
         if (event.getSource() == lbOrderMenuDrink) {
             showOrderMenuByCatalogiesDB("Drink");
         }
+        if (event.getSource() == lbOrderMenuOther) {
+            showOrderMenuByCatalogiesDB("Other");
+        }
         if (event.getSource() == tvOrderMenu) {
             OrderMenuDB o = tvOrderMenu.getSelectionModel().getSelectedItem();
-            SpinnerValueFactory<Integer> dishSpiner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, o.getMenuDishAvailabe(), 0, 1);
+            SpinnerValueFactory<Integer> dishSpiner = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, o.getMenuDishAvailabe(), 0, 1);
             snOrderDishQuantity.setValueFactory(dishSpiner);
             selectOrderMenu();
         }
         if (event.getSource() == btnOrderMenuAdd) {
+            OrderMenuDB om = tvOrderMenu.getSelectionModel().getSelectedItem();
+            if (om.getMenuDishAvailabe() == snOrderDishQuantity.getValue()) {
+                update("update Menu set dishStatus='Unavailable' where dishName ='" + om.getMenuDishName() + "'");
+            }
+            lbOrderDishName.setText(om.getMenuDishName());
             addToOderList();
+            insert("update Inventory set productQOH-=(select a.dishConsume*" + snOrderDishQuantity.getValue() + " as ingredientDown from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getMenuDishName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getMenuDishName() + "')");
             showOrderMiniDB();
+            showMenuDB();
+            showOrderMenuDB();
+            showInventoryDB();
         }
         if (event.getSource() == btnOrderMiniSend) {
-            lbOrderID.setText("" + count.incrementAndGet());
-            insert("insert into [Order](brandID,orderID,orderTime,dishCatalogies,orderNote,dishName,dishPrice,dishQuantity) select 1," + lbOrderID.getText() + ",'" + lbTime.getText() + "','" + cbOrderCatalogies.getValue() + "' ,'" + taOrderNote.getText() + "',OrderMini.dishName,OrderMini.dishPrice,OrderMini.dishQuantity from [OrderMini]");
-            delete("delete from [OrderMini]");
-            showOrderListDB();
-            showOrderMiniDB();
+            if (cbOrderCatalogies.getValue() == null) {
+                alert("Please choose Catalogies");
+            } else if (getBangMini() == false) {
+                alert("Please choose dish");
+            } else {
+                if (alertConFirm("Are you want to send order?") == true) {
+                    lbOrderID.setText("" + count.getAndIncrement());
+                    insert("insert into [Order](brandID,orderID,orderTime,dishCatalogies,orderNote,dishName,dishPrice,dishQuantity) select 1," + lbOrderID.getText() + ",'" + lbTime.getText() + "','" + cbOrderCatalogies.getValue() + "' ,'" + taOrderNote.getText() + "',OrderMini.dishName,OrderMini.dishPrice,OrderMini.dishQuantity from [OrderMini]");
+                    delete("delete from [OrderMini]");
+                    cbOrderCatalogies.setValue(null);
+                    taOrderNote.clear();
+                    showOrderListDB();
+                    showOrderMiniDB();
+                    showMenuDB();
+                    getTable();
+                    log("" + lbUser.getText() + " have send order!");
+                    showLogDB();
+                    alertSuccess("Send Order Successfully!");
+                }
+            }
+        }
+        if (event.getSource() == btnSendBook) {
+            if (cbSendTable.getValue() == null) {
+                alert("Please choose Catalogies");
+            } else {
+                if (alertConFirm("Are you want to send order?") == true) {
+                    BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
+                    lbOrderID.setText("" + count.getAndIncrement());
+                    insert("insert into [Order](brandID,orderID,orderTime,dishCatalogies,orderNote,dishName,dishPrice,dishQuantity) select 1," + bi.getBookID() + ",'" + lbTime.getText() + "','" + cbSendTable.getValue() + "' ,'" + bi.getBookNote() + "',Book.bookDishName,Book.bookDishPrice,Book.bookDishQuantity from [Book]");
+                    delete("delete from [Book] where bookID=" + bi.getBookID() + "");
+                    cbSendTable.setValue(null);
+                    showOrderListDB();
+                    showBookInfoDB();
+                    tvBookDetail.getItems().clear();
+                    getTable();
+                    lbBookTotal.setText(null);
+                    log("" + lbUser.getText() + " have send order!");
+                    showLogDB();
+                    alertSuccess("Send Order Successfully!");
+                }
+            }
         }
         if (event.getSource() == btnBillGet) {
             showBillDB();
+            totalBill();
         }
+
         if (event.getSource() == btnBillClear) {
             clearBill();
+            tvBill.getItems().clear();
+        }
+        if (event.getSource() == btnOrderMiniRemove) {
+            OrderListMini om = tvOderListMini.getSelectionModel().getSelectedItem();
+            lbOrderMiniDishName.setText(om.getOrderMiniName());
+            if (om.getOrderMiniQuantity() != 1) {
+                update("update [OrderMini] set dishQuantity-=1 where dishName='" + om.getOrderMiniName() + "'");
+                insert("update Inventory set productQOH+=(select a.dishConsume*1 as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getOrderMiniName() + "')");
+                update("update Menu set dishStatus='Available' where dishName ='" + om.getOrderMiniName() + "'");
+                showOrderMiniDB();
+                showOrderMenuDB();
+                showMenuDB();
+                showInventoryDB();
+            } else {
+                insert("update Inventory set productQOH+=(select a.dishConsume*1 as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getOrderMiniName() + "')");
+                delete("delete from [OrderMini] where dishName='" + om.getOrderMiniName() + "'");
+                update("update Menu set dishStatus='Available' where dishName ='" + om.getOrderMiniName() + "'");
+                showOrderMiniDB();
+                showOrderMenuDB();
+                showMenuDB();
+                showInventoryDB();
+            }
+
+        }
+        if (event.getSource() == btnOrderMiniDelete) {
+            if (alertConFirm("Are you want to delete order?") == true) {
+                OrderListMini om = tvOderListMini.getSelectionModel().getSelectedItem();
+                lbOrderMiniDishName.setText(om.getOrderMiniName());
+                insert("update Inventory set productQOH+=(select a.dishConsume*" + om.getOrderMiniQuantity() + " as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getOrderMiniName() + "')");
+                delete("delete from [OrderMini] where dishName='" + om.getOrderMiniName() + "'");
+                update("update Menu set dishStatus='Available' where dishName ='" + om.getOrderMiniName() + "'");
+                showOrderMiniDB();
+                showMenuDB();
+                showOrderMenuDB();
+                showInventoryDB();
+                log("" + lbUser.getText() + " have delete order!");
+                showLogDB();
+                alertSuccess("Delete Order Successfully!");
+            }
+        }
+        if (event.getSource() == btnGetBookDetail) {
+            BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
+            showBookDetailDB(bi.getBookID());
+            totalBook();
+        }
+        if (event.getSource() == btnBillCheckOut) {
+            if (cbBillTable.getValue() == null) {
+                alert("Please choose table!");
+            } else {
+                cbBillTable.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+                    showBillDB();
+                    totalBill();
+                });
+                if (alertConFirm("Are you want to check out " + cbBillTable.getValue() + "?") == true) {
+                    insert("insert into Thu values(1,'" + lbTime.getText() + "','" + cbBillTable.getValue() + "'," + lbBillAfter.getText() + ",'" + lbUser.getText() + " have check out." + taBillNote.getText() + "')");
+                    delete("delete from [Order] where dishCatalogies='" + cbBillTable.getValue() + "'");
+                    alertSuccess("Check out " + cbBillTable.getValue() + " Successfully!");
+                    update("update codeDiscount set codeQuantity -=1 where codeValue='" + tfBillDiscount.getText() + "'");
+                    log("" + lbUser.getText() + " have check out " + cbBillTable.getValue() + " with discount code " + tfBillDiscount.getText() + "!");
+//                    showLogDB();
+                    clearBill();
+                    tvBill.getItems().clear();
+                    showReceiptDB();
+                    showOrderListDB();
+                    showCodeDB();
+                    getTable();
+                }
+            }
+        }
+//        if(event.getSource()==btnNew){
+//            tabOrder.set;
+//        }
+//        if (event.getSource() == btnBillPrint) {
+//            showInvoice2();
+//        }
+        if (event.getSource() == btnReceiptClear) {
+            clearReceipt();
+        }
+        if (event.getSource() == btnPaymentClear) {
+            clearPayment();
+        }
+        if (event.getSource() == btnReceiptCreate) {
+            if (cbReceiptCatalog.getValue() == null) {
+                alert("Please fill Receipt catalogies");
+            } else if (!Pattern.matches("\\d{1,}", tfReceiptPrice.getText())) {
+                alert("Please fill Price of Receipt");
+            } else {
+                if (alertConFirm("Are you want to create receipt?") == true) {
+                    insert("insert into Thu values(1,'" + lbTime.getText() + "','" + cbReceiptCatalog.getValue() + "'," + tfReceiptPrice.getText() + ",'" + taReceiptNote.getText() + "')");
+                    clearReceipt();
+                    showReceiptDB();
+                    log("" + lbUser.getText() + " have create receipt!");
+                    showLogDB();
+                    totalReceipt();
+                    createChart();
+                    alertSuccess("Create Successfully!");
+                }
+            }
+        }
+        if (event.getSource() == btnReceiptUpdate) {
+            if (cbReceiptCatalog.getValue() == null) {
+                alert("Please fill Receipt catalogies");
+            } else if (!Pattern.matches("\\d{1,}", tfReceiptPrice.getText())) {
+                alert("Please fill Price of Receipt");
+            } else {
+                if (alertConFirm("Are you want to update receipt?") == true) {
+                    ReceiptDB i = tvReceipt.getSelectionModel().getSelectedItem();
+                    update("update Thu set thuCatalog='" + cbReceiptCatalog.getValue() + "', thuPrice=" + tfReceiptPrice.getText() + ", thuNote='" + taReceiptNote.getText() + "' where thuID=" + i.getThuID() + "");
+                    if (i == null) {
+                        alert("Please choose receipt");
+                    }
+                    clearReceipt();
+                    showReceiptDB();
+                    log("" + lbUser.getText() + " have update receipt!");
+                    showLogDB();
+                    totalReceipt();
+                    createChart();
+                    alertSuccess("Update Successfully!");
+                }
+            }
+        }
+        if (event.getSource() == btnReceiptDelete) {
+            if (alertConFirm("Are you want to delete repceit?") == true) {
+                ReceiptDB i = tvReceipt.getSelectionModel().getSelectedItem();
+                delete("delete from Thu where thuID=" + i.getThuID() + "");
+                if (i == null) {
+                    alert("Please choose receipt");
+                }
+                clearReceipt();
+                showPaymentDB();
+                log("" + lbUser.getText() + " have delete repceipt!");
+                showLogDB();
+                totalReceipt();
+                createChart();
+                alertSuccess("Delete Successfully!");
+            }
+        }
+        if (event.getSource() == btnPaymentCreate) {
+            if (cbPaymentCatalog.getValue() == null) {
+                alert("Please fill Payment catalogies");
+            } else if (!Pattern.matches("\\d{1,}", tfPaymentPrice.getText())) {
+                alert("Please fill Price of Payment");
+            } else {
+                if (alertConFirm("Are you want to create payment?") == true) {
+                    insert("insert into Chi values(1,'" + lbTime.getText() + "','" + cbPaymentCatalog.getValue() + "'," + tfPaymentPrice.getText() + ",'" + taPaymentNote.getText() + "')");
+                    clearPayment();
+                    showPaymentDB();
+                    log("" + lbUser.getText() + " have create payment!");
+                    showLogDB();
+                    totalPayment();
+                    createChart();
+                    alertSuccess("Create Successfully!");
+                }
+            }
+        }
+        if (event.getSource() == btnPaymentUpdate) {
+            if (cbPaymentCatalog.getValue() == null) {
+                alert("Please fill Payment catalogies");
+            } else if (!Pattern.matches("\\d{1,}", tfPaymentPrice.getText())) {
+                alert("Please fill Price of Payment");
+            } else {
+                if (alertConFirm("Are you want to update Payment?") == true) {
+                    PaymentDB i = tvPayment.getSelectionModel().getSelectedItem();
+                    update("update Chi set chiCatalog='" + cbPaymentCatalog.getValue() + "', chiPrice=" + tfPaymentPrice.getText() + ", chiNote='" + taPaymentNote.getText() + "' where chiID=" + i.getChiID() + "");
+                    if (i == null) {
+                        alert("Please choose payment");
+                    }
+                    clearPayment();
+                    showPaymentDB();
+                    log("" + lbUser.getText() + " have update payment!");
+                    showLogDB();
+                    totalPayment();
+                    createChart();
+                    alertSuccess("Update Successfully!");
+                }
+            }
+        }
+        if (event.getSource() == tvReceipt) {
+            selectReceipt();
+        }
+        if (event.getSource() == tvPayment) {
+            selectPayment();
+        }
+        if (event.getSource() == btnPaymentDelete) {
+            if (alertConFirm("Are you want to delete payment?") == true) {
+                PaymentDB i = tvPayment.getSelectionModel().getSelectedItem();
+                delete("delete from Chi where chiID=" + i.getChiID() + "");
+                if (i == null) {
+                    alert("Please choose receipt");
+                }
+                clearPayment();
+                showPaymentDB();
+                log("" + lbUser.getText() + " have delete payment!");
+                showLogDB();
+                totalPayment();
+                createChart();
+                alertSuccess("Delete Successfully!");
+            }
+        }
+        if (event.getSource() == btnChangePassword) {
+            modalBoxChangePassword("/FXMLFile/StaffChangePassword.fxml", "Staff Change Password");
+        }
+        if (event.getSource() == btnDeleteBook) {
+            BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
+            if (textDialog("Confirm", "Reason", "" + lbUser.getText() + " have delete " + bi.getBookID() + " book for ") == true) {
+                delete("delete from Book where bookID='" + bi.getBookID() + "'");
+                lbBookTotal.setText(null);
+                showBookInfoDB();
+                showLogDB();
+                alertSuccess("Delete Successfully!");
+                bookCount();
+            }
+        }
+        if (event.getSource() == btnInventoryAdd) {
+            modalBoxAddProduct("/FXMLFile/AddProductScene.fxml", "Add Product");
+        }
+        if (event.getSource() == btnRefresh) {
+            showPaymentDB();
+            totalPayment();
+            totalReceipt();
+            showOrderMiniDB();
+            showOrderMenuDB();
+            showMenuDB();
+            showInventoryDB();
+            createChart();
+            bookCount();
+            showInventoryDB();
+            showLogDB();
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //phanQuyen();
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All files", "* *"),
@@ -650,18 +1383,42 @@ public class StaffSceneController implements Initializable {
         );
         cbStaffPossition.getItems().addAll(possition);
         cbAccountRole.getItems().addAll(role);
-        cbInventoryUnit.getItems().addAll(productUnit);
+
         cbInventoryCatalogies.getItems().addAll(productCatalogies);
-        snInventoryQOH.setValueFactory(productSpinner);
-        cbDishIngredient.getItems().addAll(dishIngredient);
+        //snInventoryQOH.setValueFactory(productSpinner);
         cbDishCatalogies.getItems().addAll(dishCatalogies);
         cbDishStatus.getItems().addAll(dishStatus);
         cbCustomerGender.getItems().addAll(gender);
         cbOrderCatalogies.getItems().addAll(orderCatalogies);
+        cbReceiptCatalog.getItems().addAll(receiptCatalogies);
+        cbPaymentCatalog.getItems().addAll(paymentCatalogies);
+        cbSendTable.getItems().addAll(orderCatalogies);
         lbOrderID.setText("" + count);
+        tfStaffDOB.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) > 0);
+            }
+        });
+        tfCustomerDOB.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) > 0);
+            }
+        });
+        totalPayment();
+        totalReceipt();
+        showOrderMiniDB();
+        showReceiptDB();
+        showPaymentDB();
+        bookCount();
         getTable();
-        getTakeAwayID();
-        showBillDB();
+        getIngredient();
+        createChart();
+        //getTakeAwayID();
+        //showBillDB();
         Timenow();
         showLogDB();
         showStaffDB();
@@ -672,26 +1429,223 @@ public class StaffSceneController implements Initializable {
         showCustomerDB();
         showOrderMenuDB();
         showOrderListDB();
+        showBookInfoDB();
+        orderList = FXCollections.observableArrayList();
     }
 
     public void setName(String name) {
         lbUser.setText(name);
     }
+
+    public void setRole(String role) {
+        lbStaffRole.setText(role);
+    }
+
+    private void modalBox(String fxmlFile, String Title) throws IOException {
+        Stage stage = (Stage) bpStaff.getScene().getWindow();
+        stage.close();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
+
+    private void modalBoxChangePassword(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        StaffChangePasswordController userRole = loader.getController();
+        userRole.setName(lbUser.getText());
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
+
+    private void modalBoxAddProduct(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        AddProductSceneController userRole = loader.getController();
+        InventoryDB i = tvInventory.getSelectionModel().getSelectedItem();
+        userRole.setName(i.getProductName());
+        userRole.setStaff(lbUser.getText());
+        if (i == null) {
+            alert("Please choose Product to add");
+        }
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final String[] possition = {"Manager", "Supervisor", "Waiter"};
     private static final String[] role = {"Manager", "Supervisor", "Waiter", "Customer"};
-    private static final String[] productUnit = {"Kg", "L", "Lon"};
     private static final String[] productCatalogies = {"Tool", "Ingredient"};
-    private static final String[] dishIngredient = {"Thit", "Ca"};
-    private static final String[] dishCatalogies = {"Hors d'oeuvres", "Soup", "Fish Dish", "Meat Dish", "Main Course", "Salad", "Dessert", "Drink"};
+    private static final String[] dishCatalogies = {"Hors d'oeuvres", "Soup", "Fish Dish", "Meat Dish", "Main Course", "Salad", "Dessert", "Drink", "Other"};
     private static final String[] dishStatus = {"Available", "Unavailable"};
     private static final String[] gender = {"Male", "Female"};
     private static final String[] orderCatalogies = {"Table 1", "Table 2", "Table 3", "Table 4", "Table 5", "Table 6", "Table 7", "Table 8", "Take-away"};
+    private static final String[] receiptCatalogies = {"Table 1", "Table 2", "Table 3", "Table 4", "Table 5", "Table 6", "Table 7", "Table 8", "Take-away", "Other"};
+    private static final String[] paymentCatalogies = {"Other"};
     private static final SpinnerValueFactory<Integer> productSpinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1, 1);
     private static final AtomicInteger count = new AtomicInteger(100);
     public static final Logger log = Logger.getLogger(StaffSceneController.class);
 
     public volatile boolean stop = false;
+
+    private void insertInvoice() {
+        Connection cn = getConnect();
+        String sql = "insert into Invoice values(1,?,?,?,?,?)";
+        for (BillDB ol : orderList) {
+            try {
+                PreparedStatement st = cn.prepareStatement(sql);
+                st.setString(1, lbTime.getText());
+                st.setString(2, ol.getBillDishName());
+                st.setInt(3, ol.getBillDishPrice());
+                st.setInt(4, ol.getBillDishQuantity());
+                st.setInt(5, ol.getBillDishAmount());
+                st.executeUpdate();
+            } catch (SQLException ex) {
+                java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private void setInvoice() {
+        Connection cn = getConnect();
+        String sql = "insert into Invoice values(1,?,?,?,?,?)";
+        for (BillDB ol : orderList) {
+            try {
+                PreparedStatement st = cn.prepareStatement(sql);
+                st.setString(1, lbTime.getText());
+                st.setString(2, ol.getBillDishName());
+                st.setInt(3, ol.getBillDishPrice());
+                st.setInt(4, ol.getBillDishQuantity());
+                st.setInt(5, ol.getBillDishAmount());
+                st.executeUpdate();
+            } catch (SQLException ex) {
+                java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        String sourceFile = "D:/Aptech/HK2/3. JP-2/3. JP-2/ProjectII/GithubPro/Javafx-Restaurant-Management-System/Main/src/report/Invoice.jrxml";
+        try {
+            JasperReport jr = JasperCompileManager.compileReport(sourceFile);
+            HashMap<String, Object> para = new HashMap<>();
+            para.put("Cashier", "smey");
+            ArrayList<InvoiceDB> in = new ArrayList<>();
+            for (BillDB bi : orderList) {
+                in.add(new InvoiceDB(bi.getBillDishName(), "" + bi.getBillDishQuantity(), "" + bi.getBillDishPrice(), "" + bi.getBillDishAmount()));
+            }
+            JRBeanCollectionDataSource jcs = new JRBeanCollectionDataSource(in);
+            JasperPrint jp = JasperFillManager.fillReport(jr, para, jcs);
+            JasperViewer.viewReport(jp);
+        } catch (JRException ex) {
+            java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void notePad() throws IOException {
+        Runtime rt = Runtime.getRuntime();
+        String file = "D:/random.txt";
+        Process p = rt.exec("notepad " + file);
+    }
+
+    @FXML
+    public void showInvoice2() throws JRException {
+        Connection con = getConnect();
+
+        PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
+        JasperDesign jasperDesign = JRXmlLoader.load("D:\\Aptech\\HK2\\3. JP-2\\3. JP-2\\ProjectII\\GithubPro\\Javafx-Restaurant-Management-System\\Main\\src\\report\\Invoice5.jrxml");
+        //String query = "select dishName,dishPrice,dishQuantity, dishPrice*dishQuantity  as dishAmount from [Order];";
+        //JRDesignQuery jrquery = new JRDesignQuery();
+        //jrquery.setText(query);
+        //jasperDesign.setQuery(jrquery);
+
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint JasperPrint = JasperFillManager.fillReport(jasperReport, null, con);
+        JasperViewer viewer = new JasperViewer(JasperPrint, false);
+        viewer.setTitle("Invoice");
+        viewer.show();
+
+    }
+
+    private void tableInvoice() {
+
+    }
+
+    private void log(String mess) {
+        Logger.getLogger(StaffSceneController.class.getName()).info(mess);
+    }
+
+    private void validateOrder() {
+        OrderMenuDB om = tvOrderMenu.getSelectionModel().getSelectedItem();
+        if (om.getMenuDishAvailabe() < 1) {
+            btnOrderMenuAdd.setDisable(true);
+        } else {
+            btnOrderMenuAdd.setDisable(false);
+        }
+    }
+
+    private boolean alertConFirm(String mess) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, mess, ButtonType.OK, ButtonType.CANCEL);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            return true;
+        } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+            return false;
+        }
+        return false;
+    }
+
+    private void alert(String mess) {
+        Alert alert = new Alert(Alert.AlertType.WARNING, mess, ButtonType.OK);
+        Optional<ButtonType> result = alert.showAndWait();
+    }
+
+    private void alertSuccess(String mess) {
+        Alert alert = new Alert(Alert.AlertType.NONE, mess, ButtonType.OK);
+        alert.setTitle("Notification!");
+        Optional<ButtonType> result = alert.showAndWait();
+    }
+
+    private boolean textDialog(String title, String mess, String reason) {
+        TextInputDialog textInput = new TextInputDialog();
+        textInput.setTitle(title);
+        textInput.getDialogPane().setContentText(mess);
+        Optional<String> result = textInput.showAndWait();
+        javafx.scene.control.TextField input = textInput.getEditor();
+
+        final Button ok = (Button) textInput.getDialogPane().lookupButton(ButtonType.OK);
+        ok.addEventFilter(ActionEvent.ACTION, event
+                -> System.out.println("OK was definitely pressed")
+        );
+
+        final Button cancel = (Button) textInput.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancel.addEventFilter(ActionEvent.ACTION, event
+                -> System.out.println("Cancel was definitely pressed")
+        );
+
+        if (input.getText() != null && input.getText().toString().length() != 0) {
+            if (result.isPresent()) {
+                Logger.getLogger(StaffSceneController.class.getName()).info(reason + input.getText());
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            alert("Please input reason!!");
+            return false;
+        }
+    }
 
     private void Close_clicked(MouseEvent event) {
         stop = true;
@@ -714,6 +1668,32 @@ public class StaffSceneController implements Initializable {
             }
         });
         thread.start();
+    }
+
+    private void updateBrowser(String anh, Label maID) {
+        //1 tao ket noi
+        Connection cn = getConnect();
+        //2 tao doi tuong chua lenh insert
+        String sql = anh;
+
+        try {
+            PreparedStatement st = cn.prepareStatement(sql);
+            //3. cap nhat du lieu vo cac tham so ? theo dung thu tu cua bang tbBatch
+            fis = new FileInputStream(file);
+            st.setBinaryStream(1, fis, file.length());
+            st.setInt(2, Integer.valueOf(maID.getText()));
+            file = null;
+            //4 thuc hien insert sql
+            st.executeUpdate();
+            showMenuDB();
+            st.close();
+            cn.close();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static Connection getConnect() {
@@ -879,15 +1859,17 @@ public class StaffSceneController implements Initializable {
 
     private void selectStaff() {
         StaffDB s = tvStaff.getSelectionModel().getSelectedItem();
-        lbStaffID.setText("" + s.getStaffID());
-        tfStaffName.setText(s.getStaffName());
-        tfStaffDOB.setValue(s.getStaffDOB());
-        tfStaffAddress.setText(s.getStaffAddress());
-        cbStaffPossition.setValue(s.getStaffPossition());
-        tfStaffPhone.setText("" + s.getStaffPhone());
-        tfStaffMail.setText(s.getStaffMail());
-        tfStaffSalary.setText("" + s.getStaffSalary());
-        showImage("select staffImage from Staff where staffID=?", s.getStaffID(), imgStaffImage);
+        if (s != null) {
+            lbStaffID.setText("" + s.getStaffID());
+            tfStaffName.setText(s.getStaffName());
+            tfStaffDOB.setValue(s.getStaffDOB());
+            tfStaffAddress.setText(s.getStaffAddress());
+            cbStaffPossition.setValue(s.getStaffPossition());
+            tfStaffPhone.setText("" + s.getStaffPhone());
+            tfStaffMail.setText(s.getStaffMail());
+            tfStaffSalary.setText("" + s.getStaffSalary());
+            showImage("select staffImage from Staff where staffID=?", s.getStaffID(), imgStaffImage);
+        }
     }
 
     private void clearStaff() {
@@ -923,6 +1905,7 @@ public class StaffSceneController implements Initializable {
             //4 thuc hien insert sql
             st.executeUpdate();
             showStaffDB();
+            file = null;
 //            st.close();
 //            cn.close();
 
@@ -937,7 +1920,7 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "UPDATE Staff set staffName=?,staffDOB=?,staffAddress=?,staffPossition=?,staffPhone=?,staffMail=?,staffSalary=?,staffImage=? where staffID=?";
+        String sql = "UPDATE Staff set staffName=?,staffDOB=?,staffAddress=?,staffPossition=?,staffPhone=?,staffMail=?,staffSalary=? where staffID=?";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -950,10 +1933,11 @@ public class StaffSceneController implements Initializable {
             st.setInt(5, Integer.valueOf(tfStaffPhone.getText()));
             st.setString(6, tfStaffMail.getText());
             st.setInt(7, Integer.valueOf(tfStaffSalary.getText()));
-            fis = new FileInputStream(file);
-            st.setBinaryStream(8, fis, file.length());
-            st.setInt(9, Integer.valueOf(lbStaffID.getText()));
-            //4 thuc hien insert sql
+            st.setInt(8, Integer.valueOf(lbStaffID.getText()));
+            if (file != null) {
+                updateBrowser("UPDATE Staff set staffImage=? where staffID=?", lbStaffID);
+            }
+            file = null;
             st.executeUpdate();
             showStaffDB();
 //            st.close();
@@ -961,8 +1945,6 @@ public class StaffSceneController implements Initializable {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1005,11 +1987,13 @@ public class StaffSceneController implements Initializable {
 
     private void selectAccount() {
         AccountDB a = tvAccount.getSelectionModel().getSelectedItem();
-        lbAccountID.setText("" + a.getAccountID());
-        tfAccountUsername.setText(a.getAccountUserName());
-        tfAccountPassword.setText(a.getAccountPassWord());
-        cbAccountRole.setValue(a.getAccountRole());
-        tfAccountFullname.setText(a.getAccountFullname());
+        if (a != null) {
+            lbAccountID.setText("" + a.getAccountID());
+            tfAccountUsername.setText(a.getAccountUserName());
+            tfAccountPassword.setText(a.getAccountPassWord());
+            cbAccountRole.setValue(a.getAccountRole());
+            tfAccountFullname.setText(a.getAccountFullname());
+        }
     }
 
     private void clearAccount() {
@@ -1053,10 +2037,12 @@ public class StaffSceneController implements Initializable {
 
     private void selectCode() {
         CodeDB c = tvCodeDiscount.getSelectionModel().getSelectedItem();
-        lbCodeID.setText("" + c.getCodeID());
-        tfCodeValue.setText(c.getCodeValue());
-        tfCodeQuantity.setText("" + c.getCodeQuantity());
-        tfCodeDiscountPercent.setText("" + c.getDiscountPercent());
+        if (c != null) {
+            lbCodeID.setText("" + c.getCodeID());
+            tfCodeValue.setText(c.getCodeValue());
+            tfCodeQuantity.setText("" + c.getCodeQuantity());
+            tfCodeDiscountPercent.setText("" + c.getDiscountPercent());
+        }
     }
 
     private void clearCode() {
@@ -1100,21 +2086,23 @@ public class StaffSceneController implements Initializable {
 
     private void selectInventory() {
         InventoryDB i = tvInventory.getSelectionModel().getSelectedItem();
-        lbInventoryID.setText("" + i.getProductID());
-        tfInventoryName.setText(i.getProductName());
-        snInventoryQOH.getValueFactory().setValue(i.getProductQOH());
-        cbInventoryUnit.setValue(i.getProductUnit());
-        tfInventoryPrice.setText("" + i.getProductPrice());
-        cbInventoryCatalogies.setValue(i.getProductCatalogies());
-        showImage("select productImage from Inventory where productID=?", i.getProductID(), imgInventory);
+        if (i != null) {
+            lbInventoryID.setText("" + i.getProductID());
+            tfInventoryName.setText(i.getProductName());
+            //snInventoryQOH.getValueFactory().setValue(i.getProductQOH());
+            tfInventoryUnit.setText(i.getProductUnit());
+            //tfInventoryPrice.setText("" + i.getProductPrice());
+            cbInventoryCatalogies.setValue(i.getProductCatalogies());
+            showImage("select productImage from Inventory where productID=?", i.getProductID(), imgInventory);
+        }
     }
 
     private void clearInventory() {
         lbInventoryID.setText("");
         tfInventoryName.clear();
-        snInventoryQOH.getValueFactory().setValue(null);
-        cbInventoryUnit.setValue(null);
-        tfInventoryPrice.clear();
+        //snInventoryQOH.getValueFactory().setValue(1);
+        tfInventoryUnit.clear();
+        //tfInventoryPrice.clear();
         cbInventoryCatalogies.setValue(null);
         imgInventory.setImage(null);
     }
@@ -1123,22 +2111,23 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "INSERT INTO Inventory VALUES (1,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Inventory VALUES (1,?,0,?,0,?,?)";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
             //3. cap nhat du lieu vo cac tham so ? theo dung thu tu cua bang tbBatch
 //            st.setInt(1, i.id);
             st.setString(1, tfInventoryName.getText());
-            st.setInt(2, snInventoryQOH.getValue());
-            st.setString(3, cbInventoryUnit.getValue());
-            st.setInt(4, Integer.valueOf(tfInventoryPrice.getText()));
-            st.setString(5, cbInventoryCatalogies.getValue());
+            //st.setInt(2, snInventoryQOH.getValue());
+            st.setString(2, tfInventoryUnit.getText());
+            //st.setInt(4, Integer.valueOf(tfInventoryPrice.getText()));
+            st.setString(3, cbInventoryCatalogies.getValue());
             fis = new FileInputStream(file);
-            st.setBinaryStream(6, fis, file.length());
+            st.setBinaryStream(4, fis, file.length());
             //4 thuc hien insert sql
             st.executeUpdate();
             showInventoryDB();
+            file = null;
 //            st.close();
 //            cn.close();
 
@@ -1153,21 +2142,23 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "UPDATE Inventory set productName=?,productQOH=?,productUnit=?,productPrice=?,productCatalogies=?,productImage=? where productID=?";
+        String sql = "UPDATE Inventory set productName=?,productUnit=?,productCatalogies=? where productID=?";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
             //3. cap nhat du lieu vo cac tham so ? theo dung thu tu cua bang tbBatch
 //            st.setInt(1, i.id);
             st.setString(1, tfInventoryName.getText());
-            st.setInt(2, snInventoryQOH.getValue());
-            st.setString(3, cbInventoryUnit.getValue());
-            st.setInt(4, Integer.valueOf(tfInventoryPrice.getText()));
-            st.setString(5, cbInventoryCatalogies.getValue());
-            fis = new FileInputStream(file);
-            st.setBinaryStream(6, fis, file.length());
-            st.setInt(7, Integer.valueOf(lbInventoryID.getText()));
+            //st.setInt(2, snInventoryQOH.getValue());
+            st.setString(2, tfInventoryUnit.getText());
+            //st.setInt(4, Integer.valueOf(tfInventoryPrice.getText()));
+            st.setString(3, cbInventoryCatalogies.getValue());
+            st.setInt(4, Integer.valueOf(lbInventoryID.getText()));
             //4 thuc hien insert sql
+            if (file != null) {
+                updateBrowser("UPDATE Inventory set productImage=? where productID=?", lbInventoryID);
+            }
+            file = null;
             st.executeUpdate();
             showInventoryDB();
 //            st.close();
@@ -1175,8 +2166,6 @@ public class StaffSceneController implements Initializable {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1222,15 +2211,17 @@ public class StaffSceneController implements Initializable {
 
     private void selectMenu() {
         MenuDB m = tvMenu.getSelectionModel().getSelectedItem();
-        lbDishID.setText("" + m.getDishID());
-        tfDishName.setText(m.getDishName());
-        tfDishPrice.setText("" + m.getDishPrice());
-        cbDishIngredient.setValue(m.getDishIngredient());
-        tfDishConsume.setText("" + m.getDishConsume());
-        cbDishCatalogies.setValue(m.getDishCatalogies());
-        cbDishStatus.setValue(m.getDishStatus());
-        taDishDesciption.setText(m.getDishDescription());
-        showImage("select dishImage from Menu where dishID=?", m.getDishID(), imgDish);
+        if (m != null) {
+            lbDishID.setText("" + m.getDishID());
+            tfDishName.setText(m.getDishName());
+            tfDishPrice.setText("" + m.getDishPrice());
+            cbDishIngredient.setValue(m.getDishIngredient());
+            tfDishConsume.setText("" + m.getDishConsume());
+            cbDishCatalogies.setValue(m.getDishCatalogies());
+            cbDishStatus.setValue(m.getDishStatus());
+            taDishDesciption.setText(m.getDishDescription());
+            showImage("select dishImage from Menu where dishID=?", m.getDishID(), imgDish);
+        }
     }
 
     private void clearMenu() {
@@ -1267,6 +2258,7 @@ public class StaffSceneController implements Initializable {
             //4 thuc hien insert sql
             st.executeUpdate();
             showMenuDB();
+            file = null;
 //            st.close();
 //            cn.close();
 
@@ -1281,7 +2273,7 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "UPDATE Menu set dishName=?,dishPrice=?,dishIngredient=?,dishConsume=?,dishCatalogies=?,dishStatus=?,dishDescription=?,dishImage=? where dishID=?";
+        String sql = "UPDATE Menu set dishName=?,dishPrice=?,dishIngredient=?,dishConsume=?,dishCatalogies=?,dishStatus=?,dishDescription=? where dishID=?";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -1294,19 +2286,18 @@ public class StaffSceneController implements Initializable {
             st.setString(5, cbDishCatalogies.getValue());
             st.setString(6, cbDishStatus.getValue());
             st.setString(7, taDishDesciption.getText());
-            fis = new FileInputStream(file);
-            st.setBinaryStream(8, fis, file.length());
-            st.setInt(9, Integer.valueOf(lbDishID.getText()));
+            st.setInt(8, Integer.valueOf(lbDishID.getText()));
+            if (file != null) {
+                updateBrowser("UPDATE Menu set dishImage=? where dishID=?", lbDishID);
+            }
+            file = null;
             //4 thuc hien insert sql
             st.executeUpdate();
             showMenuDB();
             st.close();
             cn.close();
-
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1351,14 +2342,16 @@ public class StaffSceneController implements Initializable {
 
     private void selectCustomer() {
         CustomerDB c = tvCustomer.getSelectionModel().getSelectedItem();
-        lbCustomerID.setText("" + c.getCustomerID());
-        tfCustomerName.setText(c.getCustomerName());
-        tfCustomerDOB.setValue(c.getCustomerDOB());
-        tfCustomerAddress.setText(c.getCustomerAddress());
-        tfCustomerPhone.setText("" + c.getCustomerPhone());
-        tfCustomerMail.setText(c.getCustomerMail());
-        cbCustomerGender.setValue(c.getCustomerGender());
-        showImage("select customerImage from Customer where customerID=?", c.getCustomerID(), imgCustomer);
+        if (c != null) {
+            lbCustomerID.setText("" + c.getCustomerID());
+            tfCustomerName.setText(c.getCustomerName());
+            tfCustomerDOB.setValue(c.getCustomerDOB());
+            tfCustomerAddress.setText(c.getCustomerAddress());
+            tfCustomerPhone.setText("" + c.getCustomerPhone());
+            tfCustomerMail.setText(c.getCustomerMail());
+            cbCustomerGender.setValue(c.getCustomerGender());
+            showImage("select customerImage from Customer where customerID=?", c.getCustomerID(), imgCustomer);
+        }
     }
 
     private void clearCustomer() {
@@ -1392,6 +2385,7 @@ public class StaffSceneController implements Initializable {
             //4 thuc hien insert sql
             st.executeUpdate();
             showCustomerDB();
+            file = null;
 //            st.close();
 //            cn.close();
 
@@ -1406,7 +2400,7 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "UPDATE Customer set customerName=?,customerDOB=?,customerAddress=?,customerPhone=?,customerMail=?,customerGender=?,customerImage=? where customerID=?";
+        String sql = "UPDATE Customer set customerName=?,customerDOB=?,customerAddress=?,customerPhone=?,customerMail=?,customerGender=? where customerID=?";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -1418,10 +2412,12 @@ public class StaffSceneController implements Initializable {
             st.setInt(4, Integer.valueOf(tfCustomerPhone.getText()));
             st.setString(5, tfCustomerMail.getText());
             st.setString(6, cbCustomerGender.getValue());
-            fis = new FileInputStream(file);
-            st.setBinaryStream(7, fis, file.length());
-            st.setInt(8, Integer.valueOf(lbCustomerID.getText()));
+            st.setInt(7, Integer.valueOf(lbCustomerID.getText()));
             //4 thuc hien insert sql
+            if (file != null) {
+                updateBrowser("UPDATE Customer set customerImage=? where customerID=?", lbCustomerID);
+            }
+            file = null;
             st.executeUpdate();
             showCustomerDB();
 //            st.close();
@@ -1429,8 +2425,6 @@ public class StaffSceneController implements Initializable {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StaffSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1502,8 +2496,11 @@ public class StaffSceneController implements Initializable {
 
     private void selectOrderMenu() {
         OrderMenuDB o = tvOrderMenu.getSelectionModel().getSelectedItem();
-        lbOrderDishName.setText(o.getMenuDishName());
-        showImage("select dishImage from Menu where dishName=?", o.getMenuDishName(), imgOrderMenu);
+        if (o != null) {
+            lbOrderDishName.setText(o.getMenuDishName());
+            taOrderDishDescription.setText(o.getMenuDishDescription());
+            showImage("select dishImage from Menu where dishName=?", o.getMenuDishName(), imgOrderMenu);
+        }
     }
 
     private void addToOderList() {
@@ -1615,10 +2612,10 @@ public class StaffSceneController implements Initializable {
         return TableList;
     }
 
-    public ObservableList<Integer> getTakeAwayID() {
-        ObservableList<Integer> TableList = FXCollections.observableArrayList();
+    public ObservableList<InputStream> getImage() {
+        ObservableList<InputStream> ImageList = FXCollections.observableArrayList();
         Connection cn = getConnect();
-        String sql = "select distinct orderID from [Order]";
+        String sql = "select dishImage from [Menu] where dishID=" + lbDishID.getText() + "";
         Statement st;
         ResultSet rs;
         try {
@@ -1626,21 +2623,41 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
 //            BillDB b = null;
             while (rs.next()) {
-                int table = rs.getInt("orderID");
-                TableList.add(table);
-                cbBillTakeAway.setItems(TableList);
+                InputStream table = rs.getBinaryStream("dishCatalogies");
+                ImageList.add(table);
             }
             cn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return TableList;
+        return ImageList;
     }
 
+//    public ObservableList<Integer> getTakeAwayID() {
+//        ObservableList<Integer> TableList = FXCollections.observableArrayList();
+//        Connection cn = getConnect();
+//        String sql = "select distinct orderID from [Order]";
+//        Statement st;
+//        ResultSet rs;
+//        try {
+//            st = cn.createStatement();
+//            rs = st.executeQuery(sql);
+////            BillDB b = null;
+//            while (rs.next()) {
+//                int table = rs.getInt("orderID");
+//                TableList.add(table);
+//                cbBillTakeAway.setItems(TableList);
+//            }
+//            cn.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return TableList;
+//    }
     public ObservableList<BillDB> getBillDB() {
         ObservableList<BillDB> billList = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
-        String sql = "select dishName,dishPrice,dishQuantity from [Order] where dishCatalogies='" + cbBillTable.getValue() + "'";
+        String sql = "select dishName,dishPrice,dishQuantity, dishPrice*dishQuantity  as dishAmount from [Order] where dishCatalogies='" + cbBillTable.getValue() + "'";
         Statement st;
         ResultSet rs;
         try {
@@ -1648,7 +2665,7 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
             BillDB b = null;
             while (rs.next()) {
-                b = new BillDB(rs.getString("dishName"), rs.getInt("dishPrice"), rs.getInt("dishQuantity"));
+                b = new BillDB(rs.getString("dishName"), rs.getInt("dishPrice"), rs.getInt("dishQuantity"), rs.getInt("dishAmount"));
                 billList.add(b);
             }
             cn.close();
@@ -1663,14 +2680,390 @@ public class StaffSceneController implements Initializable {
         colBillDishName.setCellValueFactory(new PropertyValueFactory<BillDB, String>("billDishName"));
         colBillDishQuantity.setCellValueFactory(new PropertyValueFactory<BillDB, Integer>("billDishQuantity"));
         colBillDishPrice.setCellValueFactory(new PropertyValueFactory<BillDB, Integer>("billDishPrice"));
+        colBillDishAmount.setCellValueFactory(new PropertyValueFactory<BillDB, Integer>("billDishAmount"));
         tvBill.setItems(list);
     }
 
     private void clearBill() {
         cbBillTable.setValue(null);
-        cbBillTakeAway.setValue(null);
         tfBillDiscount.clear();
+        lbBillDiscount.setText(null);
     }
-    //or orderID="+cbBillTakeAway.getValue()+"
+
+    private void totalBill() {
+        String sql1 = "select SUM(dishPrice* dishQuantity) as billTotal from [Order] where dishCatalogies='" + cbBillTable.getValue() + "'";
+        String sql2 = "select discountPercent from codeDiscount where codeValue='" + tfBillDiscount.getText() + "'";
+        Connection cn = getConnect();
+        Statement st1;
+        Statement st2;
+        try {
+            st1 = cn.createStatement();
+            st2 = cn.createStatement();
+            ResultSet rs1 = st1.executeQuery(sql1);
+            ResultSet rs2 = st2.executeQuery(sql2);
+            if (Pattern.matches("\\w{1,}", tfBillDiscount.getText())) {
+                if (rs2.next() && rs1.next()) {
+                    int totalBill = rs1.getInt("billTotal");
+                    int discountTotal = rs2.getInt("discountPercent");
+                    int afterTotal = totalBill - (totalBill * discountTotal / 100);
+                    lbBillDiscount.setText("" + discountTotal);
+                    lbBillTotal.setText("" + totalBill);
+                    lbBillAfter.setText("" + afterTotal);
+                } else if (rs1.next() && !rs2.next()) {
+                    alert("Invalid discount code");
+                    int totalBill = rs1.getInt("billTotal");
+                    lbBillTotal.setText("" + totalBill);
+                    lbBillDiscount.setText("0");
+                    lbBillAfter.setText("" + totalBill);
+                }
+            } else {
+                if (rs1.next()) {
+                    int totalBill = rs1.getInt("billTotal");
+                    lbBillTotal.setText("" + totalBill);
+                    lbBillDiscount.setText("0");
+                    lbBillAfter.setText("" + totalBill);
+                }
+            }
+            //close?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getDiscount() {
+        String sql = "select discountPercent from codeDiscount where codeValue='" + tfBillDiscount.getText() + "'";
+        Connection cn = getConnect();
+        Statement st;
+        try {
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                update("update codeDiscount set codeQuantity -=1 where codeValue='" + tfBillDiscount.getText() + "'");
+                int discountTotal = rs.getInt("discountPercent");
+                lbBillDiscount.setText("" + discountTotal);
+            } else {
+                alert("Invalid discount code");
+            }
+            //close?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ObservableList<BookInfo> getBookInfoDB() {
+        ObservableList<BookInfo> bookInfo = FXCollections.observableArrayList();
+        java.sql.Connection cn = getConnect();
+        String sql = "select distinct bookID,bookDate,bookTime,bookCustomerName,bookCatalogies,bookNote from Book";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            BookInfo bi = null;
+            while (rs.next()) {
+
+                bi = new BookInfo(rs.getInt("bookID"), rs.getDate("bookDate").toLocalDate(), rs.getString("bookTime"), rs.getString("bookCustomerName"), rs.getString("bookCatalogies"), rs.getString("bookNote"));
+                bookInfo.add(bi);
+            }
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bookInfo;
+    }
+
+    public void showBookInfoDB() {
+        ObservableList<BookInfo> list = getBookInfoDB();
+        colBookInfoID.setCellValueFactory(new PropertyValueFactory<BookInfo, Integer>("bookID"));
+        colBookInfoDate.setCellValueFactory(new PropertyValueFactory<BookInfo, LocalDate>("bookDate"));
+        colBookInfoTime.setCellValueFactory(new PropertyValueFactory<BookInfo, String>("bookTime"));
+        colBookInfoCusName.setCellValueFactory(new PropertyValueFactory<BookInfo, String>("bookCustomerName"));
+        colBookInfoCatalogies.setCellValueFactory(new PropertyValueFactory<BookInfo, String>("bookCatalogies"));
+        colBookInfoNote.setCellValueFactory(new PropertyValueFactory<BookInfo, String>("bookNote"));
+        tvBookInfo.setItems(list);
+    }
+
+    public static ObservableList<BookDetail> getBookDetailDB(Integer ma) {
+        ObservableList<BookDetail> bookDetail = FXCollections.observableArrayList();
+        java.sql.Connection cn = getConnect();
+        String sql = "select bookDishName,bookDishQuantity,bookDishPrice from Book where bookID=" + ma + "";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            BookDetail m = null;
+            while (rs.next()) {
+
+                m = new BookDetail(rs.getString("bookDishName"), rs.getInt("bookDishQuantity"), rs.getInt("bookDishPrice"));
+                bookDetail.add(m);
+            }
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bookDetail;
+    }
+
+    public void showBookDetailDB(Integer ma) {
+        ObservableList<BookDetail> list = getBookDetailDB(ma);
+        colBookDetailName.setCellValueFactory(new PropertyValueFactory<BookDetail, String>("bookDishName"));
+        colBookDetailQuantity.setCellValueFactory(new PropertyValueFactory<BookDetail, Integer>("bookDishQuantity"));
+        colBookDetailPrice.setCellValueFactory(new PropertyValueFactory<BookDetail, Integer>("bookDishPrice"));
+        tvBookDetail.setItems(list);
+    }
+
+    private void bookCount() {
+        String sql = "select COUNT(bookID) as bookCount from Book";
+        Connection cn = getConnect();
+        Statement st;
+        try {
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                int bookCount = rs.getInt("bookCount");
+                lbBookCount.setText("" + bookCount);
+            }
+            //close?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void totalBook() {
+        BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
+        String sql = "select SUM(bookDishQuantity* bookDishPrice) as bookTotal from Book where bookID=" + bi.getBookID() + "";
+        Connection cn = getConnect();
+        Statement st;
+        try {
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                int totalBill = rs.getInt("bookTotal");
+                lbBookTotal.setText("" + totalBill);
+            }
+            //close?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ObservableList<ReceiptDB> getReceiptDB() {
+        ObservableList<ReceiptDB> receipt = FXCollections.observableArrayList();
+        java.sql.Connection cn = getConnect();
+        String sql = "select thuID,thuDate,thuCatalog,thuPrice,thuNote from Thu";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            ReceiptDB r = null;
+            while (rs.next()) {
+                r = new ReceiptDB(rs.getInt("thuID"), rs.getString("thuDate"), rs.getString("thuCatalog"), rs.getInt("thuPrice"), rs.getString("thuNote"));
+                receipt.add(r);
+            }
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return receipt;
+    }
+
+    public void showReceiptDB() {
+        ObservableList<ReceiptDB> list = getReceiptDB();
+        colReceiptID.setCellValueFactory(new PropertyValueFactory<ReceiptDB, Integer>("thuID"));
+        colReceiptTime.setCellValueFactory(new PropertyValueFactory<ReceiptDB, String>("thuDate"));
+        colReceiptCatalog.setCellValueFactory(new PropertyValueFactory<ReceiptDB, String>("thuCatalog"));
+        colReceiptPrice.setCellValueFactory(new PropertyValueFactory<ReceiptDB, Integer>("thuPrice"));
+        colReceiptNote.setCellValueFactory(new PropertyValueFactory<ReceiptDB, String>("thuNote"));
+        tvReceipt.setItems(list);
+    }
+
+    public ObservableList<PaymentDB> getPaymentDB() {
+        ObservableList<PaymentDB> payment = FXCollections.observableArrayList();
+        java.sql.Connection cn = getConnect();
+        String sql = "select chiID,chiDate,chiCatalog,chiPrice,chiNote from Chi";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            PaymentDB p = null;
+            while (rs.next()) {
+                p = new PaymentDB(rs.getInt("chiID"), rs.getString("chiDate"), rs.getString("chiCatalog"), rs.getInt("chiPrice"), rs.getString("chiNote"));
+                payment.add(p);
+            }
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return payment;
+    }
+
+    public void showPaymentDB() {
+        ObservableList<PaymentDB> list = getPaymentDB();
+        colPaymentID.setCellValueFactory(new PropertyValueFactory<PaymentDB, Integer>("chiID"));
+        colPaymentTime.setCellValueFactory(new PropertyValueFactory<PaymentDB, String>("chiDate"));
+        colPaymentCatalog.setCellValueFactory(new PropertyValueFactory<PaymentDB, String>("chiCatalog"));
+        colPaymentPrice.setCellValueFactory(new PropertyValueFactory<PaymentDB, Integer>("chiPrice"));
+        colPaymentNote.setCellValueFactory(new PropertyValueFactory<PaymentDB, String>("chiNote"));
+        tvPayment.setItems(list);
+    }
+
+    public ObservableList<String> getIngredient() {
+        ObservableList<String> ingredientList = FXCollections.observableArrayList();
+        Connection cn = getConnect();
+        String sql = "select distinct productName from Inventory where productCatalogies='Ingredient'";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+//            BillDB b = null;
+            while (rs.next()) {
+                String ingredient = rs.getString("productName");
+                ingredientList.add(ingredient);
+                cbDishIngredient.setItems(ingredientList);
+            }
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ingredientList;
+    }
+
+    public PieChart createChart() {
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        pieChartData.addAll(new PieChart.Data("Receipt", Integer.parseInt(lbTotalReceipt.getText())),
+                new PieChart.Data("Payment", Integer.parseInt(lbTotalPayment.getText())));
+
+        pChart.setData(pieChartData);
+        pChart.setTitle("The chart summarizes the area of each continent.");
+        pChart.setClockwise(true);
+        pChart.setLabelLineLength(30);
+        pChart.setLabelsVisible(true);
+        pChart.setLegendVisible(true);
+        pChart.setStartAngle(50);
+        pChart.setLegendSide(Side.RIGHT);
+
+        pChart.getData().forEach(data -> {
+            double total = 0;
+            for (PieChart.Data d : pChart.getData()) {
+                total += d.getPieValue();
+            }
+            String text = String.format("%.1f%%", 100 * data.getPieValue() / total);
+            Tooltip toolTip = new Tooltip(text);
+            Tooltip.install(data.getNode(), toolTip);
+        });
+
+        return pChart;
+    }
+
+    private void totalReceipt() {
+        String sql = "select SUM(thuPrice) as thuTotal from Thu";
+        Connection cn = getConnect();
+        Statement st;
+        try {
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                int totalBill = rs.getInt("thuTotal");
+                lbTotalReceipt.setText("" + totalBill);
+            }
+            //close?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void totalPayment() {
+        String sql = "select SUM(chiPrice) as chiTotal from Chi";
+        Connection cn = getConnect();
+        Statement st;
+        try {
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                int totalBill = rs.getInt("chiTotal");
+                lbTotalPayment.setText("" + totalBill);
+            }
+            //close?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean getMaGiamGia() {
+        Connection cn = getConnect();
+        String sql = "select * from codeDiscount where codeValue='" + tfCodeValue.getText().toUpperCase() + "'";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            while (rs.next()) {
+                return false;
+            }
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean getBangMini() {
+        Connection cn = getConnect();
+        String sql = "select * from [OrderMini]";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            while (rs.next()) {
+                return true;
+            }
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void selectReceipt() {
+        ReceiptDB i = tvReceipt.getSelectionModel().getSelectedItem();
+        if (i != null) {
+            cbReceiptCatalog.setValue(i.getThuCatalog());
+            tfReceiptPrice.setText("" + i.getThuPrice());
+            taReceiptNote.setText(i.getThuNote());
+        }
+    }
+
+    private void selectPayment() {
+        PaymentDB i = tvPayment.getSelectionModel().getSelectedItem();
+        if (i != null) {
+            cbPaymentCatalog.setValue(i.getChiCatalog());
+            tfPaymentPrice.setText("" + i.getChiPrice());
+            taPaymentNote.setText(i.getChiNote());
+        }
+    }
+
+    private void clearReceipt() {
+        cbReceiptCatalog.setValue(null);
+        tfReceiptPrice.clear();
+        taReceiptNote.clear();
+    }
+
+    private void clearPayment() {
+        cbPaymentCatalog.setValue(null);
+        tfPaymentPrice.clear();
+        taPaymentNote.clear();
+    }
+
+    private void handleMouseAction(ActionEvent event) {
+        if (event.getSource() == btnBillPrint) {
+            PrintReport pr = new PrintReport();
+            pr.showInvoice();
+        }
+    }
 
 }

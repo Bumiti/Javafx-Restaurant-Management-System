@@ -12,11 +12,13 @@ public class BillDB {
     private String billDishName;
     private int billDishPrice;
     private int billDishQuantity;
+    private int billDishAmount;
 
-    public BillDB(String billDishName, int billDishPrice, int billDishQuantity) {
+    public BillDB(String billDishName, int billDishPrice, int billDishQuantity, int billDishAmount) {
         this.billDishName = billDishName;
         this.billDishPrice = billDishPrice;
         this.billDishQuantity = billDishQuantity;
+        this.billDishAmount = billDishAmount;
     }
 
     public String getBillDishName() {
@@ -30,6 +32,12 @@ public class BillDB {
     public int getBillDishQuantity() {
         return billDishQuantity;
     }
+
+    public int getBillDishAmount() {
+        return billDishAmount;
+    }
+            
+    
     
     
 }

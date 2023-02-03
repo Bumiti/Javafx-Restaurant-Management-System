@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane fx:id="bpSignUp" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.SignUpController">
+   <top>
+      <HBox id="header" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" stylesheets="@../main/application.css" BorderPane.alignment="CENTER">
+         <children>
+            <FontAwesomeIconView glyphName="USER_CIRCLE" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox id="Forgotpassword" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../main/application.css" BorderPane.alignment="TOP_LEFT">
+         <children>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="USER" />
+                        <Label alignment="CENTER" text="Fullname" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_RIGHT" prefHeight="70.0" prefWidth="368.0">
+                     <children>
+                        <TextField fx:id="tfSignUpFullName" promptText="Your fullname" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="CALENDAR" />
+                        <Label alignment="CENTER" text="Day Of Birth" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="79.0" prefWidth="368.0">
+                     <children>
+                        <DatePicker fx:id="tfSignUpDOB" prefHeight="26.0" prefWidth="368.0" promptText="The day you was born" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="PENCIL" />
+                        <Label alignment="CENTER" text="Gender" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="79.0" prefWidth="369.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="80.0">
+                           <children>
+                              <RadioButton fx:id="rbMale" mnemonicParsing="false" selected="true" text="Male">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="MALE" />
+                                 </graphic>
+                              </RadioButton>
+                              <RadioButton fx:id="rbFemale" mnemonicParsing="false" text="Female">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="FEMALE" />
+                                 </graphic>
+                              </RadioButton>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="ENVELOPE" />
+                        <Label alignment="CENTER" text="E-mail" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                     <children>
+                        <TextField fx:id="tfSignUpMail" promptText="E-mail, G-mail or any mail you have" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="MAP_MARKER" />
+                        <Label contentDisplay="CENTER" text="Address" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="26.0" prefWidth="368.0">
+                     <children>
+                        <TextField fx:id="tfSignUpAddress" promptText="Where do you at now ?" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="PHONE" />
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="126.0" text="Number Phone" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                     <children>
+                        <TextField fx:id="tfSignUpPhone" prefHeight="26.0" prefWidth="368.0" promptText="+84" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="EDIT" />
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="126.0" text="Username" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                     <children>
+                        <TextField fx:id="tfSignUpUserName" onKeyTyped="#handleTypeAction" prefHeight="26.0" prefWidth="368.0" promptText="Username" />
+                        <Label fx:id="lbCheck" textFill="#eb0505" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="KEY" />
+                        <Label alignment="CENTER" text="Password" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                     <children>
+                        <PasswordField fx:id="tfSignUpPassWord1" prefHeight="26.0" prefWidth="368.0" promptText="Password" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="KEY" />
+                        <Label alignment="CENTER" prefHeight="18.0" prefWidth="150.0" text="Confim Password" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                     <children>
+                        <PasswordField fx:id="tfSignUpPassWord2" prefHeight="26.0" prefWidth="369.0" promptText="Enter your Password again" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox id="buto" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="150.0" stylesheets="@../main/application.css">
+               <children>
+                  <Button id="button" fx:id="btnAccountCreate" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Sign Up" />
+                  <Button id="button" fx:id="btnAccountClear" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Reset" />
+                  <Button id="button" fx:id="btnAccountClose" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Close" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+   <left>
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="284.0" spacing="40.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="imgCustomer" fitHeight="150.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="btnImageBrowser" mnemonicParsing="false" onMouseClicked="#handleButtonAction" text="Choose Image" />
+         </children>
+         <BorderPane.margin>
+            <Insets top="100.0" />
+         </BorderPane.margin>
+      </VBox>
+   </left>
+</BorderPane>

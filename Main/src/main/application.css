@@ -1,0 +1,150 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Dec 18, 2022, 6:54:54 PM
+    Author     : HP
+
+*/
+.text-field {
+    -fx-background-color: #a9a9a9 , white , white;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}
+
+.text-field:focused {
+    -fx-background-color: #a9a9a9 , white , white;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}
+    
+.border-pane{
+    -fx-background-color: white;
+}
+#header{
+    -fx-font-family: Times New Roman;
+    -fx-text-fill: black;
+    -fx-font-size: 40px;
+    -fx-background-color: white;
+}
+#Login{
+    -fx-font-family: Times New Roman;
+    -fx-text-fill: black;
+    -fx-font-size: 20px;
+    -fx-font-color: black;
+    -fx-text-alignment: center;
+}
+#LoginText{
+    -fx-font-color: black;
+
+}
+#button1{
+    -fx-background-color: rgb(230,102,232);
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-pref-width: 94px;
+    -fx-pref-height: 38px;
+}
+
+#button1:hover {
+    -fx-background-color: #b0def3;
+    -fx-text-fill:black;
+    
+}
+#button2{
+    -fx-background-color: rgb(230,102,232);
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    
+}
+
+#button2:hover {
+    -fx-background-color: #b0def3;
+    -fx-text-fill:black;
+    
+}
+#hyperlink{
+    -fx-text-fill: black;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-border-color: black;
+    
+}
+#Forgotpassword{
+    -fx-font-family: Times New Roman;
+    -fx-text-fill: black;
+    -fx-font-size: 15px;    
+    -fx-background-color: white;
+}
+
+
+
+.table-view .column-header,
+.table-view .column-header-background .filter{
+    -fx-cell-size: 20px;
+    -fx-background-color: white;
+    -fx-alignment: center;
+}
+.table-view .column-header .label{
+    -fx-text-fill: black;
+    -fx-alignment: center;
+}
+.table-view .cell{
+    -fx-alignment: CENTER;  
+}
+.tab-pane .tab-header-area .tab-header-background {
+    /*-fx-opacity: 0.0;*/
+    /*-fx-background-color:linear-gradient(#38424b 0.0%, #1f2429 20.0%, #191d22 100.0%);  */
+    -fx-background-color:white;	    
+}
+
+.tab-pane{	
+    -fx-tab-min-width:69px; 
+}
+
+
+.tab-pane .tab{
+    -fx-background-color: #c3c3c3;
+    -fx-background-radius: 0.0 45.0 0.0 0.0 ;
+    -fx-border-color:transparent transparent transparent transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;  
+    -fx-cursor:hand; 
+}
+
+.tab-pane .tab:selected{
+    -fx-background-color: rgb(230,102,232);
+}
+
+.tab-pane .tab:selected:hover{
+     -fx-background-color: #b0def3; 
+}
+
+.tab-pane .tab:hover{
+	-fx-background-color:#b0def3;
+}
+
+
+.tab-pane .tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: black;
+    -fx-font-size: 13.0px; /* before it was 12px */
+    -fx-wrap-text: true;
+    
+}
+
+.tab-pane .tab:selected .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill:white ; /* before it was BROWN */
+    /*-fx-font-size:130.0%;*/
+}
+
+.tab-pane .tab:hover .tab-label{
+	-fx-text-fill:red;
+	-fx-background-color: transparent;
+	-fx-background-radius: 0.0 0.0 0.0 0.0;
+}
+
+    
+
+ 
+
+
