@@ -20,15 +20,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="bpStaff" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="940.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.StaffSceneController">
+<BorderPane id="background" fx:id="bpStaff" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="940.0" stylesheets="@../main/application.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.StaffSceneController">
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane id="background" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
             <Tab fx:id="tabMenu" text="Menu">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
-                        <TableView fx:id="tvMenu" onMouseClicked="#handleMouseAction" prefHeight="571.0" prefWidth="550.0" BorderPane.alignment="CENTER">
+                        <TableView id="background" fx:id="tvMenu" onMouseClicked="#handleMouseAction" prefHeight="571.0" prefWidth="550.0" BorderPane.alignment="CENTER">
                            <columns>
                               <TableColumn fx:id="colDishID" prefWidth="27.333327651023865" text="ID" />
                               <TableColumn fx:id="colDishName" prefWidth="87.7776927947998" text="DishName" />
@@ -39,10 +39,13 @@
                               <TableColumn fx:id="colDishStatus" prefWidth="90.66671752929688" text="DishStatus" />
                               <TableColumn fx:id="colDishDescription" prefWidth="64.6666259765625" text="DishDesciption" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
-                        <VBox prefHeight="650.0" prefWidth="140.0" BorderPane.alignment="CENTER">
+                        <VBox id="baclground" prefHeight="650.0" prefWidth="140.0" BorderPane.alignment="CENTER">
                            <children>
                               <ImageView fx:id="imgDish" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" />
                               <Label text="ID" />
@@ -61,11 +64,11 @@
                               <ComboBox fx:id="cbDishStatus" layoutX="10.0" layoutY="373.0" prefWidth="150.0" />
                               <Label text="DishDescription" />
                               <TextArea fx:id="taDishDesciption" prefHeight="100.0" prefWidth="100.0" />
-                              <Button fx:id="btnDishBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser" />
-                              <Button fx:id="btnDishClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnDishCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
-                              <Button fx:id="btnDishUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button fx:id="btnDishDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnDishBrowser" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="178.0" text="Browser" />
+                              <Button id="button3" fx:id="btnDishClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnDishCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
+                              <Button id="button3" fx:id="btnDishUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                              <Button id="button3" fx:id="btnDishDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                         </VBox>
                      </right>
@@ -83,6 +86,9 @@
                               <TableColumn fx:id="colOrderMenuDishAvailable" prefWidth="91.33332824707031" text="DishAvailable" />
                               <TableColumn fx:id="colOrderMenuDishDescription" prefWidth="117.99996948242188" text="DishDescription" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <left>
@@ -114,7 +120,7 @@
                               <Spinner fx:id="snOrderDishQuantity" />
                               <Label text="Description" />
                               <TextArea fx:id="taOrderDishDescription" prefHeight="200.0" prefWidth="200.0" />
-                              <Button fx:id="btnOrderMenuAdd" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Add" />
+                              <Button id="button3" fx:id="btnOrderMenuAdd" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Add" />
                            </children>
                         </VBox>
                      </right>
@@ -127,6 +133,9 @@
                                   <TableColumn fx:id="colOrderListMiniDishPrice" prefWidth="75.0" text="DishPrice" />
                                     <TableColumn fx:id="colOrderListMiniDishQuantity" prefWidth="107.3333740234375" text="DishQuantity" />
                                 </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
                               </TableView>
                            </center>
                            <right>
@@ -139,9 +148,9 @@
                                     <ComboBox fx:id="cbOrderCatalogies" prefWidth="150.0" />
                                     <Label text="Note" />
                                     <TextArea fx:id="taOrderNote" prefHeight="200.0" prefWidth="200.0" />
-                                    <Button fx:id="btnOrderMiniSend" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Send" />
-                                    <Button fx:id="btnOrderMiniRemove" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Remove" />
-                                    <Button fx:id="btnOrderMiniDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                                    <Button id="button3" fx:id="btnOrderMiniSend" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Send" />
+                                    <Button id="button3" fx:id="btnOrderMiniRemove" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Remove" />
+                                    <Button id="button3" fx:id="btnOrderMiniDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                                  </children>
                               </VBox>
                            </right>
@@ -162,8 +171,11 @@
                               <TableColumn fx:id="colOrderQuantity" prefWidth="111.77772521972656" text="OrderQuantity" />
                               <TableColumn fx:id="colOrderCatalogies" prefWidth="111.77772521972656" text="OrderCatalogies" />
                               <TableColumn fx:id="colOrderNote" prefWidth="111.77772521972656" text="OrderNote" />
-                              <TableColumn fx:id="colOrderCheck" prefWidth="111.77772521972656" text="OrderCheck" />
+                              <TableColumn fx:id="colOrderCheck" prefWidth="134.22222900390625" text="OrderCheck" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                   </BorderPane>
@@ -180,6 +192,9 @@
                               <TableColumn fx:id="colBillDishPrice" prefWidth="111.77772521972656" text="DishPrice" />
                               <TableColumn fx:id="colBillDishAmount" prefWidth="111.77772521972656" text="DishAmount" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
@@ -191,10 +206,10 @@
                               <TextField fx:id="tfBillDiscount" />
                               <Label text="Note" />
                               <TextArea fx:id="taBillNote" prefHeight="200.0" prefWidth="200.0" />
-                              <Button fx:id="btnBillClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnBillGet" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Get" />
-                              <Button fx:id="btnBillPrint" mnemonicParsing="false" onAction="#showInvoice2" text="PrintBill" />
-                              <Button fx:id="btnBillCheckOut" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Check Out" />
+                              <Button id="button3" fx:id="btnBillClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnBillGet" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Get" />
+                              <Button id="button3" fx:id="btnBillPrint" mnemonicParsing="false" onAction="#showInvoice2" text="PrintBill" />
+                              <Button id="button3" fx:id="btnBillCheckOut" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Check Out" />
                            </children>
                         </VBox>
                      </right>
@@ -235,6 +250,9 @@
                               <TableColumn fx:id="colBookInfoCatalogies" minWidth="6.0" prefWidth="103.11117553710938" text="BookCatalogies" />
                               <TableColumn fx:id="colBookInfoNote" minWidth="6.0" prefWidth="103.11117553710938" text="BookNote" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
@@ -245,14 +263,14 @@
                                     <Insets top="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <Button fx:id="btnGetBookDetail" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Get">
+                              <Button id="button3" fx:id="btnGetBookDetail" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Get">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
                                  <VBox.margin>
                                     <Insets top="5.0" />
                                  </VBox.margin></Button>
-                              <Button fx:id="btnDeleteBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnDeleteBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                            <opaqueInsets>
                               <Insets />
@@ -267,6 +285,9 @@
                                     <TableColumn fx:id="colBookDetailQuantity" prefWidth="111.77777862548828" text="DishQuantity" />
                                     <TableColumn fx:id="colBookDetailPrice" prefWidth="110.44441223144531" text="DishPrice" />
                                 </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
                               </TableView>
                            </center>
                            <right>
@@ -274,7 +295,7 @@
                                  <children>
                                     <Label text="Table" />
                                     <ComboBox fx:id="cbSendTable" prefWidth="150.0" />
-                                    <Button fx:id="btnSendBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Send" />
+                                    <Button id="button3" fx:id="btnSendBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Send" />
                                  </children>
                                  <BorderPane.margin>
                                     <Insets top="25.0" />
@@ -308,6 +329,9 @@
                               <TableColumn fx:id="colInventoryPrice" prefWidth="75.0" text="Price" visible="false" />
                               <TableColumn fx:id="colInventoryCatalogies" prefWidth="75.0" text="Catalogies" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
@@ -322,12 +346,12 @@
                               <TextField fx:id="tfInventoryUnit" />
                               <Label text="Catalogies" />
                               <ComboBox fx:id="cbInventoryCatalogies" prefWidth="150.0" />
-                              <Button fx:id="btnInventoryBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser Image" />
-                              <Button fx:id="btnInventoryClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnInventoryAdd" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Add" />
-                              <Button fx:id="btnInventoryCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
-                              <Button fx:id="btnInventoryUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button fx:id="btnInventoryDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnInventoryBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser Image" />
+                              <Button id="button3" fx:id="btnInventoryClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnInventoryAdd" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Add" />
+                              <Button id="button3" fx:id="btnInventoryCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
+                              <Button id="button3" fx:id="btnInventoryUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                              <Button id="button3" fx:id="btnInventoryDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                         </VBox>
                      </right>
@@ -349,6 +373,9 @@
                               <TableColumn fx:id="colStaffPossition" prefWidth="75.0" text="Possition" />
                               <TableColumn fx:id="colStaffSalary" prefWidth="57.3333740234375" text="Salary" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
@@ -372,11 +399,11 @@
                               <Label text="Salary" />
                               <TextField fx:id="tfStaffSalary" />
                               <Label text="Browser" />
-                              <Button fx:id="btnStaffBrowser" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="179.0" text="Choose" />
-                              <Button fx:id="btnStaffClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnStaffCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
-                              <Button fx:id="btnStaffUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button fx:id="btnStaffDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnStaffBrowser" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="179.0" text="Choose" />
+                              <Button id="button3" fx:id="btnStaffClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnStaffCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
+                              <Button id="button3" fx:id="btnStaffUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                              <Button id="button3" fx:id="btnStaffDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                         </VBox>
                      </right>
@@ -397,6 +424,9 @@
                               <TableColumn fx:id="colCustomerMail" prefWidth="64.22222900390625" text="CusMail" />
                               <TableColumn fx:id="colCustomerGender" prefWidth="87.55563354492188" text="CusGender" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
@@ -417,11 +447,11 @@
                               <TextField fx:id="tfCustomerMail" layoutX="10.0" layoutY="258.0" />
                               <Label text="Gender" />
                               <ComboBox fx:id="cbCustomerGender" prefWidth="150.0" />
-                              <Button fx:id="btnCustomerBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser" />
-                              <Button fx:id="btnCustomerClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnCustomerCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
-                              <Button fx:id="btnCustomerUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button fx:id="btnCustomerDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnCustomerBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser" />
+                              <Button id="button3" fx:id="btnCustomerClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnCustomerCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
+                              <Button id="button3" fx:id="btnCustomerUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                              <Button id="button3" fx:id="btnCustomerDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                         </VBox>
                      </right>
@@ -439,6 +469,9 @@
                               <TableColumn fx:id="colCodeQuantity" prefWidth="98.4444580078125" text="CodeQuantity" />
                               <TableColumn fx:id="colCodeDiscountPercent" prefWidth="98.4444580078125" text="DiscountPercent" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
@@ -452,10 +485,10 @@
                               <TextField fx:id="tfCodeQuantity" layoutX="10.0" layoutY="27.0" />
                               <Label layoutX="10.0" layoutY="87.0" text="DiscountPercent" />
                               <TextField fx:id="tfCodeDiscountPercent" layoutX="10.0" layoutY="105.0" />
-                              <Button fx:id="btnCodeClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnCodeCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New Code" />
-                              <Button fx:id="btnCodeUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update Code" />
-                              <Button fx:id="btnCodeDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete Code" />
+                              <Button id="button3" fx:id="btnCodeClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnCodeCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New Code" />
+                              <Button id="button3" fx:id="btnCodeUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update Code" />
+                              <Button id="button3" fx:id="btnCodeDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete Code" />
                            </children>
                         </VBox>
                      </right>
@@ -474,6 +507,9 @@
                               <TableColumn fx:id="colReceiptPrice" prefWidth="75.0" text="Price" />
                               <TableColumn fx:id="colReceiptNote" prefWidth="75.0" text="Note" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <bottom>
@@ -493,10 +529,10 @@
                               <TextField fx:id="tfReceiptPrice" />
                               <Label text="Note" />
                               <TextArea fx:id="taReceiptNote" prefHeight="200.0" prefWidth="200.0" />
-                              <Button fx:id="btnReceiptClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnReceiptCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
-                              <Button fx:id="btnReceiptUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button fx:id="btnReceiptDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnReceiptClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnReceiptCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
+                              <Button id="button3" fx:id="btnReceiptUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                              <Button id="button3" fx:id="btnReceiptDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                         </VBox>
                      </right>
@@ -515,6 +551,9 @@
                               <TableColumn fx:id="colPaymentPrice" prefWidth="75.0" text="Price" />
                               <TableColumn fx:id="colPaymentNote" prefWidth="75.0" text="Note" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <bottom>
@@ -534,10 +573,10 @@
                               <TextField fx:id="tfPaymentPrice" layoutX="10.0" layoutY="27.0" />
                               <Label text="Note" />
                               <TextArea fx:id="taPaymentNote" prefHeight="200.0" prefWidth="200.0" />
-                              <Button fx:id="btnPaymentClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnPaymentCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
-                              <Button fx:id="btnPaymentUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button fx:id="btnPaymentDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnPaymentClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnPaymentCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
+                              <Button id="button3" fx:id="btnPaymentUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                              <Button id="button3" fx:id="btnPaymentDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                         </VBox>
                      </right>
@@ -551,7 +590,7 @@
                         <PieChart fx:id="pChart" prefHeight="419.0" prefWidth="767.0" BorderPane.alignment="CENTER" />
                      </center>
                      <bottom>
-                        <Button fx:id="btnDayReport" mnemonicParsing="false" text="Report" BorderPane.alignment="CENTER" />
+                        <Button id="button3" fx:id="btnDayReport" mnemonicParsing="false" text="Report" BorderPane.alignment="CENTER" />
                      </bottom>
                   </BorderPane>
                </content>
@@ -568,6 +607,9 @@
                               <TableColumn fx:id="colAccountRole" prefWidth="126.44439697265625" text="Role" />
                               <TableColumn fx:id="colAccountFullname" prefWidth="126.44439697265625" text="Fullname" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <right>
@@ -583,10 +625,10 @@
                               <ComboBox fx:id="cbAccountRole" prefWidth="150.0" />
                               <Label text="Fullname" />
                               <TextField fx:id="tfAccountFullname" />
-                              <Button fx:id="btnAccountClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button fx:id="btnAccountCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
-                              <Button fx:id="btnAccountUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button fx:id="btnAccountDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <Button id="button3" fx:id="btnAccountClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                              <Button id="button3" fx:id="btnAccountCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
+                              <Button id="button3" fx:id="btnAccountUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                              <Button id="button3" fx:id="btnAccountDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                         </VBox>
                      </right>
@@ -605,6 +647,9 @@
                               <TableColumn fx:id="colLoggerLevel" prefWidth="163.0" text="Level" />
                               <TableColumn fx:id="colLoggerMessage" prefWidth="261.0" text="Message" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </center>
                   </BorderPane>
@@ -614,20 +659,20 @@
       </TabPane>
    </center>
    <left>
-      <VBox alignment="CENTER" prefHeight="600.0" prefWidth="173.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <VBox id="background" alignment="CENTER" prefHeight="600.0" prefWidth="173.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="lbTime" />
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../image/StaffSceneIcon.png" />
+                  <Image url="@../image/Login/Logo.png" />
                </image>
             </ImageView>
             <Label text="Hello" />
             <Label fx:id="lbStaffRole" />
             <Label fx:id="lbUser" />
-            <Button fx:id="btnLogOut" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Log out" />
-            <Button fx:id="btnChangePassword" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Change Password" />
-            <Button fx:id="btnRefresh" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Refresh" />
+            <Button id="button3" fx:id="btnLogOut" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Log out" />
+            <Button id="button3" fx:id="btnChangePassword" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Change Password" />
+            <Button id="button3" fx:id="btnRefresh" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Refresh" />
          </children>
       </VBox>
    </left>

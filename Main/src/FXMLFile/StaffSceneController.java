@@ -1074,7 +1074,7 @@ public class StaffSceneController implements Initializable {
         }
         if (event.getSource() == tvOrderMenu) {
             OrderMenuDB o = tvOrderMenu.getSelectionModel().getSelectedItem();
-            SpinnerValueFactory<Integer> dishSpiner = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, o.getMenuDishAvailabe(), 0, 1);
+            SpinnerValueFactory<Integer> dishSpiner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, o.getMenuDishAvailabe(), 0, 1);
             snOrderDishQuantity.setValueFactory(dishSpiner);
             selectOrderMenu();
         }
@@ -1564,7 +1564,7 @@ public class StaffSceneController implements Initializable {
         Connection con = getConnect();
 
         PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
-        JasperDesign jasperDesign = JRXmlLoader.load("D:\\Aptech\\HK2\\3. JP-2\\3. JP-2\\ProjectII\\GithubPro\\Javafx-Restaurant-Management-System\\Main\\src\\report\\Invoice5.jrxml");
+        JasperDesign jasperDesign = JRXmlLoader.load("D:\\Invoice5.jrxml");
         //String query = "select dishName,dishPrice,dishQuantity, dishPrice*dishQuantity  as dishAmount from [Order];";
         //JRDesignQuery jrquery = new JRDesignQuery();
         //jrquery.setText(query);
@@ -3059,11 +3059,11 @@ public class StaffSceneController implements Initializable {
         taPaymentNote.clear();
     }
 
-    private void handleMouseAction(ActionEvent event) {
-        if (event.getSource() == btnBillPrint) {
-            PrintReport pr = new PrintReport();
-            pr.showInvoice();
-        }
-    }
+//    private void handleMouseAction(ActionEvent event) {
+//        if (event.getSource() == btnBillPrint) {
+//            PrintReport pr = new PrintReport();
+//            pr.showInvoice();
+//        }
+//    }
 
 }

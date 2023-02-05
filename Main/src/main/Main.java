@@ -26,7 +26,6 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/FXMLFile/LoginScene.fxml"));
         PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
 //        log.info("Add");
-
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

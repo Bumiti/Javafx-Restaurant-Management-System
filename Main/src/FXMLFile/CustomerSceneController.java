@@ -68,6 +68,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  * FXML Controller class
@@ -263,6 +264,8 @@ public class CustomerSceneController implements Initializable {
     private BorderPane bpHistory;
     @FXML
     private Button btnHistory;
+    @FXML
+    private Label lbDarkMode;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -276,6 +279,7 @@ public class CustomerSceneController implements Initializable {
         snTime.setValueFactory(time);
         rbMale.setToggleGroup(gender);
         rbFemale.setToggleGroup(gender);
+        lbDarkMode.setText("Light");
         Timenow();
         showOrderMenuDB();
         showOrderMiniDB();
@@ -389,6 +393,17 @@ public class CustomerSceneController implements Initializable {
                 Stage stage = (Stage) spCustomer.getScene().getWindow();
                 stage.close();
                 getSceneEN("/FXMLFile/CustomerScene.fxml", "Customer");
+            }
+        }
+        if (event.getSource() == btnDarkMode) {
+            if (Pattern.matches("Light", lbDarkMode.getText())) {
+                spCustomer.getStylesheets().remove(theme2Url);
+                lbDarkMode.setText("Dark");
+                spCustomer.getStylesheets().add(theme1Url);
+            } else if (Pattern.matches("Dark", lbDarkMode.getText())) {
+                spCustomer.getStylesheets().remove(theme1Url);
+                lbDarkMode.setText("Light");
+                spCustomer.getStylesheets().add(theme2Url);
             }
         }
     }
@@ -543,6 +558,8 @@ public class CustomerSceneController implements Initializable {
     SpinnerValueFactory<String> time = new SpinnerValueFactory.ListSpinnerValueFactory<String>(Time);
     private static final AtomicInteger count = new AtomicInteger(100);
     public volatile boolean stop = false;
+    private String theme1Url = getClass().getResource("/FXMLFile/DarkMode.css").toExternalForm();
+    private String theme2Url = getClass().getResource("/FXMLFile/application.css").toExternalForm();
 
     private void modalBox(String fxmlFile, String Title) throws IOException {
         Stage stage = (Stage) spCustomer.getScene().getWindow();
@@ -1047,7 +1064,7 @@ public class CustomerSceneController implements Initializable {
         colBookDetailPrice.setCellValueFactory(new PropertyValueFactory<BookDetail, Integer>("bookDishPrice"));
         tvBookDetail.setItems(list);
     }
-    
+
     private void totalBook() {
         BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
         String sql = "select SUM(bookDishQuantity* bookDishPrice) as bookTotal from Book where bookID=" + bi.getBookID() + "";
@@ -1065,7 +1082,7 @@ public class CustomerSceneController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     private void handleTypeAction(KeyEvent event) {
     }

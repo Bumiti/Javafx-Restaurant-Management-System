@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.AddProductSceneController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: white;" stylesheets="@../main/application.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.AddProductSceneController">
    <children>
       <Label fx:id="lbTime" visible="false" />
       <Label text="Add Quantity">
@@ -33,7 +33,7 @@
             <TextField fx:id="tfProductPrice" />
          </children>
       </HBox>
-      <Button fx:id="btnProductAdd" mnemonicParsing="false" onAction="#handleButtonAction" text="Add" />
+      <Button id="button3" fx:id="btnProductAdd" mnemonicParsing="false" onAction="#handleButtonAction" text="Add" />
       <Label fx:id="lbStaff" visible="false" />
    </children>
 </VBox>

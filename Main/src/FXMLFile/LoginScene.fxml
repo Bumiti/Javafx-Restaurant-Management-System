@@ -17,14 +17,14 @@
 
 <BorderPane id="Login" fx:id="bpLogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1000.0" stylesheets="@../main/application.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.LoginController">
    <center>
-      <VBox alignment="CENTER" prefHeight="800.0" prefWidth="527.0" BorderPane.alignment="CENTER">
+      <VBox id="background" alignment="CENTER" prefHeight="800.0" prefWidth="527.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <FontAwesomeIconView glyphName="SIGN_IN" size="80" wrappingWidth="95.55000019073486" />
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-border-color: black;" text="User Login" textAlignment="CENTER" wrappingWidth="438.2841796875">
                      <font>
@@ -74,9 +74,28 @@
                   </Button>
                </children>
             </HBox>
-            <HBox id="LoginText" alignment="BOTTOM_CENTER" prefHeight="69.0" prefWidth="500.0" stylesheets="@../main/application.css">
+            <HBox id="LoginText" alignment="TOP_CENTER" prefHeight="69.0" prefWidth="500.0" stylesheets="@../main/application.css">
                <children>
                   <Hyperlink id="hyperlink" fx:id="btnForgotPassword" alignment="CENTER" onMouseClicked="#handleClickAction" prefWidth="173.0" text="Forgot Password ?" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button id="button2" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" stylesheets="@../main/application.css">
+                     <graphic>
+                        <FontAwesomeIconView fill="#fff5e9" glyphName="YOUTUBE_PLAY" selectionFill="BLACK" />
+                     </graphic>
+                  </Button>
+                  <Button id="button2" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="#fff5e9" glyphName="FACEBOOK" selectionFill="BLACK" />
+                     </graphic>
+                  </Button>
+                  <Button id="button2" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="#fff5e9" glyphName="GOOGLE" selectionFill="BLACK" />
+                     </graphic>
+                  </Button>
                </children>
             </HBox>
             <Label fx:id="lbCheck" />
@@ -87,7 +106,7 @@
       </VBox>
    </center>
    <left>
-      <VBox alignment="CENTER" prefHeight="800.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="800.0" prefWidth="500.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="200.0" prefWidth="500.0">
                <children>

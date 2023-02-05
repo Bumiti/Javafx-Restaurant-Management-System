@@ -12,19 +12,23 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="bpSignUp" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.SignUpController">
+<BorderPane id="background" fx:id="bpSignUp" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="900.0" stylesheets="@../main/application.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLFile.SignUpController">
    <top>
-      <HBox id="header" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" stylesheets="@../main/application.css" BorderPane.alignment="CENTER">
+      <HBox id="background" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" stylesheets="@../main/application.css" BorderPane.alignment="CENTER">
          <children>
-            <FontAwesomeIconView glyphName="USER_CIRCLE" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" />
+            <FontAwesomeIconView glyphName="USER_CIRCLE" size="30" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font></Text>
          </children>
       </HBox>
    </top>
    <center>
-      <VBox id="Forgotpassword" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../main/application.css" BorderPane.alignment="TOP_LEFT">
+      <VBox id="background" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../main/application.css" BorderPane.alignment="TOP_LEFT">
          <children>
             <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
                <children>
@@ -41,7 +45,7 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+            <HBox id="background" alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
                <children>
                   <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
                      <children>
@@ -186,23 +190,24 @@
             </HBox>
             <HBox id="buto" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="150.0" stylesheets="@../main/application.css">
                <children>
-                  <Button id="button" fx:id="btnAccountCreate" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Sign Up" />
-                  <Button id="button" fx:id="btnAccountClear" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Reset" />
-                  <Button id="button" fx:id="btnAccountClose" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Close" />
+                  <Button id="button1" fx:id="btnAccountCreate" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Sign Up" />
+                  <Button id="button1" fx:id="btnAccountClear" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Reset" />
+                  <Button id="button1" fx:id="btnAccountClose" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Close" />
                </children>
             </HBox>
          </children>
       </VBox>
    </center>
    <left>
-      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="284.0" spacing="40.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imgCustomer" fitHeight="150.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="btnImageBrowser" mnemonicParsing="false" onMouseClicked="#handleButtonAction" text="Choose Image" />
+            <VBox id="background" alignment="CENTER" prefHeight="600.0" prefWidth="284.0" spacing="40.0">
+               <children>
+                  <ImageView fx:id="imgCustomer" fitHeight="150.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button id="button1" fx:id="btnImageBrowser" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Choose Image" />
+               </children>
+            </VBox>
          </children>
-         <BorderPane.margin>
-            <Insets top="100.0" />
-         </BorderPane.margin>
       </VBox>
    </left>
 </BorderPane>
