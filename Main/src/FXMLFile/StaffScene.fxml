@@ -208,7 +208,7 @@
                               <TextArea fx:id="taBillNote" prefHeight="200.0" prefWidth="200.0" />
                               <Button id="button3" fx:id="btnBillClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnBillGet" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Get" />
-                              <Button id="button3" fx:id="btnBillPrint" mnemonicParsing="false" onAction="#showInvoice2" text="PrintBill" />
+                              <Button id="button3" fx:id="btnBillPrint" mnemonicParsing="false" onAction="#showInvoice3" text="PrintBill" />
                               <Button id="button3" fx:id="btnBillCheckOut" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Check Out" />
                            </children>
                         </VBox>

@@ -266,6 +266,8 @@ public class CustomerSceneController implements Initializable {
     private Button btnHistory;
     @FXML
     private Label lbDarkMode;
+    @FXML
+    private Label lbBackground;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -280,6 +282,7 @@ public class CustomerSceneController implements Initializable {
         rbMale.setToggleGroup(gender);
         rbFemale.setToggleGroup(gender);
         lbDarkMode.setText("Light");
+        lbBackground.setText("1");
         Timenow();
         showOrderMenuDB();
         showOrderMiniDB();
@@ -375,14 +378,10 @@ public class CustomerSceneController implements Initializable {
             showBookInfoDB();
         }
         if (event.getSource() == btnLeft) {
-            img1.setVisible(false);
-            img2.setVisible(true);
-            img3.setVisible(false);
+            left();
         }
         if (event.getSource() == btnRight) {
-            img1.setVisible(false);
-            img2.setVisible(false);
-            img3.setVisible(true);
+            right();
         }
         if (event.getSource() == btnLanguage) {
             if (Pattern.matches("Welcome", lbChangeCheck.getText())) {
@@ -560,6 +559,50 @@ public class CustomerSceneController implements Initializable {
     public volatile boolean stop = false;
     private String theme1Url = getClass().getResource("/FXMLFile/DarkMode.css").toExternalForm();
     private String theme2Url = getClass().getResource("/FXMLFile/application.css").toExternalForm();
+
+    private void right() {
+        if (Pattern.matches("4", lbBackground.getText())) {
+            img1.setVisible(false);
+            img2.setVisible(false);
+            img3.setVisible(true);
+            img4.setVisible(false);
+            lbBackground.setText("3");
+        } else if (Pattern.matches("3", lbBackground.getText())) {
+            img1.setVisible(false);
+            img2.setVisible(true);
+            img3.setVisible(false);
+            img4.setVisible(false);
+            lbBackground.setText("2");
+        } else if (Pattern.matches("2", lbBackground.getText())) {
+            img1.setVisible(true);
+            img2.setVisible(false);
+            img3.setVisible(false);
+            img4.setVisible(false);
+            lbBackground.setText("1");
+        }
+    }
+
+    private void left() {
+        if (Pattern.matches("1", lbBackground.getText())) {
+            img1.setVisible(false);
+            img2.setVisible(true);
+            img3.setVisible(false);
+            img4.setVisible(false);
+            lbBackground.setText("2");
+        } else if (Pattern.matches("2", lbBackground.getText())) {
+            img1.setVisible(false);
+            img2.setVisible(false);
+            img3.setVisible(true);
+            img4.setVisible(false);
+            lbBackground.setText("3");
+        } else if (Pattern.matches("3", lbBackground.getText())) {
+            img1.setVisible(false);
+            img2.setVisible(false);
+            img3.setVisible(false);
+            img4.setVisible(true);
+            lbBackground.setText("4");
+        }
+    }
 
     private void modalBox(String fxmlFile, String Title) throws IOException {
         Stage stage = (Stage) spCustomer.getScene().getWindow();

@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -83,8 +84,10 @@ import jdbcDAO.*;
 import main.Main;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -608,8 +611,6 @@ public class StaffSceneController implements Initializable {
     private Button btnReceiptClear;
     @FXML
     private Button btnPaymentClear;
-    @FXML
-    private TextArea taSendTable;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -1559,27 +1560,39 @@ public class StaffSceneController implements Initializable {
         Process p = rt.exec("notepad " + file);
     }
 
-    @FXML
     public void showInvoice2() throws JRException {
         Connection con = getConnect();
 
-        PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
-        JasperDesign jasperDesign = JRXmlLoader.load("D:\\Invoice5.jrxml");
+        //PropertyConfigurator.configure(getClass().getResource("log4j.properties"));
+        JasperDesign jasperDesign = JRXmlLoader.load("D:\\Aptech\\HK2\\3. JP-2\\3. JP-2\\ProjectII\\GithubPro\\Javafx-Restaurant-Management-System\\Main\\src\\report\\Invoice6.jrxml");
         //String query = "select dishName,dishPrice,dishQuantity, dishPrice*dishQuantity  as dishAmount from [Order];";
         //JRDesignQuery jrquery = new JRDesignQuery();
         //jrquery.setText(query);
         //jasperDesign.setQuery(jrquery);
-
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint JasperPrint = JasperFillManager.fillReport(jasperReport, null, con);
         JasperViewer viewer = new JasperViewer(JasperPrint, false);
         viewer.setTitle("Invoice");
         viewer.show();
-
     }
 
-    private void tableInvoice() {
+    @FXML
+    private void showInvoice3() throws JRException {
+        Connection con = getConnect();
 
+        // Compile the report design
+        JasperReport jasperReport = JasperCompileManager.compileReport("D:\\Invoice6.jrxml");
+
+// Fill the report with data
+        Map<String, Object> parameters = new HashMap<>();
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, con);
+
+// Preview the report
+        JasperViewer.viewReport(jasperPrint, false);
+
+// Print the report
+        JasperPrintManager.printReport(jasperPrint, true);
+        JasperExportManager.exportReportToPdfFile(jasperPrint, "report.pdf");
     }
 
     private void log(String mess) {
@@ -3065,5 +3078,4 @@ public class StaffSceneController implements Initializable {
 //            pr.showInvoice();
 //        }
 //    }
-
 }

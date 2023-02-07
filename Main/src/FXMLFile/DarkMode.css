@@ -1,4 +1,4 @@
-.root { 
+.root {
     -fx-accent: #1e74c6;
     -fx-focus-color: -fx-accent;
     -fx-base: #373e43;
@@ -27,7 +27,7 @@
     -fx-text-fill: #3C3C3C;
 }
 
-.separator *.line { 
+.separator *.line {
     -fx-background-color: #3C3C3C;
     -fx-border-style: solid;
     -fx-border-width: 1px;
@@ -39,7 +39,7 @@
 
 .button:default {
     -fx-base: -fx-accent ;
-} 
+}
 
 .table-view{
     /*-fx-background-color: derive(-fx-base, 10%);*/
@@ -54,7 +54,7 @@
 .list-cell:even,
 .list-cell:odd,
 .table-row-cell:even,
-.table-row-cell:odd{    
+.table-row-cell:odd{
     -fx-control-inner-background: derive(-fx-base, 15%);
 }
 
@@ -68,5 +68,272 @@
     -fx-border-color: transparent;
     -fx-table-cell-border-color:transparent;
 }
+
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Dec 18, 2022, 6:54:54 PM
+    Author     : HP
+
+*/
+#background{
+    -fx-background-color: derive(-fx-base, 35%);
+}
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-body-color: #f5f525;
+}
+
+.spinner .increment-arrow-button:hover,
+
+.spinner .increment-arrow-button:hover:pressed,
+.spinner .decrement-arrow-button:hover:pressed,
+.spinner .increment-arrow-button:pressed,
+
+.text-field {
+    -fx-background-color: #3c3022 , derive(-fx-base, 35%) , derive(-fx-base, 35%);
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}
+.spinner{
+    -fx-text-fill: white;
+}
+.hbox{
+    -fx-background-color: derive(-fx-base, 35%);
+}
+.text-field:focused {
+    -fx-background-color: #3c3022 , derive(-fx-base, 35%) , derive(-fx-base, 35%);
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}
+
+.border-pane{
+    -fx-background-color: derive(-fx-base, 35%);
+}
+#header{
+    -fx-font-family: Times New Roman;
+    -fx-text-fill: #3c3022;
+    -fx-font-size: 40px;
+    -fx-background-color: #f2fafa;
+}
+#Login{
+    -fx-font-family: Times New Roman;
+    -fx-text-fill: #3c3022;
+    -fx-font-size: 20px;
+    -fx-font-color: #3c3022;
+    -fx-text-alignment: center;
+}
+#LoginText{
+    -fx-font-color: black;
+
+}
+#button1{
+    -fx-background-color: black;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 10px;
+    -fx-pref-width: 94px;
+    -fx-pref-height: 38px;
+    -fx-text-fill: white;
+
+}
+
+#button1:hover {
+    -fx-background-color: #f5f525;
+    -fx-text-fill:white;
+
+}
+#button2{
+    -fx-background-color: black;
+    -fx-text-fill: black;
+    -fx-background-radius: 10px;
+    -fx-font-size: 16px;
+    -fx-font-weight: Bold;
+    -fx-text-fill:white;
+}
+
+#button2:hover {
+    -fx-background-color: #f5f525;
+    -fx-text-fill:white;
+
+}
+#button3{
+    -fx-background-color: black;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 10px;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 38px;
+    -fx-text-fill:white;
+
+}
+
+#button3:hover {
+    -fx-background-color: #f5f525;
+    -fx-text-fill:white;
+
+}
+.combo-box .list-cell
+{
+
+
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 3 0 2 7;
+    -fx-cell-size: 1.66667em;
+
+}
+
+.combo-box-popup .list-view
+{
+
+    -fx-background-color: #b0def3;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 8, 0.0 , 0 , 0 );
+}
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover
+{
+
+    -fx-background: -fx-accent;
+    -fx-background-color: #ea9700;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover
+{
+
+    -fx-background-color: #ea9700;
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.combo-box-base
+{
+    -fx-border-radius: 0.0 45.0 0.0 0.0 ;
+    -fx-background-color: derive(-fx-base, 35%), derive(-fx-base, 35%), derive(-fx-base, 35%), derive(-fx-base, 35%);
+
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-padding: 0;
+}
+
+.combo-box-base:hover
+{
+    -fx-color: -fx-hover-base;
+}
+
+.combo-box-base:showing
+{
+    -fx-color: -fx-pressed-base;
+}
+
+.combo-box-base:focused {
+    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: -1.4, 0, 1, 2;
+}
+
+.combo-box-base:disabled {
+    -fx-opacity: .4;
+}
+#hyperlink{
+    -fx-text-fill: black;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-border-color: black;
+
+}
+#Forgotpassword{
+    -fx-font-family: Times New Roman;
+    -fx-text-fill: black;
+    -fx-font-size: 15px;
+    -fx-background-color: #f2fafa;
+}
+
+
+.table-view .column-header,
+.table-view .column-header-background .filter{
+    -fx-cell-size: 20px;
+    -fx-background-color:  derive(-fx-base, 35%);
+    -fx-alignment: center;
+
+}
+.table-view .column-header .label{
+    -fx-text-fill: black;
+    -fx-alignment: center;
+}
+.table-view .cell{
+    -fx-alignment: CENTER;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    /*-fx-opacity: 0.0;*/
+    /*-fx-background-color:linear-gradient(#38424b 0.0%, #1f2429 20.0%, #191d22 100.0%);  */
+    -fx-background-color: #f2fafa;
+}
+
+.tab-pane{
+    -fx-tab-min-width:69px;
+}
+
+
+.tab-pane .tab{
+    -fx-background-color: black;
+    -fx-background-radius: 10.0 45.0 0.0 0.0 ;
+    -fx-border-color:transparent transparent transparent transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-cursor:hand;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+.tab-pane .tab:selected{
+    -fx-background-color: black;
+}
+
+.tab-pane .tab:selected:hover{
+    -fx-background-color: #f5f525;
+}
+
+.tab-pane .tab:hover{
+    -fx-background-color:#f5f525;
+}
+
+
+.tab-pane .tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: black;
+    -fx-font-size: 13.0px; /* before it was 12px */
+    -fx-wrap-text: true;
+
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill:white; /* before it was BROWN */
+    /*-fx-font-size:130.0%;*/
+}
+
+.tab-pane .tab:hover .tab-label{
+    -fx-text-fill:white;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0 0.0 0.0 0.0;
+}
+.tab-pane .table-view{
+    -fx-column-resize-policy: constrained-resize;
+    -fx-border-color: derive(-fx-base, 35%);
+}
+
+.date-picker:editable > .arrow-button > * {
+    -fx-opacity: 1; /* Set the node in the button to be visible */
+}
+
+.date-picker > .arrow-button {
+    -fx-background-color: #f2fafa;
+    -fx-background-size: 60% 60%; /* Can be `cover` or `100% 100%` ect. */
+    -fx-background-position: center center; /* Put the icon in the center */
+
+}
+
+.label{
+    -fx-font-weight: bold;
+}
+
+
+
+
 
 

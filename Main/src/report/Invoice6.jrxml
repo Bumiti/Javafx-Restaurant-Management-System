@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4a1473dd-c8dd-416c-8cf9-020a3efd82ad">
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<queryString language="SQL">
+		<![CDATA[select dishName,dishPrice,dishQuantity, dishPrice*dishQuantity  as dishAmount from [Order]]]>
+	</queryString>
+	<field name="dishName" class="java.lang.String"/>
+	<field name="dishPrice" class="java.lang.Integer"/>
+	<field name="dishQuantity" class="java.lang.Integer"/>
+	<field name="dishAmount" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="136" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="164" height="126" uuid="9b52b564-6b51-4207-b54c-9c914044ad54"/>
+				<imageExpression><![CDATA["coffee.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="170" y="0" width="263" height="62" uuid="32dd965a-cb88-47c5-9d8e-ef3dcebee6cb"/>
+				<textElement verticalAlignment="Middle">
+					<font pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Coffee Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="219" y="62" width="196" height="22" uuid="2911944b-093f-4c63-89ec-ec488e2556c4"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Coffee SubTitle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="172" y="94" width="383" height="42" uuid="2fd0df0d-a122-4ae0-8906-16dcbbfb327e"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor purus gravida arcu aliquam mattis. Donec et nulla libero, ut varius massa. Nulla sed turpis elit. Etiam aliquet mauris a ligula hendrerit in auctor leo lobortis.]]></text>
+			</staticText>
+			<image>
+				<reportElement x="433" y="-115" width="267" height="209" uuid="b9d6e3a4-0644-4cdf-9788-c65a5863382f"/>
+				<imageExpression><![CDATA["coffee_stain.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="bc261b0a-2f53-42a1-be11-cfddba78643f"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="138" height="15" forecolor="#736343" uuid="2e776231-f7c5-44d0-bf29-b05cd02a1662"/>
+				<text><![CDATA[dishName]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="138" y="0" width="138" height="15" forecolor="#736343" uuid="9b8392ad-659f-4db5-850c-ccdd4082bc29"/>
+				<text><![CDATA[dishPrice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="0" width="138" height="15" forecolor="#736343" uuid="7bfbf2ed-dc8f-4626-9409-7fa2bef93410"/>
+				<text><![CDATA[dishQuantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="414" y="0" width="138" height="15" forecolor="#736343" uuid="91878e79-0896-45c2-8c5b-9d2caf1bf8bd"/>
+				<text><![CDATA[dishAmount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="f9e61317-c818-43af-a2b1-11fa74f22487"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="0" y="0" width="138" height="15" uuid="e7511486-7a74-4733-a50e-bd9392892bc7"/>
+					<textFieldExpression><![CDATA[$F{dishName}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="138" y="0" width="138" height="15" uuid="a537767f-55bb-4ab2-9360-e16fcc78f64f"/>
+					<textFieldExpression><![CDATA[$F{dishPrice}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="276" y="0" width="138" height="15" uuid="da8672ff-f710-4434-87d4-ed724427b259"/>
+					<textFieldExpression><![CDATA[$F{dishQuantity}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="414" y="0" width="138" height="15" uuid="e45a224d-59e5-4f15-92d5-8f5f7443d79c"/>
+					<textFieldExpression><![CDATA[$F{dishAmount}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="f28afbde-3009-47c1-a802-240f80d727cc"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="a0c1c0cb-651f-458e-a855-9cc06c05871b"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="8e868471-fe84-4c94-8a10-93e25966a633"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="ea9a7c93-56c0-4ddb-acae-59c6e0c3cfe6"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="a6a92f6b-e4ee-4515-8642-9f848ee3c2a8"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
