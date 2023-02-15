@@ -15,14 +15,12 @@ public class AccountDB {
     private String accountUserName;
     private String accountPassWord;
     private String accountRole;
-    private String accountFullname;
 
-    public AccountDB(int accountID, String accountUserName, String accountPassWord, String accountRole, String accountFullname) {
+    public AccountDB(int accountID, String accountUserName, String accountPassWord, String accountRole) {
         this.accountID = accountID;
         this.accountUserName = accountUserName;
         this.accountPassWord = accountPassWord;
         this.accountRole = accountRole;
-        this.accountFullname = accountFullname;
     }
 
     public int getAccountID() {
@@ -40,10 +38,11 @@ public class AccountDB {
     public String getAccountRole() {
         return accountRole;
     }
+    
 
-    public String getAccountFullname() {
-        return accountFullname;
-    }
+    
+
+    
 
     
 

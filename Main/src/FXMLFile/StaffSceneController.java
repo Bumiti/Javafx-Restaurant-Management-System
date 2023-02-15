@@ -6,6 +6,7 @@ package FXMLFile;
 
 import report.InvoiceDB;
 import static FXMLFile.LoginController.getConnect;
+import static FXMLFile.SignUpController.getConnect;
 import com.gluonhq.charm.glisten.control.TextField;
 import java.awt.Desktop;
 import java.io.File;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.security.Timestamp;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,9 +25,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,6 +69,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -71,6 +79,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -78,6 +87,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import jdbcDAO.*;
@@ -151,7 +162,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private TableColumn<StaffDB, String> colStaffName;
     @FXML
-    private TableColumn<StaffDB, LocalDate> colStaffDOB;
+    private TableColumn<StaffDB, Date> colStaffDOB;
     @FXML
     private TableColumn<StaffDB, String> colStaffAddress;
     @FXML
@@ -181,8 +192,6 @@ public class StaffSceneController implements Initializable {
     @FXML
     private TableColumn<AccountDB, String> colAccountRole;
     @FXML
-    private TableColumn<AccountDB, String> colAccountFullname;
-    @FXML
     private Label lbAccountID;
     @FXML
     private javafx.scene.control.TextField tfAccountUsername;
@@ -190,8 +199,6 @@ public class StaffSceneController implements Initializable {
     private javafx.scene.control.TextField tfAccountPassword;
     @FXML
     private ComboBox<String> cbAccountRole;
-    @FXML
-    private javafx.scene.control.TextField tfAccountFullname;
     @FXML
     private Label lbStaffID;
     @FXML
@@ -518,8 +525,6 @@ public class StaffSceneController implements Initializable {
     @FXML
     private TextArea taBillNote;
     @FXML
-    private Button btnBillPrint;
-    @FXML
     private Button btnBillCheckOut;
     @FXML
     private Label lbTotalReceipt;
@@ -611,6 +616,46 @@ public class StaffSceneController implements Initializable {
     private Button btnReceiptClear;
     @FXML
     private Button btnPaymentClear;
+    @FXML
+    private Label lbCheck;
+    @FXML
+    private Label lbStaffCheck;
+    @FXML
+    private Label lbCusCheck;
+    @FXML
+    private TableColumn<StaffDB, String> colStaffUserName;
+    @FXML
+    private javafx.scene.control.TextField tfStaffUsername;
+    @FXML
+    private TableColumn<CustomerDB, String> colCustomerUserName;
+    @FXML
+    private javafx.scene.control.TextField tfCustomerUserName;
+    private ComboBox<String> cbStaffUsername;
+    private ComboBox<String> cbCustomerUserName;
+    @FXML
+    private Label lbDishNameCheck;
+    @FXML
+    private Label lbInventoryCheck;
+    @FXML
+    private Button btnInventoryRemove;
+    @FXML
+    private Label lbCodeCheck;
+    @FXML
+    private Label lbBookID;
+    @FXML
+    private DatePicker dpBookDate;
+    @FXML
+    private javafx.scene.control.TextField tfBookCusName;
+    @FXML
+    private ComboBox<String> cbBookCatalogies;
+    @FXML
+    private TextArea taBookNote;
+    @FXML
+    private Button btnUpdateBook;
+    @FXML
+    private Spinner<String> snBookTime;
+    @FXML
+    private Button btnEditBook;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -683,12 +728,14 @@ public class StaffSceneController implements Initializable {
                 alert("Please fill Staff mail in right form");
             } else if (!Pattern.matches("\\d{1,}", tfStaffSalary.getText())) {
                 alert("Please fill Staff salary");
+            } else if (!Pattern.matches("\\w{1,}", tfStaffUsername.getText())) {
+                alert("Please fill Staff Username");
             } else if (imgStaffImage.getImage() == null) {
                 alert("Please Choose image");
             } else {
                 if (alertConFirm("Are you want to create new staff?") == true) {
                     insertStaff();
-                    insert("insert into Chi values(1,'" + lbTime.getText() + "','Salary' , " + tfStaffSalary.getText() + ",'Salary for " + tfStaffName.getText() + "," + lbUser.getText() + " have edit')");
+                    insert("insert into Chi values(1,N'" + lbTime.getText() + "','Salary' , " + tfStaffSalary.getText() + ",'Salary for " + tfStaffName.getText() + "," + lbUser.getText() + " have edit')");
                     clearStaff();
                     log("" + lbUser.getText() + " have create new staff!");
                     showLogDB();
@@ -712,12 +759,15 @@ public class StaffSceneController implements Initializable {
                 alert("Please fill Staff mail in right form");
             } else if (!Pattern.matches("\\d{1,}", tfStaffSalary.getText())) {
                 alert("Please fill Staff salary");
+            } else if (!Pattern.matches("\\w{1,}", tfStaffUsername.getText())) {
+                alert("Please fill Staff Username");
             } else if (imgStaffImage.getImage() == null) {
                 alert("Please Choose image");
             } else {
                 if (alertConFirm("Are you want to update staff?") == true) {
                     updateStaff();
                     update("update Chi set chiPrice=" + tfStaffSalary.getText() + " where chiNote like 'Salary for " + tfStaffName.getText() + "%'");
+                    update("update Account set accountPhone=N'" + tfStaffPhone.getText() + "',accountMail=N'" + tfStaffMail.getText() + "' where accountPhone=N'" + tfStaffPhone.getText() + "'");
                     clearStaff();
                     log("" + lbUser.getText() + " have update staff!");
                     showLogDB();
@@ -747,15 +797,17 @@ public class StaffSceneController implements Initializable {
         if (event.getSource() == btnAccountCreate) {
             if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountUsername.getText())) {
                 alert("Please fill Account username");
-            } else if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountPassword.getText())) {
-                alert("Please fill Account password");
+            } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfAccountPassword.getText())) {
+                alert("Password must contain at least one digit [0-9].\n"
+                        + "Password must contain at least one lowercase Latin character [a-z].\n"
+                        + "Password must contain at least one uppercase Latin character [A-Z].\n"
+                        + "Password must contain at least one special character like ! @ # & ( ).\n"
+                        + "Password must contain a length of at least 8 characters and a maximum of 20 characters.");
             } else if (cbAccountRole.getValue() == null) {
                 alert("Please fill Account role");
-            } else if (!Pattern.matches("\\w{1,}", tfAccountFullname.getText())) {
-                alert("Please fill Account fullname");
             } else {
                 if (alertConFirm("Are you want to create new account?") == true) {
-                    insert("insert into Account values ('" + tfAccountUsername.getText() + "','" + tfAccountPassword.getText() + "','" + cbAccountRole.getValue() + "','" + tfAccountFullname.getText() + "')");
+                    insert("insert into Account values (N'" + tfAccountUsername.getText() + "',N'" + tfAccountPassword.getText() + "',N'" + cbAccountRole.getValue() + "')");
                     showAccountDB();
                     clearAccount();
                     log("" + lbUser.getText() + " have create new account!");
@@ -767,15 +819,17 @@ public class StaffSceneController implements Initializable {
         if (event.getSource() == btnAccountUpdate) {
             if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountUsername.getText())) {
                 alert("Please fill Account username");
-            } else if (!Pattern.matches("\\w{1,}|\\d{1,}", tfAccountPassword.getText())) {
-                alert("Please fill Account password");
+            } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfAccountPassword.getText())) {
+                alert("Password must contain at least one digit [0-9].\n"
+                        + "Password must contain at least one lowercase Latin character [a-z].\n"
+                        + "Password must contain at least one uppercase Latin character [A-Z].\n"
+                        + "Password must contain at least one special character like ! @ # & ( ).\n"
+                        + "Password must contain a length of at least 8 characters and a maximum of 20 characters.");
             } else if (cbAccountRole.getValue() == null) {
                 alert("Please fill Account role");
-            } else if (!Pattern.matches("\\w{1,}", tfAccountFullname.getText())) {
-                alert("Please fill Account fullname");
             } else {
                 if (alertConFirm("Are you want to update account?") == true) {
-                    update("update Account set accountUserName='" + tfAccountUsername.getText() + "',accountPassWord=" + tfAccountPassword.getText() + ",accountRole='" + cbAccountRole.getValue() + "',accountFullname='" + tfAccountFullname.getText() + "' where accountID=" + Integer.valueOf(lbAccountID.getText()) + "");
+                    update("update Account set accountUserName=N'" + tfAccountUsername.getText() + "',accountPassWord=" + tfAccountPassword.getText() + ",accountRole=N'" + cbAccountRole.getValue() + "' where accountID=" + Integer.valueOf(lbAccountID.getText()) + "");
                     showAccountDB();
                     clearAccount();
                     log("" + lbUser.getText() + " have update account!");
@@ -811,7 +865,7 @@ public class StaffSceneController implements Initializable {
                 alert("Code is exits");
             } else {
                 if (alertConFirm("Are you want to create new code?") == true) {
-                    insert("insert into codeDiscount values (1,'" + tfCodeValue.getText().toUpperCase() + "'," + tfCodeQuantity.getText() + "," + tfCodeDiscountPercent.getText() + ")");
+                    insert("insert into codeDiscount values (1,N'" + tfCodeValue.getText().toUpperCase() + "'," + tfCodeQuantity.getText() + "," + tfCodeDiscountPercent.getText() + ")");
                     showCodeDB();
                     clearCode();
                     log("" + lbUser.getText() + " have create new code!");
@@ -905,6 +959,7 @@ public class StaffSceneController implements Initializable {
             if (textDialog("Confirm", "Reason", "" + lbUser.getText() + " have delete " + i.getProductName() + " product for ") == true) {
                 deleteInventory();
                 clearInventory();
+                update("update Menu set dishStatus='Unavailable' where dishIngredient = N'" + i.getProductName() + "')");
                 showOrderMenuDB();
                 showLogDB();
                 alertSuccess("Delete Successfully!");
@@ -985,7 +1040,7 @@ public class StaffSceneController implements Initializable {
             clearCustomer();
         }
         if (event.getSource() == btnCustomerCreate) {
-            if (!Pattern.matches("\\w{1,}", tfCustomerName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfCustomerName.getText())) {
                 alert("Please fill Customer name");
             } else if (tfCustomerDOB.getValue() == null) {
                 alert("Please fill Customer DOB in right form");
@@ -997,6 +1052,8 @@ public class StaffSceneController implements Initializable {
                 alert("Please fill Customer mail in right form");
             } else if (cbCustomerGender.getValue() == null) {
                 alert("Please fill choose Customer gender");
+            } else if (!Pattern.matches("\\w{1,}", tfCustomerUserName.getText())) {
+                alert("Please fill Customer Username");
             } else if (imgCustomer.getImage() == null) {
                 alert("Please Choose image");
             } else {
@@ -1010,7 +1067,7 @@ public class StaffSceneController implements Initializable {
             }
         }
         if (event.getSource() == btnCustomerUpdate) {
-            if (!Pattern.matches("\\w{1,}", tfCustomerName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfCustomerName.getText())) {
                 alert("Please fill Customer name");
             } else if (tfCustomerDOB.getValue() == null) {
                 alert("Please fill Customer DOB in right form");
@@ -1022,11 +1079,14 @@ public class StaffSceneController implements Initializable {
                 alert("Please fill Customer mail in right form");
             } else if (cbCustomerGender.getValue() == null) {
                 alert("Please fill choose Customer gender");
+            } else if (!Pattern.matches("\\w{1,}", tfCustomerUserName.getText())) {
+                alert("Please fill Customer Username");
             } else if (imgCustomer.getImage() == null) {
                 alert("Please Choose image");
             } else {
                 if (alertConFirm("Are you want to update customer?") == true) {
                     updateCustomer();
+                    update("update Account set accountPhone=N'" + tfCustomerPhone.getText() + "',accountMail=N'" + tfCustomerMail.getText() + "' where accountPhone=N'" + tfCustomerPhone.getText() + "'");
                     clearCustomer();
                     log("" + lbUser.getText() + " have update customer!");
                     showLogDB();
@@ -1082,11 +1142,11 @@ public class StaffSceneController implements Initializable {
         if (event.getSource() == btnOrderMenuAdd) {
             OrderMenuDB om = tvOrderMenu.getSelectionModel().getSelectedItem();
             if (om.getMenuDishAvailabe() == snOrderDishQuantity.getValue()) {
-                update("update Menu set dishStatus='Unavailable' where dishName ='" + om.getMenuDishName() + "'");
+                update("update Menu set dishStatus='Unavailable' where dishIngredient = (select dishIngredient from Menu where dishName=N'" + om.getMenuDishName() + "')");
             }
             lbOrderDishName.setText(om.getMenuDishName());
             addToOderList();
-            insert("update Inventory set productQOH-=(select a.dishConsume*" + snOrderDishQuantity.getValue() + " as ingredientDown from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getMenuDishName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getMenuDishName() + "')");
+            insert("update Inventory set productQOH-=(select a.dishConsume*" + snOrderDishQuantity.getValue() + " as ingredientDown from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName=N'" + om.getMenuDishName() + "') where productName=(select dishIngredient from Menu  where dishName=N'" + om.getMenuDishName() + "')");
             showOrderMiniDB();
             showMenuDB();
             showOrderMenuDB();
@@ -1100,7 +1160,7 @@ public class StaffSceneController implements Initializable {
             } else {
                 if (alertConFirm("Are you want to send order?") == true) {
                     lbOrderID.setText("" + count.getAndIncrement());
-                    insert("insert into [Order](brandID,orderID,orderTime,dishCatalogies,orderNote,dishName,dishPrice,dishQuantity) select 1," + lbOrderID.getText() + ",'" + lbTime.getText() + "','" + cbOrderCatalogies.getValue() + "' ,'" + taOrderNote.getText() + "',OrderMini.dishName,OrderMini.dishPrice,OrderMini.dishQuantity from [OrderMini]");
+                    insert("insert into [Order](brandID,orderID,orderTime,dishCatalogies,orderNote,dishName,dishPrice,dishQuantity) select 1," + lbOrderID.getText() + ",N'" + lbTime.getText() + "',N'" + cbOrderCatalogies.getValue() + "' ,N'" + taOrderNote.getText() + "',OrderMini.dishName,OrderMini.dishPrice,OrderMini.dishQuantity from [OrderMini]");
                     delete("delete from [OrderMini]");
                     cbOrderCatalogies.setValue(null);
                     taOrderNote.clear();
@@ -1121,13 +1181,14 @@ public class StaffSceneController implements Initializable {
                 if (alertConFirm("Are you want to send order?") == true) {
                     BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
                     lbOrderID.setText("" + count.getAndIncrement());
-                    insert("insert into [Order](brandID,orderID,orderTime,dishCatalogies,orderNote,dishName,dishPrice,dishQuantity) select 1," + bi.getBookID() + ",'" + lbTime.getText() + "','" + cbSendTable.getValue() + "' ,'" + bi.getBookNote() + "',Book.bookDishName,Book.bookDishPrice,Book.bookDishQuantity from [Book]");
+                    insert("insert into [Order](brandID,orderID,orderTime,dishCatalogies,orderNote,dishName,dishPrice,dishQuantity) select 1," + bi.getBookID() + ",N'" + lbTime.getText() + "',N'" + cbSendTable.getValue() + "' ,N'" + bi.getBookNote() + "',Book.bookDishName,Book.bookDishPrice,Book.bookDishQuantity from [Book] where Book.bookCustomerName='" + bi.getBookCustomerName() + "' and Book.bookID=" + bi.getBookID() + "");
                     delete("delete from [Book] where bookID=" + bi.getBookID() + "");
                     cbSendTable.setValue(null);
                     showOrderListDB();
                     showBookInfoDB();
                     tvBookDetail.getItems().clear();
                     getTable();
+                    bookCount();
                     lbBookTotal.setText(null);
                     log("" + lbUser.getText() + " have send order!");
                     showLogDB();
@@ -1148,17 +1209,17 @@ public class StaffSceneController implements Initializable {
             OrderListMini om = tvOderListMini.getSelectionModel().getSelectedItem();
             lbOrderMiniDishName.setText(om.getOrderMiniName());
             if (om.getOrderMiniQuantity() != 1) {
-                update("update [OrderMini] set dishQuantity-=1 where dishName='" + om.getOrderMiniName() + "'");
-                insert("update Inventory set productQOH+=(select a.dishConsume*1 as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getOrderMiniName() + "')");
-                update("update Menu set dishStatus='Available' where dishName ='" + om.getOrderMiniName() + "'");
+                update("update [OrderMini] set dishQuantity-=1 where dishName=N'" + om.getOrderMiniName() + "'");
+                insert("update Inventory set productQOH+=(select a.dishConsume*1 as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName=N'" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName=N'" + om.getOrderMiniName() + "')");
+                update("update Menu set dishStatus='Available' where dishIngredient = (select dishIngredient from Menu where dishName=N'" + om.getOrderMiniName() + "')");
                 showOrderMiniDB();
                 showOrderMenuDB();
                 showMenuDB();
                 showInventoryDB();
             } else {
-                insert("update Inventory set productQOH+=(select a.dishConsume*1 as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getOrderMiniName() + "')");
-                delete("delete from [OrderMini] where dishName='" + om.getOrderMiniName() + "'");
-                update("update Menu set dishStatus='Available' where dishName ='" + om.getOrderMiniName() + "'");
+                insert("update Inventory set productQOH+=(select a.dishConsume*1 as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName=N'" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName=N'" + om.getOrderMiniName() + "')");
+                delete("delete from [OrderMini] where dishName=N'" + om.getOrderMiniName() + "'");
+                update("update Menu set dishStatus='Available' where dishIngredient = (select dishIngredient from Menu where dishName=N'" + om.getOrderMiniName() + "')");
                 showOrderMiniDB();
                 showOrderMenuDB();
                 showMenuDB();
@@ -1170,9 +1231,9 @@ public class StaffSceneController implements Initializable {
             if (alertConFirm("Are you want to delete order?") == true) {
                 OrderListMini om = tvOderListMini.getSelectionModel().getSelectedItem();
                 lbOrderMiniDishName.setText(om.getOrderMiniName());
-                insert("update Inventory set productQOH+=(select a.dishConsume*" + om.getOrderMiniQuantity() + " as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName='" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName='" + om.getOrderMiniName() + "')");
-                delete("delete from [OrderMini] where dishName='" + om.getOrderMiniName() + "'");
-                update("update Menu set dishStatus='Available' where dishName ='" + om.getOrderMiniName() + "'");
+                insert("update Inventory set productQOH+=(select a.dishConsume*" + om.getOrderMiniQuantity() + " as ingredientUp from Menu a join OrderMini b on a.dishName =b.dishName where b.dishName=N'" + om.getOrderMiniName() + "') where productName=(select dishIngredient from Menu  where dishName=N'" + om.getOrderMiniName() + "')");
+                delete("delete from [OrderMini] where dishName=N'" + om.getOrderMiniName() + "'");
+                update("update Menu set dishStatus='Available' where dishIngredient = (select dishIngredient from Menu where dishName=N'" + om.getOrderMiniName() + "')");
                 showOrderMiniDB();
                 showMenuDB();
                 showOrderMenuDB();
@@ -1184,7 +1245,7 @@ public class StaffSceneController implements Initializable {
         }
         if (event.getSource() == btnGetBookDetail) {
             BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
-            showBookDetailDB(bi.getBookID());
+            showBookDetailDB(bi.getBookCustomerName(), bi.getBookID());
             totalBook();
         }
         if (event.getSource() == btnBillCheckOut) {
@@ -1196,10 +1257,10 @@ public class StaffSceneController implements Initializable {
                     totalBill();
                 });
                 if (alertConFirm("Are you want to check out " + cbBillTable.getValue() + "?") == true) {
-                    insert("insert into Thu values(1,'" + lbTime.getText() + "','" + cbBillTable.getValue() + "'," + lbBillAfter.getText() + ",'" + lbUser.getText() + " have check out." + taBillNote.getText() + "')");
-                    delete("delete from [Order] where dishCatalogies='" + cbBillTable.getValue() + "'");
+                    insert("insert into Thu values(1,N'" + lbTime.getText() + "',N'" + cbBillTable.getValue() + "'," + lbBillAfter.getText() + ",N'" + lbUser.getText() + " have check out." + taBillNote.getText() + "')");
+                    delete("delete from [Order] where dishCatalogies=N'" + cbBillTable.getValue() + "'");
                     alertSuccess("Check out " + cbBillTable.getValue() + " Successfully!");
-                    update("update codeDiscount set codeQuantity -=1 where codeValue='" + tfBillDiscount.getText() + "'");
+                    update("update codeDiscount set codeQuantity -=1 where codeValue=N'" + tfBillDiscount.getText() + "'");
                     log("" + lbUser.getText() + " have check out " + cbBillTable.getValue() + " with discount code " + tfBillDiscount.getText() + "!");
 //                    showLogDB();
                     clearBill();
@@ -1230,7 +1291,7 @@ public class StaffSceneController implements Initializable {
                 alert("Please fill Price of Receipt");
             } else {
                 if (alertConFirm("Are you want to create receipt?") == true) {
-                    insert("insert into Thu values(1,'" + lbTime.getText() + "','" + cbReceiptCatalog.getValue() + "'," + tfReceiptPrice.getText() + ",'" + taReceiptNote.getText() + "')");
+                    insert("insert into Thu values(1,N'" + lbTime.getText() + "',N'" + cbReceiptCatalog.getValue() + "'," + tfReceiptPrice.getText() + ",N'" + taReceiptNote.getText() + "')");
                     clearReceipt();
                     showReceiptDB();
                     log("" + lbUser.getText() + " have create receipt!");
@@ -1249,7 +1310,7 @@ public class StaffSceneController implements Initializable {
             } else {
                 if (alertConFirm("Are you want to update receipt?") == true) {
                     ReceiptDB i = tvReceipt.getSelectionModel().getSelectedItem();
-                    update("update Thu set thuCatalog='" + cbReceiptCatalog.getValue() + "', thuPrice=" + tfReceiptPrice.getText() + ", thuNote='" + taReceiptNote.getText() + "' where thuID=" + i.getThuID() + "");
+                    update("update Thu set thuCatalog=N'" + cbReceiptCatalog.getValue() + "', thuPrice=" + tfReceiptPrice.getText() + ", thuNote=N'" + taReceiptNote.getText() + "' where thuID=" + i.getThuID() + "");
                     if (i == null) {
                         alert("Please choose receipt");
                     }
@@ -1286,7 +1347,7 @@ public class StaffSceneController implements Initializable {
                 alert("Please fill Price of Payment");
             } else {
                 if (alertConFirm("Are you want to create payment?") == true) {
-                    insert("insert into Chi values(1,'" + lbTime.getText() + "','" + cbPaymentCatalog.getValue() + "'," + tfPaymentPrice.getText() + ",'" + taPaymentNote.getText() + "')");
+                    insert("insert into Chi values(1,N'" + lbTime.getText() + "',N'" + cbPaymentCatalog.getValue() + "'," + tfPaymentPrice.getText() + ",N'" + taPaymentNote.getText() + "')");
                     clearPayment();
                     showPaymentDB();
                     log("" + lbUser.getText() + " have create payment!");
@@ -1305,7 +1366,7 @@ public class StaffSceneController implements Initializable {
             } else {
                 if (alertConFirm("Are you want to update Payment?") == true) {
                     PaymentDB i = tvPayment.getSelectionModel().getSelectedItem();
-                    update("update Chi set chiCatalog='" + cbPaymentCatalog.getValue() + "', chiPrice=" + tfPaymentPrice.getText() + ", chiNote='" + taPaymentNote.getText() + "' where chiID=" + i.getChiID() + "");
+                    update("update Chi set chiCatalog=N'" + cbPaymentCatalog.getValue() + "', chiPrice=" + tfPaymentPrice.getText() + ", chiNote=N'" + taPaymentNote.getText() + "' where chiID=" + i.getChiID() + "");
                     if (i == null) {
                         alert("Please choose payment");
                     }
@@ -1321,6 +1382,9 @@ public class StaffSceneController implements Initializable {
         }
         if (event.getSource() == tvReceipt) {
             selectReceipt();
+        }
+        if (event.getSource() == tvBookInfo) {
+            selectBookInfo();
         }
         if (event.getSource() == tvPayment) {
             selectPayment();
@@ -1347,7 +1411,7 @@ public class StaffSceneController implements Initializable {
         if (event.getSource() == btnDeleteBook) {
             BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
             if (textDialog("Confirm", "Reason", "" + lbUser.getText() + " have delete " + bi.getBookID() + " book for ") == true) {
-                delete("delete from Book where bookID='" + bi.getBookID() + "'");
+                delete("delete from Book where bookID=N'" + bi.getBookID() + "'");
                 lbBookTotal.setText(null);
                 showBookInfoDB();
                 showLogDB();
@@ -1355,8 +1419,21 @@ public class StaffSceneController implements Initializable {
                 bookCount();
             }
         }
+        if (event.getSource() == btnUpdateBook) {
+            if (alertConFirm("Are you want to update book info?") == true) {
+                update("update Book set bookDate=N'" + dpBookDate.getValue() + "',bookTime=N'" + snBookTime.getValue() + "',bookCatalogies=N'" + cbBookCatalogies.getValue() + "',bookNote=N'" + taBookNote.getText() + "' where bookID=N'" + lbBookID.getText() + "' and bookCustomerName=N'" + tfBookCusName.getText() + "'");
+                lbBookTotal.setText(null);
+                showBookInfoDB();
+                showLogDB();
+                log("" + lbUser.getText() + " have update Book Info!");
+                alertSuccess("Update Successfully!");
+            }
+        }
         if (event.getSource() == btnInventoryAdd) {
             modalBoxAddProduct("/FXMLFile/AddProductScene.fxml", "Add Product");
+        }
+        if (event.getSource() == btnInventoryRemove) {
+            modalBoxRemoveProduct("/FXMLFile/AddProductScene.fxml", "Remove Product");
         }
         if (event.getSource() == btnRefresh) {
             showPaymentDB();
@@ -1368,14 +1445,34 @@ public class StaffSceneController implements Initializable {
             showInventoryDB();
             createChart();
             bookCount();
-            showInventoryDB();
             showLogDB();
+        }
+        if (event.getSource() == tvMenu && event.getClickCount() == 2) {
+            modalBoxMenuDetailForMenu("/FXMLFile/MenuDetailScene.fxml", "Menu Detail");
+        }
+        if (event.getSource() == tvOrderMenu && event.getClickCount() == 2) {
+            modalBoxMenuDetailForOrderMenu("/FXMLFile/MenuDetailScene.fxml", "Menu Detail");
+        }
+        if (event.getSource() == btnDayReport) {
+            if (checkDayReport() == true) {
+                alert("Please Check out all table");
+            } else {
+//                insert("insert into EOD values(1,'" + lbTime.getText() + "'," + lbTotalReceipt.getText() + "," + lbTotalPayment.getText() + ")");
+//                insert("insert into EODDetailThu(brandID,eodDetailThuID,eodDetailThuTime,eoddetailThuCatalog,eoddetailThuPrice,eoddetailThuNote) select 1,thuID,Thu.thuDate,Thu.thuCatalog,Thu.thuPrice,Thu.thuNote from Thu");
+//                insert("insert into EODDetailChi(brandID,eodDetailChiID,eodDetailChiTime,eoddetailChiCatalog,eoddetailChiPrice,eoddetailChiNote) select 1,chiID,Chi.chiDate,Chi.chiCatalog,Chi.chiPrice,Chi.chiNote from Chi");
+//                
+                modalBoxEOD("/FXMLFile/EOD.fxml", "EOD");
+            }
+        }
+        if (event.getSource() == btnEditBook) {
+            modalBoxBookEdit("/FXMLFile/UpdateBook.fxml", "Update Book");
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //phanQuyen();
+
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All files", "* *"),
@@ -1409,6 +1506,81 @@ public class StaffSceneController implements Initializable {
                 setDisable(empty || date.compareTo(LocalDate.now()) > 0);
             }
         });
+        dpBookDate.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0);
+            }
+        });
+        tfStaffDOB.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "dd-MM-yyyy";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+        tfCustomerDOB.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "dd-MM-yyyy";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+        dpBookDate.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "dd-MM-yyyy";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+        cbBookCatalogies.getItems().addAll(bookCatalogies);
+        snBookTime.setValueFactory(time);
         totalPayment();
         totalReceipt();
         showOrderMiniDB();
@@ -1475,6 +1647,8 @@ public class StaffSceneController implements Initializable {
         InventoryDB i = tvInventory.getSelectionModel().getSelectedItem();
         userRole.setName(i.getProductName());
         userRole.setStaff(lbUser.getText());
+        userRole.setTitle("Add Product");
+        userRole.btnProductRemove.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
         if (i == null) {
             alert("Please choose Product to add");
         }
@@ -1486,18 +1660,106 @@ public class StaffSceneController implements Initializable {
         window.show();
     }
 
+    private void modalBoxRemoveProduct(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        AddProductSceneController userRole = loader.getController();
+        InventoryDB i = tvInventory.getSelectionModel().getSelectedItem();
+        userRole.setName(i.getProductName());
+        userRole.setStaff(lbUser.getText());
+        userRole.setTitle("Remove product");
+        userRole.btnProductAdd.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userRole.tfProductPrice.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userRole.lbPrice.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        SpinnerValueFactory<Integer> invetorySpiner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, i.getProductQOH(), 0, 1);
+        userRole.snProductQOH.setValueFactory(invetorySpiner);
+        userRole.lbMax.setText("" + i.getProductQOH());
+        if (i == null) {
+            alert("Please choose Product to remove");
+        }
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
+
+    private void modalBoxMenuDetailForMenu(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        MenuDetailSceneController userRole = loader.getController();
+        MenuDB i = tvMenu.getSelectionModel().getSelectedItem();
+        userRole.setName(i.getDishName());
+        userRole.setPrice("" + i.getDishPrice());
+        userRole.setDescription(i.getDishDescription());
+        userRole.setImage(imgDish.getImage());
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
+
+    private void modalBoxMenuDetailForOrderMenu(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        MenuDetailSceneController userRole = loader.getController();
+        OrderMenuDB i = tvOrderMenu.getSelectionModel().getSelectedItem();
+        userRole.setName(i.getMenuDishName());
+        userRole.setPrice("" + i.getMenuDishPrice());
+        userRole.setDescription(i.getMenuDishDescription());
+        userRole.setImage(imgOrderMenu.getImage());
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
+
+    private void modalBoxEOD(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
+
+    private void modalBoxBookEdit(String fxmlFile, String Title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent root = loader.load();
+
+        UpdateBookController userRole = loader.getController();
+        BookInfo i = tvBookInfo.getSelectionModel().getSelectedItem();
+        userRole.setInfo("" + i.getBookID(), i.getBookCustomerName(), i.getBookCatalogies(), i.getBookNote(), i.getBookDate().toString(), i.getBookTime());
+        userRole.showBookDetailDB(i.getBookCustomerName(), "" + i.getBookID());
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(Title);
+        window.show();
+    }
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final String[] possition = {"Manager", "Supervisor", "Waiter"};
     private static final String[] role = {"Manager", "Supervisor", "Waiter", "Customer"};
-    private static final String[] productCatalogies = {"Tool", "Ingredient"};
+    private static final String[] productCatalogies = {"Ingredient"};
     private static final String[] dishCatalogies = {"Hors d'oeuvres", "Soup", "Fish Dish", "Meat Dish", "Main Course", "Salad", "Dessert", "Drink", "Other"};
     private static final String[] dishStatus = {"Available", "Unavailable"};
     private static final String[] gender = {"Male", "Female"};
     private static final String[] orderCatalogies = {"Table 1", "Table 2", "Table 3", "Table 4", "Table 5", "Table 6", "Table 7", "Table 8", "Take-away"};
     private static final String[] receiptCatalogies = {"Table 1", "Table 2", "Table 3", "Table 4", "Table 5", "Table 6", "Table 7", "Table 8", "Take-away", "Other"};
-    private static final String[] paymentCatalogies = {"Other"};
+    private static final String[] paymentCatalogies = {"Other", "Salary", "Product"};
     private static final SpinnerValueFactory<Integer> productSpinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1, 1);
     private static final AtomicInteger count = new AtomicInteger(100);
+    private static final String[] bookCatalogies = {"Eat at Restaurant", "Take-away"};
+    ObservableList<String> Time = FXCollections.observableArrayList("10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30");
+    SpinnerValueFactory<String> time = new SpinnerValueFactory.ListSpinnerValueFactory<String>(Time);
     public static final Logger log = Logger.getLogger(StaffSceneController.class);
 
     public volatile boolean stop = false;
@@ -1576,7 +1838,6 @@ public class StaffSceneController implements Initializable {
         viewer.show();
     }
 
-    @FXML
     private void showInvoice3() throws JRException {
         Connection con = getConnect();
 
@@ -1699,6 +1960,9 @@ public class StaffSceneController implements Initializable {
             //4 thuc hien insert sql
             st.executeUpdate();
             showMenuDB();
+            showStaffDB();
+            showCustomerDB();
+            showInventoryDB();
             st.close();
             cn.close();
 
@@ -1839,7 +2103,7 @@ public class StaffSceneController implements Initializable {
     public static ObservableList<StaffDB> getStaffDB() {
         ObservableList<StaffDB> StaffList = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
-        String sql = "select staffID,staffName,staffDOB,staffAddress,staffPossition,staffPhone,staffMail,staffSalary from Staff";
+        String sql = "select staffID,staffName,staffDOB,staffAddress,staffPossition,staffPhone,staffMail,staffSalary,staffUserName from Staff";
         Statement st;
         ResultSet rs;
         try {
@@ -1847,7 +2111,7 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
             StaffDB s = null;
             while (rs.next()) {
-                s = new StaffDB(rs.getInt("staffID"), rs.getString("staffName"), rs.getDate("staffDOB").toLocalDate(), rs.getString("staffAddress"), rs.getString("staffPossition"), rs.getInt("staffPhone"), rs.getString("staffMail"), rs.getInt("staffSalary"));
+                s = new StaffDB(rs.getInt("staffID"), rs.getString("staffName"), rs.getDate("staffDOB").toLocalDate(), rs.getString("staffAddress"), rs.getString("staffPossition"), rs.getString("staffPhone"), rs.getString("staffMail"), rs.getInt("staffSalary"), rs.getString("staffUserName"));
                 StaffList.add(s);
             }
             cn.close();
@@ -1861,12 +2125,13 @@ public class StaffSceneController implements Initializable {
         ObservableList<StaffDB> list = getStaffDB();
         colStaffID.setCellValueFactory(new PropertyValueFactory<StaffDB, Integer>("staffID"));
         colStaffName.setCellValueFactory(new PropertyValueFactory<StaffDB, String>("staffName"));
-        colStaffDOB.setCellValueFactory(new PropertyValueFactory<StaffDB, LocalDate>("staffDOB"));
+        colStaffDOB.setCellValueFactory(new PropertyValueFactory<StaffDB, Date>("staffDOB"));
         colStaffAddress.setCellValueFactory(new PropertyValueFactory<StaffDB, String>("staffAddress"));
         colStaffPossition.setCellValueFactory(new PropertyValueFactory<StaffDB, String>("staffPossition"));
         colStaffPhone.setCellValueFactory(new PropertyValueFactory<StaffDB, Integer>("staffPhone"));
         colStaffMail.setCellValueFactory(new PropertyValueFactory<StaffDB, String>("staffMail"));
         colStaffSalary.setCellValueFactory(new PropertyValueFactory<StaffDB, Integer>("staffSalary"));
+        colStaffUserName.setCellValueFactory(new PropertyValueFactory<StaffDB, String>("staffUserName"));
         tvStaff.setItems(list);
     }
 
@@ -1881,6 +2146,7 @@ public class StaffSceneController implements Initializable {
             tfStaffPhone.setText("" + s.getStaffPhone());
             tfStaffMail.setText(s.getStaffMail());
             tfStaffSalary.setText("" + s.getStaffSalary());
+            tfStaffUsername.setText(s.getStaffUserName());
             showImage("select staffImage from Staff where staffID=?", s.getStaffID(), imgStaffImage);
         }
     }
@@ -1894,6 +2160,7 @@ public class StaffSceneController implements Initializable {
         tfStaffPhone.clear();
         tfStaffMail.clear();
         tfStaffSalary.clear();
+        tfStaffUsername.clear();
         imgStaffImage.setImage(null);
     }
 
@@ -1901,7 +2168,7 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "INSERT INTO Staff VALUES (1,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Staff VALUES (1,?,?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -1913,8 +2180,9 @@ public class StaffSceneController implements Initializable {
             st.setInt(5, Integer.valueOf(tfStaffPhone.getText()));
             st.setString(6, tfStaffMail.getText());
             st.setInt(7, Integer.valueOf(tfStaffSalary.getText()));
+            st.setString(8, tfStaffUsername.getText());
             fis = new FileInputStream(file);
-            st.setBinaryStream(8, fis, file.length());
+            st.setBinaryStream(9, fis, file.length());
             //4 thuc hien insert sql
             st.executeUpdate();
             showStaffDB();
@@ -1933,7 +2201,7 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "UPDATE Staff set staffName=?,staffDOB=?,staffAddress=?,staffPossition=?,staffPhone=?,staffMail=?,staffSalary=? where staffID=?";
+        String sql = "UPDATE Staff set staffName=?,staffDOB=?,staffAddress=?,staffPossition=?,staffPhone=?,staffMail=?,staffSalary=?,staffUserName=? where staffID=?";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -1946,7 +2214,8 @@ public class StaffSceneController implements Initializable {
             st.setInt(5, Integer.valueOf(tfStaffPhone.getText()));
             st.setString(6, tfStaffMail.getText());
             st.setInt(7, Integer.valueOf(tfStaffSalary.getText()));
-            st.setInt(8, Integer.valueOf(lbStaffID.getText()));
+            st.setString(8, tfStaffUsername.getText());
+            st.setInt(9, Integer.valueOf(lbStaffID.getText()));
             if (file != null) {
                 updateBrowser("UPDATE Staff set staffImage=? where staffID=?", lbStaffID);
             }
@@ -1970,7 +2239,7 @@ public class StaffSceneController implements Initializable {
     public static ObservableList<AccountDB> getAccountDB() {
         ObservableList<AccountDB> accountList = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
-        String sql = "select accountID, accountUserName,accountPassWord,accountRole,accountFullname from Account";
+        String sql = "select accountID, accountUserName,accountPassWord,accountRole from Account";
         Statement st;
         ResultSet rs;
         try {
@@ -1978,7 +2247,7 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
             AccountDB a = null;
             while (rs.next()) {
-                a = new AccountDB(rs.getInt("accountID"), rs.getString("accountUserName"), rs.getString("accountPassWord"), rs.getString("accountRole"), rs.getString("accountFullname"));
+                a = new AccountDB(rs.getInt("accountID"), rs.getString("accountUserName"), rs.getString("accountPassWord"), rs.getString("accountRole"));
                 accountList.add(a);
             }
             cn.close();
@@ -1994,7 +2263,6 @@ public class StaffSceneController implements Initializable {
         colAccountUsername.setCellValueFactory(new PropertyValueFactory<AccountDB, String>("accountUserName"));
         colAccountPassword.setCellValueFactory(new PropertyValueFactory<AccountDB, String>("accountPassWord"));
         colAccountRole.setCellValueFactory(new PropertyValueFactory<AccountDB, String>("accountRole"));
-        colAccountFullname.setCellValueFactory(new PropertyValueFactory<AccountDB, String>("accountFullname"));
         tvAccount.setItems(list);
     }
 
@@ -2005,7 +2273,6 @@ public class StaffSceneController implements Initializable {
             tfAccountUsername.setText(a.getAccountUserName());
             tfAccountPassword.setText(a.getAccountPassWord());
             cbAccountRole.setValue(a.getAccountRole());
-            tfAccountFullname.setText(a.getAccountFullname());
         }
     }
 
@@ -2014,7 +2281,6 @@ public class StaffSceneController implements Initializable {
         tfAccountUsername.clear();
         tfAccountPassword.clear();
         cbAccountRole.setValue(null);
-        tfAccountFullname.clear();
     }
 
     public static ObservableList<CodeDB> getCodeDB() {
@@ -2323,7 +2589,7 @@ public class StaffSceneController implements Initializable {
     public static ObservableList<CustomerDB> getCustomerDB() {
         ObservableList<CustomerDB> cusList = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
-        String sql = "select customerID, customerName,customerDOB,customerAddress,customerPhone,customerMail,customerGender from Customer";
+        String sql = "select customerID, customerName,customerDOB,customerAddress,customerPhone,customerMail,customerGender,customerUserName from Customer";
         Statement st;
         ResultSet rs;
         try {
@@ -2331,7 +2597,7 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
             CustomerDB c = null;
             while (rs.next()) {
-                c = new CustomerDB(rs.getInt("customerID"), rs.getString("customerName"), rs.getDate("customerDOB").toLocalDate(), rs.getString("customerAddress"), rs.getInt("customerPhone"), rs.getString("customerMail"), rs.getString("customerGender"));
+                c = new CustomerDB(rs.getInt("customerID"), rs.getString("customerName"), rs.getDate("customerDOB").toLocalDate(), rs.getString("customerAddress"), rs.getString("customerPhone"), rs.getString("customerMail"), rs.getString("customerGender"), rs.getString("customerUserName"));
                 cusList.add(c);
             }
             cn.close();
@@ -2350,6 +2616,7 @@ public class StaffSceneController implements Initializable {
         colCustomerPhone.setCellValueFactory(new PropertyValueFactory<CustomerDB, Integer>("customerPhone"));
         colCustomerMail.setCellValueFactory(new PropertyValueFactory<CustomerDB, String>("customerMail"));
         colCustomerGender.setCellValueFactory(new PropertyValueFactory<CustomerDB, String>("customerGender"));
+        colCustomerUserName.setCellValueFactory(new PropertyValueFactory<CustomerDB, String>("customerUserName"));
         tvCustomer.setItems(list);
     }
 
@@ -2363,6 +2630,7 @@ public class StaffSceneController implements Initializable {
             tfCustomerPhone.setText("" + c.getCustomerPhone());
             tfCustomerMail.setText(c.getCustomerMail());
             cbCustomerGender.setValue(c.getCustomerGender());
+            tfCustomerUserName.setText(c.getCustomerUserName());
             showImage("select customerImage from Customer where customerID=?", c.getCustomerID(), imgCustomer);
         }
     }
@@ -2375,6 +2643,7 @@ public class StaffSceneController implements Initializable {
         tfCustomerPhone.clear();
         tfCustomerMail.clear();
         cbCustomerGender.setValue(null);
+        tfCustomerUserName.clear();
         imgCustomer.setImage(null);
     }
 
@@ -2382,7 +2651,7 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "INSERT INTO Customer VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Customer VALUES (?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -2393,8 +2662,9 @@ public class StaffSceneController implements Initializable {
             st.setInt(4, Integer.valueOf(tfCustomerPhone.getText()));
             st.setString(5, tfCustomerMail.getText());
             st.setString(6, cbCustomerGender.getValue());
+            st.setString(7, tfCustomerUserName.getText());
             fis = new FileInputStream(file);
-            st.setBinaryStream(7, fis, file.length());
+            st.setBinaryStream(8, fis, file.length());
             //4 thuc hien insert sql
             st.executeUpdate();
             showCustomerDB();
@@ -2413,7 +2683,7 @@ public class StaffSceneController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "UPDATE Customer set customerName=?,customerDOB=?,customerAddress=?,customerPhone=?,customerMail=?,customerGender=? where customerID=?";
+        String sql = "UPDATE Customer set customerName=?,customerDOB=?,customerAddress=?,customerPhone=?,customerMail=?,customerGender=?,customerUserName=? where customerID=?";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -2425,7 +2695,8 @@ public class StaffSceneController implements Initializable {
             st.setInt(4, Integer.valueOf(tfCustomerPhone.getText()));
             st.setString(5, tfCustomerMail.getText());
             st.setString(6, cbCustomerGender.getValue());
-            st.setInt(7, Integer.valueOf(lbCustomerID.getText()));
+            st.setString(7, tfCustomerUserName.getText());
+            st.setInt(8, Integer.valueOf(lbCustomerID.getText()));
             //4 thuc hien insert sql
             if (file != null) {
                 updateBrowser("UPDATE Customer set customerImage=? where customerID=?", lbCustomerID);
@@ -2480,7 +2751,7 @@ public class StaffSceneController implements Initializable {
     public static ObservableList<OrderMenuDB> getOrderMenuDB(String Catalogies) {
         ObservableList<OrderMenuDB> orderMenuList = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
-        String sql = "select a.dishName,a.dishPrice,floor(b.productQOH/a.dishConsume) as dishAvailable,a.dishDescription from Menu a join Inventory b on productName =dishIngredient where a.dishStatus='Available' and a.dishCatalogies='" + Catalogies + "'";
+        String sql = "select a.dishName,a.dishPrice,floor(b.productQOH/a.dishConsume) as dishAvailable,a.dishDescription from Menu a join Inventory b on productName =dishIngredient where a.dishStatus='Available' and a.dishCatalogies=N'" + Catalogies + "'";
         Statement st;
         ResultSet rs;
         try {
@@ -2518,17 +2789,17 @@ public class StaffSceneController implements Initializable {
 
     private void addToOderList() {
         OrderMenuDB o = tvOrderMenu.getSelectionModel().getSelectedItem();
-        String sql = "select * from [OrderMini] where dishName='" + o.getMenuDishName() + "'";
+        String sql = "select * from [OrderMini] where dishName=N'" + o.getMenuDishName() + "'";
         Connection cn = getConnect();
         Statement st;
         try {
             st = cn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             if (rs.next()) {
-                String sqlUpdate = "update [OrderMini] set dishQuantity+=" + snOrderDishQuantity.getValue() + " where dishName='" + o.getMenuDishName() + "'";
+                String sqlUpdate = "update [OrderMini] set dishQuantity+=" + snOrderDishQuantity.getValue() + " where dishName=N'" + o.getMenuDishName() + "'";
                 executeQuery(sqlUpdate);
             } else {
-                String sqInsert = "insert into [OrderMini] values (1,'" + o.getMenuDishName() + "'," + o.getMenuDishPrice() + "," + snOrderDishQuantity.getValue() + ")";
+                String sqInsert = "insert into [OrderMini] values (1,N'" + o.getMenuDishName() + "'," + o.getMenuDishPrice() + "," + snOrderDishQuantity.getValue() + ")";
                 executeQuery(sqInsert);
             }
             //close?
@@ -2670,7 +2941,7 @@ public class StaffSceneController implements Initializable {
     public ObservableList<BillDB> getBillDB() {
         ObservableList<BillDB> billList = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
-        String sql = "select dishName,dishPrice,dishQuantity, dishPrice*dishQuantity  as dishAmount from [Order] where dishCatalogies='" + cbBillTable.getValue() + "'";
+        String sql = "select dishName,dishPrice,dishQuantity, dishPrice*dishQuantity  as dishAmount from [Order] where dishCatalogies=N'" + cbBillTable.getValue() + "'";
         Statement st;
         ResultSet rs;
         try {
@@ -2701,11 +2972,13 @@ public class StaffSceneController implements Initializable {
         cbBillTable.setValue(null);
         tfBillDiscount.clear();
         lbBillDiscount.setText(null);
+        lbBillTotal.setText(null);
+        lbBillAfter.setText(null);
     }
 
     private void totalBill() {
-        String sql1 = "select SUM(dishPrice* dishQuantity) as billTotal from [Order] where dishCatalogies='" + cbBillTable.getValue() + "'";
-        String sql2 = "select discountPercent from codeDiscount where codeValue='" + tfBillDiscount.getText() + "'";
+        String sql1 = "select SUM(dishPrice* dishQuantity) as billTotal from [Order] where dishCatalogies=N'" + cbBillTable.getValue() + "'";
+        String sql2 = "select discountPercent from codeDiscount where codeValue=N'" + tfBillDiscount.getText() + "'";
         Connection cn = getConnect();
         Statement st1;
         Statement st2;
@@ -2744,14 +3017,14 @@ public class StaffSceneController implements Initializable {
     }
 
     private void getDiscount() {
-        String sql = "select discountPercent from codeDiscount where codeValue='" + tfBillDiscount.getText() + "'";
+        String sql = "select discountPercent from codeDiscount where codeValue=N'" + tfBillDiscount.getText() + "'";
         Connection cn = getConnect();
         Statement st;
         try {
             st = cn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             if (rs.next()) {
-                update("update codeDiscount set codeQuantity -=1 where codeValue='" + tfBillDiscount.getText() + "'");
+                update("update codeDiscount set codeQuantity -=1 where codeValue=N'" + tfBillDiscount.getText() + "'");
                 int discountTotal = rs.getInt("discountPercent");
                 lbBillDiscount.setText("" + discountTotal);
             } else {
@@ -2796,10 +3069,22 @@ public class StaffSceneController implements Initializable {
         tvBookInfo.setItems(list);
     }
 
-    public static ObservableList<BookDetail> getBookDetailDB(Integer ma) {
+    private void selectBookInfo() {
+        BookInfo o = tvBookInfo.getSelectionModel().getSelectedItem();
+        if (o != null) {
+            lbBookID.setText("" + o.getBookID());
+            dpBookDate.setValue(o.getBookDate());
+            snBookTime.getValueFactory().setValue(o.getBookTime());
+            tfBookCusName.setText(o.getBookCustomerName());
+            cbBookCatalogies.setValue(o.getBookCatalogies());
+            taBookNote.setText(o.getBookNote());
+        }
+    }
+
+    public static ObservableList<BookDetail> getBookDetailDB(String ma, Integer id) {
         ObservableList<BookDetail> bookDetail = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
-        String sql = "select bookDishName,bookDishQuantity,bookDishPrice from Book where bookID=" + ma + "";
+        String sql = "select bookDishName,bookDishQuantity,bookDishPrice from Book where bookCustomerName='" + ma + "' and bookID=" + id + "";
         Statement st;
         ResultSet rs;
         try {
@@ -2818,8 +3103,8 @@ public class StaffSceneController implements Initializable {
         return bookDetail;
     }
 
-    public void showBookDetailDB(Integer ma) {
-        ObservableList<BookDetail> list = getBookDetailDB(ma);
+    public void showBookDetailDB(String ma, Integer id) {
+        ObservableList<BookDetail> list = getBookDetailDB(ma, id);
         colBookDetailName.setCellValueFactory(new PropertyValueFactory<BookDetail, String>("bookDishName"));
         colBookDetailQuantity.setCellValueFactory(new PropertyValueFactory<BookDetail, Integer>("bookDishQuantity"));
         colBookDetailPrice.setCellValueFactory(new PropertyValueFactory<BookDetail, Integer>("bookDishPrice"));
@@ -2827,7 +3112,7 @@ public class StaffSceneController implements Initializable {
     }
 
     private void bookCount() {
-        String sql = "select COUNT(bookID) as bookCount from Book";
+        String sql = "select COUNT(distinct bookCustomerName) as bookCount from Book";
         Connection cn = getConnect();
         Statement st;
         try {
@@ -2845,7 +3130,7 @@ public class StaffSceneController implements Initializable {
 
     private void totalBook() {
         BookInfo bi = tvBookInfo.getSelectionModel().getSelectedItem();
-        String sql = "select SUM(bookDishQuantity* bookDishPrice) as bookTotal from Book where bookID=" + bi.getBookID() + "";
+        String sql = "select SUM(bookDishQuantity* bookDishPrice) as bookTotal from Book where bookID=" + bi.getBookID() + " and bookCustomerName='" + bi.getBookCustomerName() + "'";
         Connection cn = getConnect();
         Statement st;
         try {
@@ -2872,7 +3157,7 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
             ReceiptDB r = null;
             while (rs.next()) {
-                r = new ReceiptDB(rs.getInt("thuID"), rs.getString("thuDate"), rs.getString("thuCatalog"), rs.getInt("thuPrice"), rs.getString("thuNote"));
+                r = new ReceiptDB(rs.getInt("thuID"), rs.getDate("thuDate").toLocalDate(), rs.getString("thuCatalog"), rs.getInt("thuPrice"), rs.getString("thuNote"));
                 receipt.add(r);
             }
             cn.close();
@@ -2903,7 +3188,7 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
             PaymentDB p = null;
             while (rs.next()) {
-                p = new PaymentDB(rs.getInt("chiID"), rs.getString("chiDate"), rs.getString("chiCatalog"), rs.getInt("chiPrice"), rs.getString("chiNote"));
+                p = new PaymentDB(rs.getInt("chiID"), rs.getDate("chiDate").toLocalDate(), rs.getString("chiCatalog"), rs.getInt("chiPrice"), rs.getString("chiNote"));
                 payment.add(p);
             }
             cn.close();
@@ -3008,7 +3293,7 @@ public class StaffSceneController implements Initializable {
 
     public boolean getMaGiamGia() {
         Connection cn = getConnect();
-        String sql = "select * from codeDiscount where codeValue='" + tfCodeValue.getText().toUpperCase() + "'";
+        String sql = "select * from codeDiscount where codeValue=N'" + tfCodeValue.getText().toUpperCase() + "'";
         Statement st;
         ResultSet rs;
         try {
@@ -3072,10 +3357,94 @@ public class StaffSceneController implements Initializable {
         taPaymentNote.clear();
     }
 
+    private void checkUserName(javafx.scene.control.TextField p, Label lb, Button btn1, Button btn2) {
+        String sql1 = "select * from Staff where staffUserName=N'" + p.getText() + "'";
+        String sql2 = "select * from Account where accountUserName=N'" + p.getText() + "'";
+        String sql3 = "select * from Customer where customerUserName=N'" + p.getText() + "'";
+        Connection cn = getConnect();
+        Statement st1;
+        Statement st2;
+        Statement st3;
+        try {
+            st1 = cn.createStatement();
+            st2 = cn.createStatement();
+            st3 = cn.createStatement();
+            ResultSet rs1 = st1.executeQuery(sql1);
+            ResultSet rs2 = st2.executeQuery(sql2);
+            ResultSet rs3 = st3.executeQuery(sql3);
+            if ((rs1.next() && rs2.next()) || (rs3.next() && rs2.next())) {
+                lb.setText("Your UserName is used");
+                btn1.setDisable(true);
+                btn2.setDisable(true);
+            } else if (!rs1.next() && rs2.next()) {
+                btn1.setDisable(false);
+                btn2.setDisable(false);
+                lb.setText("");
+            } else {
+                lb.setText("Your UserName is invalid");
+                btn1.setDisable(true);
+                btn2.setDisable(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkDishName(String query, Label lb, String tb, Button btn1, Button btn2) {
+        String sql1 = query;
+        Connection cn = getConnect();
+        Statement st1;
+        try {
+            st1 = cn.createStatement();
+            ResultSet rs1 = st1.executeQuery(sql1);
+            if ((rs1.next())) {
+                lb.setText(tb);
+                btn1.setDisable(true);
+                btn2.setDisable(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkDayReport() {
+        String sql1 = "Select * from [Order]";
+        Connection cn = getConnect();
+        Statement st1;
+        try {
+            st1 = cn.createStatement();
+            ResultSet rs1 = st1.executeQuery(sql1);
+            if ((rs1.next())) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 //    private void handleMouseAction(ActionEvent event) {
 //        if (event.getSource() == btnBillPrint) {
 //            PrintReport pr = new PrintReport();
 //            pr.showInvoice();
 //        }
 //    }
+    @FXML
+    private void handleTypeAction(KeyEvent event) {
+        if (event.getSource() == tfStaffUsername) {
+            checkUserName(tfStaffUsername, lbStaffCheck, btnStaffCreate, btnStaffUpdate);
+        }
+        if (event.getSource() == tfCustomerUserName) {
+            checkUserName(tfCustomerUserName, lbCusCheck, btnCustomerCreate, btnCustomerUpdate);
+        }
+        if (event.getSource() == tfDishName) {
+            checkDishName("select * from Menu where dishName=N'" + tfDishName.getText() + "'", lbDishNameCheck, "Your Dish is exits", btnDishCreate, btnDishUpdate);
+        }
+        if (event.getSource() == tfDishName) {
+            checkDishName("select * from Inventory where productName=N'" + tfInventoryName.getText() + "'", lbInventoryCheck, "Your Inventory is exits", btnInventoryCreate, btnInventoryUpdate);
+        }
+        if (event.getSource() == tfCodeValue) {
+            checkDishName("select * from codeDiscount where codeValue=N'" + tfCodeValue.getText() + "'", lbCodeCheck, "Your Code is exits", btnCodeCreate, btnCodeUpdate);
+        }
+    }
 }

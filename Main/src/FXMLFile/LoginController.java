@@ -4,6 +4,7 @@
  */
 package FXMLFile;
 
+import static FXMLFile.StaffSceneController.getConnect;
 import com.gluonhq.charm.glisten.control.TextField;
 import java.io.IOException;
 import java.net.URL;
@@ -15,6 +16,8 @@ import java.sql.Statement;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,6 +70,10 @@ public class LoginController implements Initializable {
     private Label lbStaffRole1;
     @FXML
     private Label lbUserName;
+    @FXML
+    private Label lbPhone;
+    @FXML
+    private Label lbMail;
 
     /**
      * Initializes the controller class.
@@ -131,7 +138,7 @@ public class LoginController implements Initializable {
         userRole.setName(lbRole.getText());
         StaffSceneController userStaffRole = loader.getController();
         userStaffRole.setRole(lbStaffRole1.getText());
-
+        
         Stage window = new Stage();
         Scene scene = new Scene(root);
         window.setScene(scene);
@@ -156,7 +163,8 @@ public class LoginController implements Initializable {
         userStaffRole.btnAccountDelete.setVisible(false);
         userStaffRole.tabLog.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
         userStaffRole.tabDisCode.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
-
+        userStaffRole.tabAccount.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        
         Stage window = new Stage();
         Scene scene = new Scene(root);
         window.setScene(scene);
@@ -200,6 +208,7 @@ public class LoginController implements Initializable {
         CustomerSceneController userRole = fXmlLoader.getController();
         userRole.setName(lbRole.getText());
         userRole.setUserName(lbUserName.getText());
+       
         
         Stage primaryStage = new Stage();
         Scene scene = new Scene(root);
@@ -219,7 +228,7 @@ public class LoginController implements Initializable {
     }
 
     public void login() {
-        String sql = "select accountRole,accountFullname,accountUserName from Account where accountUserName='" + tfUsername.getText() + "' and accountPassWord='" + tfPassword.getText() + "'";
+        String sql = "select accountRole,accountUserName from Account where accountUserName='" + tfUsername.getText() + "' and accountPassWord='" + tfPassword.getText() + "'";
         Connection cn = getConnect();
         Statement st;
         try {
@@ -227,12 +236,10 @@ public class LoginController implements Initializable {
             ResultSet rs = st.executeQuery(sql);
             if (rs.next()) {
 //                lbCheck.setText("");
-                String userName = rs.getString("accountFullname");
-                lbRole.setText(userName);
                 String role = rs.getString("accountRole");
                 lbStaffRole1.setText(role);
                 String cusUserName = rs.getString("accountUserName");
-                lbUserName.setText(cusUserName);
+                lbRole.setText(cusUserName);
                 Stage stage = (Stage) bpLogin.getScene().getWindow();
                 stage.close();
                 switch (role) {

@@ -15,11 +15,12 @@ public class CustomerDB {
     private String customerName;
     private LocalDate customerDOB;
     private String customerAddress;
-    private int customerPhone;
+    private String customerPhone;
     private String customerMail;
     private String customerGender;
+    private String customerUserName;
 
-    public CustomerDB(int customerID, String customerName, LocalDate customerDOB, String customerAddress, int customerPhone, String customerMail, String customerGender) {
+    public CustomerDB(int customerID, String customerName, LocalDate customerDOB, String customerAddress, String customerPhone, String customerMail, String customerGender, String customerUserName) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.customerDOB = customerDOB;
@@ -27,6 +28,7 @@ public class CustomerDB {
         this.customerPhone = customerPhone;
         this.customerMail = customerMail;
         this.customerGender = customerGender;
+        this.customerUserName = customerUserName;
     }
 
     public int getCustomerID() {
@@ -45,7 +47,7 @@ public class CustomerDB {
         return customerAddress;
     }
 
-    public int getCustomerPhone() {
+    public String getCustomerPhone() {
         return customerPhone;
     }
 
@@ -56,6 +58,14 @@ public class CustomerDB {
     public String getCustomerGender() {
         return customerGender;
     }
+
+    public String getCustomerUserName() {
+        return customerUserName;
+    }
+    
+    
+
+    
 
     
     

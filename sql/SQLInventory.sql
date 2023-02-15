@@ -143,7 +143,56 @@ INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,produc
 SELECT 1,'TAGLIATELLE',10,'g',20,'Ingredient', 
 	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Icon\TAGLIATELLE.png', SINGLE_BLOB) image;
 	go
+	-- Tool
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Plate',10,'Plate',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Plate.jpg', SINGLE_BLOB) image;
+	go
 
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Knife',10,'Knives',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Knife.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Bowl',10,'Bowls',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Bowl.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Glass',10,'Glasses',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Glass.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Ladle',10,'Ladles',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Ladle.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Napkin',10,'Napkins',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Napkin.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Spoon',10,'Spoons',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Spoon.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Table Cloth',10,'Tablecloths',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Table Cloth.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Tongs',10,'Tongs',20,'Tool', 
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Tongs.jpg', SINGLE_BLOB) image;
+	go
+
+INSERT INTO [dbo].[Inventory] (brandID,productName,productQOH,productUnit,productPrice,productCatalogies,productImage)
+SELECT 1,'Fork',10,'Forks',20,'Tool',
+	BulkColumn FROM OPENROWSET(BULK N'D:\Aptech\HK2\3. JP-2\3. JP-2\ProjectII\GithubPro\Javafx-Restaurant-Management-System\Main\src\image\Tool\Fork.jpg', SINGLE_BLOB) image;
+	go
 
 select * from Inventory
 go

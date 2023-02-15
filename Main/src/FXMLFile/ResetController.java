@@ -104,6 +104,7 @@ public class ResetController implements Initializable {
                 alert("Mail wrong form");
             } else {
                 getMail();
+                getUserNameByMail(tfForgetMail);
             }
         }
         if (event.getSource() == btnChange2) {
@@ -111,14 +112,14 @@ public class ResetController implements Initializable {
                 alert("Phone from 8-12");
             } else {
                 getPhone();
+                getUserNameByPhone(tfForgetPhone);
             }
         }
         if (event.getSource() == btnSubmit) {
             if (Pattern.matches(tfPassWord1.getText(), tfPassWord2.getText())) {
-                if (getUserName() == true) {
-                    insert("update Account set accountPassWord='" + tfPassWord1.getText() + "' where accountUserName='" + tfUserName.getText() + "'");
-                    alertSuccess("Change Password Suscessfully");
-                }
+                insert("update Account set accountPassWord='" + tfPassWord1.getText() + "' where accountUserName='" + tfUserName.getText() + "'");
+                alertSuccess("Change Password Suscessfully");
+
             } else {
                 alert("Password not same");
             }
@@ -127,7 +128,7 @@ public class ResetController implements Initializable {
 
     private void getMail() {
         Connection cn = getConnect();
-        String sql = "select customerMail from Customer where customerMail ='" + tfForgetMail.getText() + "'";
+        String sql = "select * from Customer where customerMail ='" + tfForgetMail.getText() + "'";
         Statement st;
         ResultSet rs;
         try {
@@ -149,7 +150,7 @@ public class ResetController implements Initializable {
 
     private void getPhone() {
         Connection cn = getConnect();
-        String sql = "select customerPhone from Customer where customerPhone=" + tfForgetPhone.getText() + "";
+        String sql = "select * from Customer where customerPhone=" + tfForgetPhone.getText() + "";
         Statement st;
         ResultSet rs;
         try {
@@ -169,24 +170,38 @@ public class ResetController implements Initializable {
         }
     }
 
-    private boolean getUserName() {
+    private void getUserNameByPhone(TextField tf) {
         Connection cn = getConnect();
-        String sql = "select accountUserName from Account where accountUserName='" + tfUserName.getText() + "'";
+        String sql = "select customerUserName from Customer where customerPhone='" + tf.getText() + "'";
         Statement st;
         ResultSet rs;
         try {
             st = cn.createStatement();
             rs = st.executeQuery(sql);
             if (rs.next()) {
-                return true;
-            } else {
-                alert("Invalid Username");
-                return false;
+                String userName = rs.getString("customerUserName");
+                tfUserName.setText(userName);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+    }
+
+    private void getUserNameByMail(TextField tf) {
+        Connection cn = getConnect();
+        String sql = "select customerUserName from Customer where customerMail='" + tf.getText() + "'";
+        Statement st;
+        ResultSet rs;
+        try {
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            if (rs.next()) {
+                String userName = rs.getString("customerUserName");
+                tfUserName.setText(userName);
+            } 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void alert(String mess) {

@@ -13,6 +13,7 @@ import java.sql.SQLException;
 //import java.sql.Statement;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,6 +36,12 @@ public class StaffChangePasswordController implements Initializable {
     private Button btnOK;
     @FXML
     private PasswordField tfPassword;
+    @FXML
+    private Button btnShowPass1;
+    @FXML
+    private PasswordField tfConfirmPassword;
+    @FXML
+    private Button btnShowPass2;
 
     /**
      * Initializes the controller class.
@@ -84,12 +91,57 @@ public class StaffChangePasswordController implements Initializable {
         alert.setTitle("Notification!");
         Optional<ButtonType> result = alert.showAndWait();
     }
-    
+
+    private void alert(String mess) {
+        Alert alert = new Alert(Alert.AlertType.WARNING, mess, ButtonType.OK);
+        Optional<ButtonType> result = alert.showAndWait();
+    }
+    private String password1;
+    private String password2;
+
+    @FXML
+    private void showPassword1() {
+        password1 = tfPassword.getText();
+        tfPassword.clear();
+        tfPassword.setPromptText(password1);
+    }
+
+    @FXML
+    private void hidePassword1() {
+        password1 = tfPassword.getPromptText();
+        tfPassword.setText(password1);
+        tfPassword.setPromptText("Password");
+    }
+
+    @FXML
+    private void showPassword2() {
+        password2 = tfConfirmPassword.getText();
+        tfConfirmPassword.clear();
+        tfConfirmPassword.setPromptText(password2);
+    }
+
+    @FXML
+    private void hidePassword2() {
+        password1 = tfConfirmPassword.getPromptText();
+        tfConfirmPassword.setText(password2);
+        tfConfirmPassword.setPromptText("Enter your Password again");
+    }
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
         if (event.getSource() == btnOK) {
-            update("update Account set accountPassWord='" + tfPassword.getText() + "' where accountFullname='" + lbStaffName.getText() + "'");
-            alertSuccess("Change Password Successfully!");
+            if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfPassword.getText())) {
+                alert("Password must contain at least one digit [0-9].\n"
+                        + "Password must contain at least one lowercase Latin character [a-z].\n"
+                        + "Password must contain at least one uppercase Latin character [A-Z].\n"
+                        + "Password must contain at least one special character like ! @ # & ( ).\n"
+                        + "Password must contain a length of at least 8 characters and a maximum of 20 characters.");
+            } else if (!Pattern.matches(tfPassword.getText(), tfConfirmPassword.getText())) {
+                alert("Password not the same");
+            } else {
+                update("update Account set accountPassWord='" + tfPassword.getText() + "' where accountUserName='" + lbStaffName.getText() + "'");
+                alertSuccess("Change Password Successfully!");
+            }
         }
     }
 

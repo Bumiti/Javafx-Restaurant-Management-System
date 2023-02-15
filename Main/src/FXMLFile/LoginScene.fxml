@@ -19,6 +19,7 @@
    <center>
       <VBox id="background" alignment="CENTER" prefHeight="800.0" prefWidth="527.0" BorderPane.alignment="CENTER">
          <children>
+            <Label fx:id="lbMail" visible="false" />
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <FontAwesomeIconView glyphName="SIGN_IN" size="80" wrappingWidth="95.55000019073486" />
@@ -102,6 +103,7 @@
             <Label fx:id="lbRole" visible="false" />
             <Label fx:id="lbStaffRole1" visible="false" />
             <Label fx:id="lbUserName" />
+            <Label fx:id="lbPhone" visible="false" />
          </children>
       </VBox>
    </center>

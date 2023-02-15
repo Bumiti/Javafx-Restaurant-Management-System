@@ -4,18 +4,20 @@
  */
 package jdbcDAO;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author Admin
  */
 public class PaymentDB {
     private int chiID;
-    private String chiDate;
+    private LocalDate chiDate;
     private String chiCatalog;
     private int chiPrice;
     private String chiNote;
 
-    public PaymentDB(int chiID, String chiDate, String chiCatalog, int chiPrice, String chiNote) {
+    public PaymentDB(int chiID, LocalDate chiDate, String chiCatalog, int chiPrice, String chiNote) {
         this.chiID = chiID;
         this.chiDate = chiDate;
         this.chiCatalog = chiCatalog;
@@ -27,7 +29,7 @@ public class PaymentDB {
         return chiID;
     }
 
-    public String getChiDate() {
+    public LocalDate getChiDate() {
         return chiDate;
     }
 
@@ -42,6 +44,8 @@ public class PaymentDB {
     public String getChiNote() {
         return chiNote;
     }
+
+    
     
     
 }

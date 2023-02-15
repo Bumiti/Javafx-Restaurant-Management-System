@@ -47,24 +47,28 @@
                      <right>
                         <VBox id="baclground" prefHeight="650.0" prefWidth="140.0" BorderPane.alignment="CENTER">
                            <children>
-                              <ImageView fx:id="imgDish" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" />
+                              <ImageView fx:id="imgDish" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../image/Icon/Dish.png" />
+                                 </image></ImageView>
                               <Label text="ID" />
                               <Label fx:id="lbDishID" />
                               <Label text="DishName" />
-                              <TextField fx:id="tfDishName" />
+                              <TextField fx:id="tfDishName" onKeyTyped="#handleTypeAction" promptText="Input DishName" />
                               <Label layoutX="10.0" layoutY="10.0" text="DishPrice" />
-                              <TextField fx:id="tfDishPrice" layoutX="10.0" layoutY="27.0" />
+                              <TextField fx:id="tfDishPrice" layoutX="10.0" layoutY="27.0" promptText=" Input DishPrice" />
                               <Label text="DishIngredient" />
-                              <ComboBox fx:id="cbDishIngredient" prefWidth="150.0" />
+                              <ComboBox fx:id="cbDishIngredient" prefWidth="150.0" promptText="Input DishIngredient " />
                               <Label layoutX="10.0" layoutY="53.0" text="DishConsume" />
-                              <TextField fx:id="tfDishConsume" layoutX="10.0" layoutY="70.0" />
+                              <TextField fx:id="tfDishConsume" layoutX="10.0" layoutY="70.0" promptText="Input DisConsume" />
                               <Label layoutX="10.0" layoutY="95.0" text="DishCatalogies" />
-                              <ComboBox fx:id="cbDishCatalogies" layoutX="10.0" layoutY="113.0" prefWidth="150.0" />
+                              <ComboBox fx:id="cbDishCatalogies" layoutX="10.0" layoutY="113.0" prefWidth="150.0" promptText="Input DishCatalogies " />
                               <Label layoutX="10.0" layoutY="355.0" text="DishStatus" />
-                              <ComboBox fx:id="cbDishStatus" layoutX="10.0" layoutY="373.0" prefWidth="150.0" />
+                              <ComboBox fx:id="cbDishStatus" layoutX="10.0" layoutY="373.0" prefWidth="150.0" promptText="Input DishStatus" />
                               <Label text="DishDescription" />
-                              <TextArea fx:id="taDishDesciption" prefHeight="100.0" prefWidth="100.0" />
-                              <Button id="button3" fx:id="btnDishBrowser" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="178.0" text="Browser" />
+                              <TextArea fx:id="taDishDesciption" prefHeight="100.0" prefWidth="100.0" promptText="Input DishDescription" />
+                              <Label fx:id="lbDishNameCheck" />
+                              <Button id="button3" fx:id="btnDishBrowser" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="178.0" text="Browser Image" />
                               <Button id="button3" fx:id="btnDishClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnDishCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
                               <Button id="button3" fx:id="btnDishUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
@@ -113,13 +117,16 @@
                      <right>
                         <VBox prefHeight="401.0" prefWidth="131.0" BorderPane.alignment="CENTER">
                            <children>
-                              <ImageView fx:id="imgOrderMenu" fitHeight="150.0" fitWidth="130.0" pickOnBounds="true" />
+                              <ImageView fx:id="imgOrderMenu" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../image/Icon/Dish.png" />
+                                 </image></ImageView>
                               <Label text="DishName" />
-                              <Label fx:id="lbOrderDishName" />
+                              <Label fx:id="lbOrderDishName" text="Name" />
                               <Label text="Quantity" />
                               <Spinner fx:id="snOrderDishQuantity" />
                               <Label text="Description" />
-                              <TextArea fx:id="taOrderDishDescription" prefHeight="200.0" prefWidth="200.0" />
+                              <TextArea fx:id="taOrderDishDescription" prefHeight="200.0" prefWidth="200.0" promptText="Information" />
                               <Button id="button3" fx:id="btnOrderMenuAdd" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Add" />
                            </children>
                         </VBox>
@@ -145,9 +152,9 @@
                                     <Label text="OrderID" />
                                     <Label fx:id="lbOrderID" />
                                     <Label text="Catalogies" />
-                                    <ComboBox fx:id="cbOrderCatalogies" prefWidth="150.0" />
+                                    <ComboBox fx:id="cbOrderCatalogies" prefWidth="150.0" promptText="Input Catalogies" />
                                     <Label text="Note" />
-                                    <TextArea fx:id="taOrderNote" prefHeight="200.0" prefWidth="200.0" />
+                                    <TextArea fx:id="taOrderNote" prefHeight="200.0" prefWidth="200.0" promptText="Input Note" />
                                     <Button id="button3" fx:id="btnOrderMiniSend" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Send" />
                                     <Button id="button3" fx:id="btnOrderMiniRemove" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Remove" />
                                     <Button id="button3" fx:id="btnOrderMiniDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
@@ -201,14 +208,13 @@
                         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                            <children>
                               <Label text="ChooseTable" />
-                              <ComboBox fx:id="cbBillTable" onMouseClicked="#handleMouseAction" prefWidth="150.0" />
+                              <ComboBox fx:id="cbBillTable" onMouseClicked="#handleMouseAction" prefWidth="150.0" promptText="Input Table" />
                               <Label text="CodeDiscount" />
-                              <TextField fx:id="tfBillDiscount" />
+                              <TextField fx:id="tfBillDiscount" promptText="Input CodeDiscount" />
                               <Label text="Note" />
-                              <TextArea fx:id="taBillNote" prefHeight="200.0" prefWidth="200.0" />
+                              <TextArea fx:id="taBillNote" prefHeight="200.0" prefWidth="200.0" promptText="Input Note" />
                               <Button id="button3" fx:id="btnBillClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnBillGet" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Get" />
-                              <Button id="button3" fx:id="btnBillPrint" mnemonicParsing="false" onAction="#showInvoice3" text="PrintBill" />
                               <Button id="button3" fx:id="btnBillCheckOut" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Check Out" />
                            </children>
                         </VBox>
@@ -241,7 +247,7 @@
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
-                        <TableView fx:id="tvBookInfo" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <TableView fx:id="tvBookInfo" onMouseClicked="#handleMouseAction" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <columns>
                             <TableColumn fx:id="colBookInfoID" prefWidth="75.0" text="BookID" />
                               <TableColumn fx:id="colBookInfoDate" prefWidth="77.77783966064453" text="BookDate" />
@@ -258,11 +264,22 @@
                      <right>
                         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Label text="Choose Table">
+                              <Label text="BookId">
                                  <VBox.margin>
                                     <Insets top="5.0" />
                                  </VBox.margin>
                               </Label>
+                              <Label fx:id="lbBookID" layoutX="10.0" layoutY="50.0" />
+                              <Label layoutX="10.0" layoutY="102.0" text="BookDate" />
+                              <DatePicker fx:id="dpBookDate" promptText="Input Date" />
+                              <Label layoutX="10.0" layoutY="15.0" text="BookTime" />
+                              <Spinner fx:id="snBookTime" />
+                              <Label layoutX="10.0" layoutY="15.0" text="CustomerName" />
+                              <TextField fx:id="tfBookCusName" editable="false" promptText="Input Name" />
+                              <Label layoutX="10.0" layoutY="33.0" text="BookCatalogies" />
+                              <ComboBox fx:id="cbBookCatalogies" layoutX="10.0" layoutY="85.0" prefWidth="150.0" promptText="Input Catalogies" />
+                              <Label layoutX="10.0" layoutY="67.0" text="BookNote" />
+                              <TextArea fx:id="taBookNote" prefHeight="200.0" prefWidth="200.0" promptText="Input Note" />
                               <Button id="button3" fx:id="btnGetBookDetail" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Get">
                                  <opaqueInsets>
                                     <Insets />
@@ -270,6 +287,7 @@
                                  <VBox.margin>
                                     <Insets top="5.0" />
                                  </VBox.margin></Button>
+                              <Button id="button3" fx:id="btnUpdateBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
                               <Button id="button3" fx:id="btnDeleteBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
                            </children>
                            <opaqueInsets>
@@ -293,8 +311,9 @@
                            <right>
                               <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Label text="Table" />
+                                    <Label text="Calogies" />
                                     <ComboBox fx:id="cbSendTable" prefWidth="150.0" />
+                                    <Button id="button3" fx:id="btnEditBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Edit" />
                                     <Button id="button3" fx:id="btnSendBook" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Send" />
                                  </children>
                                  <BorderPane.margin>
@@ -335,20 +354,25 @@
                         </TableView>
                      </center>
                      <right>
-                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                        <VBox prefHeight="669.0" prefWidth="140.0" BorderPane.alignment="CENTER">
                            <children>
-                              <ImageView fx:id="imgInventory" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" />
+                              <ImageView fx:id="imgInventory" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../image/Icon/Dish.png" />
+                                 </image></ImageView>
                               <Label text="ID" />
                               <Label fx:id="lbInventoryID" />
                               <Label text="Name" />
-                              <TextField fx:id="tfInventoryName" />
+                              <TextField fx:id="tfInventoryName" onKeyTyped="#handleTypeAction" promptText="Input ProductName" />
                               <Label text="Unit" />
-                              <TextField fx:id="tfInventoryUnit" />
+                              <TextField fx:id="tfInventoryUnit" promptText="Input ProductUnit" />
                               <Label text="Catalogies" />
-                              <ComboBox fx:id="cbInventoryCatalogies" prefWidth="150.0" />
+                              <ComboBox fx:id="cbInventoryCatalogies" prefWidth="150.0" promptText="Input ProductCatalogies" />
+                              <Label fx:id="lbInventoryCheck" />
                               <Button id="button3" fx:id="btnInventoryBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser Image" />
                               <Button id="button3" fx:id="btnInventoryClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnInventoryAdd" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Add" />
+                              <Button id="button3" fx:id="btnInventoryRemove" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Remove" />
                               <Button id="button3" fx:id="btnInventoryCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
                               <Button id="button3" fx:id="btnInventoryUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
                               <Button id="button3" fx:id="btnInventoryDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
@@ -372,6 +396,7 @@
                               <TableColumn fx:id="colStaffMail" prefWidth="71.11117553710938" text="Mail" />
                               <TableColumn fx:id="colStaffPossition" prefWidth="75.0" text="Possition" />
                               <TableColumn fx:id="colStaffSalary" prefWidth="57.3333740234375" text="Salary" />
+                              <TableColumn fx:id="colStaffUserName" prefWidth="57.3333740234375" text="UserName" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -381,29 +406,38 @@
                      <right>
                         <VBox prefHeight="571.0" prefWidth="117.0" BorderPane.alignment="CENTER">
                            <children>
-                              <ImageView fx:id="imgStaffImage" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" />
+                              <ImageView fx:id="imgStaffImage" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../image/Member/Anymouse.jpg" />
+                                 </image></ImageView>
                               <Label text="ID" />
                               <Label fx:id="lbStaffID" />
                               <Label text="Name" />
-                              <TextField fx:id="tfStaffName" />
+                              <TextField fx:id="tfStaffName" promptText="Input StaffName" />
                               <Label text="DOB" />
-                              <DatePicker fx:id="tfStaffDOB" />
+                              <DatePicker fx:id="tfStaffDOB" promptText="Input StaffDOB" />
                               <Label text="Address" />
-                              <TextField fx:id="tfStaffAddress" />
+                              <TextField fx:id="tfStaffAddress" promptText="Input StaffAddress" />
                               <Label text="Possition" />
-                              <ComboBox fx:id="cbStaffPossition" prefWidth="150.0" />
+                              <ComboBox fx:id="cbStaffPossition" prefWidth="150.0" promptText="Input StaffPossition" />
                               <Label layoutX="10.0" layoutY="355.0" text="Phone" />
-                              <TextField fx:id="tfStaffPhone" layoutX="10.0" layoutY="373.0" />
+                              <TextField fx:id="tfStaffPhone" layoutX="10.0" layoutY="373.0" onKeyTyped="#handleTypeAction" promptText="Input StaffPhone" />
                               <Label layoutX="10.0" layoutY="534.0" text="Mail" />
-                              <TextField fx:id="tfStaffMail" layoutX="10.0" layoutY="551.0" />
+                              <TextField fx:id="tfStaffMail" layoutX="10.0" layoutY="551.0" onKeyTyped="#handleTypeAction" promptText="Input StaffMail" />
                               <Label text="Salary" />
-                              <TextField fx:id="tfStaffSalary" />
-                              <Label text="Browser" />
-                              <Button id="button3" fx:id="btnStaffBrowser" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="179.0" text="Choose" />
-                              <Button id="button3" fx:id="btnStaffClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
-                              <Button id="button3" fx:id="btnStaffCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
-                              <Button id="button3" fx:id="btnStaffUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
-                              <Button id="button3" fx:id="btnStaffDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                              <TextField fx:id="tfStaffSalary" promptText="Input StaffSalary" />
+                              <Label layoutX="10.0" layoutY="430.0" text="UserName" />
+                              <TextField fx:id="tfStaffUsername" onKeyTyped="#handleTypeAction" promptText="Input StaffUserName" />
+                              <Label fx:id="lbStaffCheck" />
+                              <VBox prefHeight="201.0" prefWidth="140.0">
+                                 <children>
+                                    <Button id="button3" fx:id="btnStaffBrowser" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="179.0" text="Browser Image" />
+                                    <Button id="button3" fx:id="btnStaffClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
+                                    <Button id="button3" fx:id="btnStaffCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
+                                    <Button id="button3" fx:id="btnStaffUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
+                                    <Button id="button3" fx:id="btnStaffDelete" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Delete" />
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
                      </right>
@@ -423,6 +457,7 @@
                               <TableColumn fx:id="colCustomerPhone" prefWidth="68.888916015625" text="CusPhone" />
                               <TableColumn fx:id="colCustomerMail" prefWidth="64.22222900390625" text="CusMail" />
                               <TableColumn fx:id="colCustomerGender" prefWidth="87.55563354492188" text="CusGender" />
+                              <TableColumn fx:id="colCustomerUserName" prefWidth="87.55563354492188" text="CusUserName" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -432,22 +467,28 @@
                      <right>
                         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                            <children>
-                              <ImageView fx:id="imgCustomer" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" />
+                              <ImageView fx:id="imgCustomer" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../image/Member/Anymouse.jpg" />
+                                 </image></ImageView>
                               <Label layoutX="10.0" layoutY="10.0" text="ID" />
                               <Label fx:id="lbCustomerID" layoutX="10.0" layoutY="171.0" />
                               <Label text="Name" />
-                              <TextField fx:id="tfCustomerName" />
+                              <TextField fx:id="tfCustomerName" promptText=" Input CustomerName" />
                               <Label text="DOB" />
-                              <DatePicker fx:id="tfCustomerDOB" />
+                              <DatePicker fx:id="tfCustomerDOB" promptText="Input CustomerDOB" />
                               <Label layoutX="10.0" layoutY="10.0" text="Address" />
-                              <TextField fx:id="tfCustomerAddress" layoutX="10.0" layoutY="27.0" />
+                              <TextField fx:id="tfCustomerAddress" layoutX="10.0" layoutY="27.0" promptText="Input CustomerDOB" />
                               <Label layoutX="10.0" layoutY="122.0" text="Phone" />
-                              <TextField fx:id="tfCustomerPhone" layoutX="10.0" layoutY="139.0" />
+                              <TextField fx:id="tfCustomerPhone" layoutX="10.0" layoutY="139.0" onKeyTyped="#handleTypeAction" promptText="Input CustomerPhone" />
                               <Label layoutX="10.0" layoutY="241.0" text="Mail" />
-                              <TextField fx:id="tfCustomerMail" layoutX="10.0" layoutY="258.0" />
+                              <TextField fx:id="tfCustomerMail" layoutX="10.0" layoutY="258.0" onKeyTyped="#handleTypeAction" promptText="Input CustomerMail" />
                               <Label text="Gender" />
-                              <ComboBox fx:id="cbCustomerGender" prefWidth="150.0" />
-                              <Button id="button3" fx:id="btnCustomerBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser" />
+                              <ComboBox fx:id="cbCustomerGender" prefWidth="150.0" promptText="Input CustomerGender" />
+                              <Label layoutX="10.0" layoutY="355.0" text="UserName" />
+                              <TextField fx:id="tfCustomerUserName" onKeyTyped="#handleTypeAction" promptText="Input CustomerUserName" />
+                              <Label fx:id="lbCusCheck" />
+                              <Button id="button3" fx:id="btnCustomerBrowser" mnemonicParsing="false" onAction="#handleButtonAction" text="Browser Image" />
                               <Button id="button3" fx:id="btnCustomerClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnCustomerCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
                               <Button id="button3" fx:id="btnCustomerUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
@@ -480,11 +521,12 @@
                               <Label text="ID" />
                               <Label fx:id="lbCodeID" />
                               <Label text="Code" />
-                              <TextField fx:id="tfCodeValue" />
+                              <TextField fx:id="tfCodeValue" onKeyTyped="#handleTypeAction" promptText="Input CodeValue" />
                               <Label layoutX="10.0" layoutY="10.0" text="Quantity" />
-                              <TextField fx:id="tfCodeQuantity" layoutX="10.0" layoutY="27.0" />
+                              <TextField fx:id="tfCodeQuantity" layoutX="10.0" layoutY="27.0" promptText="Input CodeQuantity" />
                               <Label layoutX="10.0" layoutY="87.0" text="DiscountPercent" />
-                              <TextField fx:id="tfCodeDiscountPercent" layoutX="10.0" layoutY="105.0" />
+                              <TextField fx:id="tfCodeDiscountPercent" layoutX="10.0" layoutY="105.0" promptText="Input DiscountPercent" />
+                              <Label fx:id="lbCodeCheck" />
                               <Button id="button3" fx:id="btnCodeClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnCodeCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New Code" />
                               <Button id="button3" fx:id="btnCodeUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update Code" />
@@ -523,12 +565,12 @@
                      <right>
                         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Label text="Catalog" />
-                              <ComboBox fx:id="cbReceiptCatalog" prefWidth="150.0" />
+                              <Label text="Catalogies" />
+                              <ComboBox fx:id="cbReceiptCatalog" prefWidth="150.0" promptText="Input Catalogies" />
                               <Label text="Price" />
-                              <TextField fx:id="tfReceiptPrice" />
+                              <TextField fx:id="tfReceiptPrice" promptText="Input Price" />
                               <Label text="Note" />
-                              <TextArea fx:id="taReceiptNote" prefHeight="200.0" prefWidth="200.0" />
+                              <TextArea fx:id="taReceiptNote" prefHeight="200.0" prefWidth="200.0" promptText="Input Note" />
                               <Button id="button3" fx:id="btnReceiptClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnReceiptCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
                               <Button id="button3" fx:id="btnReceiptUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
@@ -567,12 +609,12 @@
                      <right>
                         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Label text="Catalog" />
-                              <ComboBox fx:id="cbPaymentCatalog" prefWidth="150.0" />
+                              <Label text="Catalogies" />
+                              <ComboBox fx:id="cbPaymentCatalog" prefWidth="150.0" promptText="Input Catalogies" />
                               <Label layoutX="10.0" layoutY="10.0" text="Price" />
-                              <TextField fx:id="tfPaymentPrice" layoutX="10.0" layoutY="27.0" />
+                              <TextField fx:id="tfPaymentPrice" layoutX="10.0" layoutY="27.0" promptText="Input Price" />
                               <Label text="Note" />
-                              <TextArea fx:id="taPaymentNote" prefHeight="200.0" prefWidth="200.0" />
+                              <TextArea fx:id="taPaymentNote" prefHeight="200.0" prefWidth="200.0" promptText="Input Note" />
                               <Button id="button3" fx:id="btnPaymentClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnPaymentCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Create" />
                               <Button id="button3" fx:id="btnPaymentUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />
@@ -590,7 +632,7 @@
                         <PieChart fx:id="pChart" prefHeight="419.0" prefWidth="767.0" BorderPane.alignment="CENTER" />
                      </center>
                      <bottom>
-                        <Button id="button3" fx:id="btnDayReport" mnemonicParsing="false" text="Report" BorderPane.alignment="CENTER" />
+                        <Button id="button3" fx:id="btnDayReport" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Report" BorderPane.alignment="CENTER" />
                      </bottom>
                   </BorderPane>
                </content>
@@ -605,7 +647,6 @@
                               <TableColumn fx:id="colAccountUsername" prefWidth="128.2222023010254" text="Username" />
                               <TableColumn fx:id="colAccountPassword" prefWidth="109.55558776855469" text="Password" />
                               <TableColumn fx:id="colAccountRole" prefWidth="126.44439697265625" text="Role" />
-                              <TableColumn fx:id="colAccountFullname" prefWidth="126.44439697265625" text="Fullname" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -618,13 +659,12 @@
                               <Label text="ID" />
                               <Label fx:id="lbAccountID" />
                               <Label text="Username" />
-                              <TextField fx:id="tfAccountUsername" />
+                              <TextField fx:id="tfAccountUsername" editable="false" promptText="Input UserName" />
                               <Label layoutX="10.0" layoutY="10.0" text="Password" />
-                              <TextField fx:id="tfAccountPassword" layoutX="10.0" layoutY="27.0" />
+                              <TextField fx:id="tfAccountPassword" layoutX="10.0" layoutY="27.0" promptText="Input Password" />
                               <Label text="Role" />
-                              <ComboBox fx:id="cbAccountRole" prefWidth="150.0" />
-                              <Label text="Fullname" />
-                              <TextField fx:id="tfAccountFullname" />
+                              <ComboBox fx:id="cbAccountRole" prefWidth="150.0" promptText="Input Role" />
+                              <Label fx:id="lbCheck" />
                               <Button id="button3" fx:id="btnAccountClear" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Clear" />
                               <Button id="button3" fx:id="btnAccountCreate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="New" />
                               <Button id="button3" fx:id="btnAccountUpdate" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Update" />

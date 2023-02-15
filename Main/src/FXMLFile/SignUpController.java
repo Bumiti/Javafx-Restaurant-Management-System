@@ -17,21 +17,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +44,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -90,6 +95,14 @@ public class SignUpController implements Initializable {
     ToggleGroup gender = new ToggleGroup();
     @FXML
     private Label lbCheck;
+    @FXML
+    private Label lbCheckMail;
+    @FXML
+    private Label lbCheckPhone;
+    @FXML
+    private Button tgPassword1;
+    @FXML
+    private Button tgPassword2;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -107,6 +120,28 @@ public class SignUpController implements Initializable {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 setDisable(empty || date.compareTo(LocalDate.now()) > 0);
+            }
+        });
+        tfSignUpDOB.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "dd-MM-yyyy";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
             }
         });
     }
@@ -152,7 +187,7 @@ public class SignUpController implements Initializable {
         //1 tao ket noi
         Connection cn = getConnect();
         //2 tao doi tuong chua lenh insert
-        String sql = "INSERT INTO Customer VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Customer VALUES (?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement st = cn.prepareStatement(sql);
@@ -164,8 +199,9 @@ public class SignUpController implements Initializable {
             st.setString(5, tfSignUpMail.getText());
             RadioButton button = (RadioButton) gender.getSelectedToggle();
             st.setString(6, button.getText());
+            st.setString(7, tfSignUpUserName.getText());
             fis = new FileInputStream(file);
-            st.setBinaryStream(7, fis, file.length());
+            st.setBinaryStream(8, fis, file.length());
             //4 thuc hien insert sql
             st.executeUpdate();
 //            st.close();
@@ -183,9 +219,9 @@ public class SignUpController implements Initializable {
         alert.setTitle("Message");
         Optional<ButtonType> result = alert.showAndWait();
     }
-    
+
     private void checkUserName() {
-        String sql = "select * from Account where accountUserName='" + tfSignUpUserName.getText() + "'";
+        String sql = "select * from Account where accountUserName=N'" + tfSignUpUserName.getText() + "'";
         Connection cn = getConnect();
         Statement st;
         try {
@@ -202,17 +238,64 @@ public class SignUpController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
+    private void checkPhone() {
+        String sql1 = "select * from Customer where customerPhone=N'" + tfSignUpPhone.getText() + "'";
+        String sql2 = "select * from Staff where staffPhone=N'" + tfSignUpPhone.getText() + "'";
+        Connection cn = getConnect();
+        Statement st1;
+        Statement st2;
+        try {
+            st1 = cn.createStatement();
+            ResultSet rs1 = st1.executeQuery(sql1);
+            st2 = cn.createStatement();
+            ResultSet rs2 = st2.executeQuery(sql2);
+            if (rs1.next() || rs2.next()) {
+                lbCheckPhone.setText("Your Phone is used");
+                btnAccountCreate.setDisable(true);
+            } else {
+                btnAccountCreate.setDisable(false);
+                lbCheckPhone.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkMail() {
+        String sql1 = "select * from Customer where customerMail=N'" + tfSignUpMail.getText() + "'";
+        String sql2 = "select * from Staff where staffMail=N'" + tfSignUpMail.getText() + "'";
+
+        Connection cn = getConnect();
+        Statement st1;
+        Statement st2;
+        try {
+            st1 = cn.createStatement();
+            ResultSet rs1 = st1.executeQuery(sql1);
+            st2 = cn.createStatement();
+            ResultSet rs2 = st2.executeQuery(sql2);
+            if (rs1.next() || rs2.next()) {
+                lbCheckMail.setText("Your Mail is used");
+                btnAccountCreate.setDisable(true);
+            } else {
+                btnAccountCreate.setDisable(false);
+                lbCheckMail.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void handleButtonAction(MouseEvent event) {
         if (event.getSource() == btnAccountCreate) {
-            if (!Pattern.matches("\\w{1,}", tfSignUpFullName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfSignUpFullName.getText())) {
                 alert("Please input Fullname");
             } else if (tfSignUpDOB.getValue() == null) {
                 alert("Please input Day of Birth");
             } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfSignUpMail.getText())) {
                 alert("Mail wrong form");
-            } else if (!Pattern.matches("\\w{1,}|\\d{1,}", tfSignUpAddress.getText())) {
+            } else if (!Pattern.matches("\\X{1,}|\\d{1,}", tfSignUpAddress.getText())) {
                 alert("Please input Address");
             } else if (!Pattern.matches("\\d{8,12}", tfSignUpPhone.getText())) {
                 alert("Phone from 8-12");
@@ -220,15 +303,19 @@ public class SignUpController implements Initializable {
                 alert("Please input Username");
             } else if (!Pattern.matches("\\w{1,}|\\d{1,}", tfSignUpPassWord1.getText())) {
                 alert("Please input Password");
-            } else if (!Pattern.matches("\\w{1,}|\\d{1,}", tfSignUpPassWord2.getText())) {
-                alert("Please input Confirm Password");
+            } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfSignUpPassWord2.getText())) {
+                alert("Password must contain at least one digit [0-9].\n"
+                        + "Password must contain at least one lowercase Latin character [a-z].\n"
+                        + "Password must contain at least one uppercase Latin character [A-Z].\n"
+                        + "Password must contain at least one special character like ! @ # & ( ).\n"
+                        + "Password must contain a length of at least 8 characters and a maximum of 20 characters.");
             } else if (!Pattern.matches(tfSignUpPassWord1.getText(), tfSignUpPassWord2.getText())) {
                 alert("Password is not same");
             } else if (imgCustomer.getImage() == null) {
                 alert("Please choose image");
             } else {
                 alertSuccess("Successfully Sign Up");
-                insert("insert into Account values ('" + tfSignUpUserName.getText() + "','" + tfSignUpPassWord1.getText() + "', 'Customer' ,'" + tfSignUpFullName.getText() + "')");
+                insert("insert into Account values (N'" + tfSignUpUserName.getText() + "',N'" + tfSignUpPassWord1.getText() + "', 'Customer')");
                 insertCustomer();
             }
         }
@@ -258,11 +345,48 @@ public class SignUpController implements Initializable {
             }
         }
     }
+    private String password1;
+    private String password2;
+    private int n = 1;
+
+    @FXML
+    private void showPassword1() {
+        password1 = tfSignUpPassWord1.getText();
+        tfSignUpPassWord1.clear();
+        tfSignUpPassWord1.setPromptText(password1);
+    }
+
+    @FXML
+    private void hidePassword1() {
+        password1 = tfSignUpPassWord1.getPromptText();
+        tfSignUpPassWord1.setText(password1);
+        tfSignUpPassWord1.setPromptText("Password");
+    }
+
+    @FXML
+    private void showPassword2() {
+        password2 = tfSignUpPassWord2.getText();
+        tfSignUpPassWord2.clear();
+        tfSignUpPassWord2.setPromptText(password2);
+    }
+
+    @FXML
+    private void hidePassword2() {
+        password1 = tfSignUpPassWord2.getPromptText();
+        tfSignUpPassWord2.setText(password2);
+        tfSignUpPassWord2.setPromptText("Enter your Password again");
+    }
 
     @FXML
     private void handleTypeAction(KeyEvent event) {
-        if(event.getSource()==tfSignUpUserName){
+        if (event.getSource() == tfSignUpUserName) {
             checkUserName();
+        }
+        if (event.getSource() == tfSignUpPhone) {
+            checkPhone();
+        }
+        if (event.getSource() == tfSignUpMail) {
+            checkMail();
         }
     }
 

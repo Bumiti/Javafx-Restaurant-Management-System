@@ -8,6 +8,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -28,7 +29,7 @@
       </HBox>
    </top>
    <center>
-      <VBox id="background" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../main/application.css" BorderPane.alignment="TOP_LEFT">
+      <VBox id="background" alignment="TOP_CENTER" prefHeight="500.0" prefWidth="747.0" stylesheets="@../main/application.css" BorderPane.alignment="TOP_LEFT">
          <children>
             <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
                <children>
@@ -98,7 +99,8 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
                      <children>
-                        <TextField fx:id="tfSignUpMail" promptText="E-mail, G-mail or any mail you have" />
+                        <TextField fx:id="tfSignUpMail" onKeyTyped="#handleTypeAction" promptText="E-mail, G-mail or any mail you have" />
+                        <Label fx:id="lbCheckMail" />
                      </children>
                   </VBox>
                </children>
@@ -128,7 +130,8 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
                      <children>
-                        <TextField fx:id="tfSignUpPhone" prefHeight="26.0" prefWidth="368.0" promptText="+84" />
+                        <TextField fx:id="tfSignUpPhone" onKeyTyped="#handleTypeAction" prefHeight="26.0" prefWidth="368.0" promptText="+84" />
+                        <Label fx:id="lbCheckPhone" />
                      </children>
                   </VBox>
                </children>
@@ -149,7 +152,7 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1000.0" spacing="30.0">
+            <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="656.0" spacing="30.0">
                <children>
                   <VBox alignment="CENTER" prefHeight="70.0" prefWidth="144.0">
                      <children>
@@ -160,13 +163,18 @@
                         <Insets />
                      </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="319.0">
                      <children>
-                        <PasswordField fx:id="tfSignUpPassWord1" prefHeight="26.0" prefWidth="368.0" promptText="Password" />
+                        <PasswordField fx:id="tfSignUpPassWord1" prefHeight="26.0" prefWidth="307.0" promptText="Password" />
                      </children>
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="10.0">
+                     <children>
+                        <Button fx:id="tgPassword1" mnemonicParsing="false" onMousePressed="#showPassword1" onMouseReleased="#hidePassword1" />
+                     </children>
                   </VBox>
                </children>
                <VBox.margin>
@@ -181,9 +189,14 @@
                         <Label alignment="CENTER" prefHeight="18.0" prefWidth="150.0" text="Confim Password" />
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="70.0" prefWidth="368.0">
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="322.0">
                      <children>
                         <PasswordField fx:id="tfSignUpPassWord2" prefHeight="26.0" prefWidth="369.0" promptText="Enter your Password again" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="0.0">
+                     <children>
+                        <Button fx:id="tgPassword2" mnemonicParsing="false" onAction="#showPassword2" onMousePressed="#showPassword2" onMouseReleased="#hidePassword2" />
                      </children>
                   </VBox>
                </children>
@@ -201,10 +214,13 @@
    <left>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox id="background" alignment="CENTER" prefHeight="600.0" prefWidth="284.0" spacing="40.0">
+            <VBox id="background" alignment="TOP_CENTER" prefHeight="500.0" prefWidth="200.0" spacing="40.0">
                <children>
-                  <ImageView fx:id="imgCustomer" fitHeight="150.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
-                  <Button id="button1" fx:id="btnImageBrowser" mnemonicParsing="false" onMouseClicked="#handleButtonAction" stylesheets="@../main/application.css" text="Choose Image" />
+                  <ImageView fx:id="imgCustomer" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../image/Member/Anymouse.jpg" />
+                     </image></ImageView>
+                  <Button id="button1" fx:id="btnImageBrowser" mnemonicParsing="false" onMouseClicked="#handleButtonAction" prefWidth="122.0" stylesheets="@../main/application.css" text="Browser Image" />
                </children>
             </VBox>
          </children>

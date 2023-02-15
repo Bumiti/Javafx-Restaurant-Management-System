@@ -4,18 +4,20 @@
  */
 package jdbcDAO;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author Admin
  */
 public class ReceiptDB {
     private int thuID;
-    private String thuDate;
+    private LocalDate thuDate;
     private String thuCatalog;
     private int thuPrice;
     private String thuNote;
 
-    public ReceiptDB(int thuID, String thuDate, String thuCatalog, int thuPrice, String thuNote) {
+    public ReceiptDB(int thuID, LocalDate thuDate, String thuCatalog, int thuPrice, String thuNote) {
         this.thuID = thuID;
         this.thuDate = thuDate;
         this.thuCatalog = thuCatalog;
@@ -27,7 +29,7 @@ public class ReceiptDB {
         return thuID;
     }
 
-    public String getThuDate() {
+    public LocalDate getThuDate() {
         return thuDate;
     }
 
@@ -42,6 +44,8 @@ public class ReceiptDB {
     public String getThuNote() {
         return thuNote;
     }
+
+    
     
     
 }

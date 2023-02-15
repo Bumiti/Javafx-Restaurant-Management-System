@@ -13,16 +13,16 @@ insert into Restaurant values(1);
 
 create table Brand(
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
-  brandAddress varchar(60)
+  brandAddress nvarchar(255)
 );
 go
 
 create table Inventory(
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
   productID int identity(1,1) primary key,
-  productName varchar(50)  ,
+  productName varchar(255)  ,
   productQOH int,
-  productUnit varchar(20) not null,
+  productUnit varchar(255) not null,
   productPrice int ,
   productCatalogies varchar(10),
   productImage image,
@@ -32,13 +32,14 @@ go
 create table Staff(
   brandID int  FOREIGN KEY REFERENCES Restaurant(brandID),
   staffID int primary key identity(1,1),
-  staffName varchar(30) NOT NULL UNIQUE,
+  staffName nvarchar(255) NOT NULL UNIQUE,
   staffDOB date,
-  staffAddress varchar(60),
+  staffAddress nvarchar(255),
   staffPossition varchar(10) not null,
-  staffPhone int,
-  staffMail varchar(30),
+  staffPhone varchar(12),
+  staffMail varchar(255),
   staffSalary int,
+  staffUserName varchar(255),
   staffImage image
 );
 go
@@ -46,12 +47,12 @@ go
 create table Menu(
   brandID int  FOREIGN KEY REFERENCES Restaurant(brandID),
   dishID int primary key identity(1,1),
-  dishName varchar(50),
+  dishName varchar(255),
   dishPrice int,
-  dishIngredient varchar(50),
+  dishIngredient varchar(255),
   dishConsume int,
   dishCatalogies varchar(30),
-  dishStatus varchar(20),
+  dishStatus varchar(11),
   dishDescription varchar(255),
   dishImage image
 );
@@ -60,40 +61,72 @@ go
 create table Thu(
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
   thuID int primary key identity(1,1),
-  thuDate varchar(30),
+  thuDate date,
   thuCatalog varchar(50),
   thuPrice int,
-  thuNote varchar(255),
+  thuNote nvarchar(255),
 );
 go
 
 create table Chi(
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
   chiID int primary key identity(1,1),
-  chiDate varchar(30),
+  chiDate date,
   chiCatalog varchar(50),
   chiPrice int,
-  chiNote varchar(255)
+  chiNote nvarchar(255)
+);
+go
+
+create table EOD(
+	brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
+	eodID int identity(1,1) primary key,
+	eodTime date,
+	eodThu int,
+	eodChi int
+);
+go
+select eodDetailThuID,eodDetailThuTime,eodDetailThuCatalog,eodDetailThuPrice,eodDetailThuNote from EODDetailThu where eodDetailThuTime ='2023-02-11'
+go
+select * from EODDetailThu
+go
+create table EODDetailThu(
+	brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
+	eodDetailThuID int,
+	eodDetailThuTime date,
+	eodDetailThuCatalog varchar (30),
+	eodDetailThuPrice int,
+	eodDetailThuNote nvarchar(255)
+);
+go
+
+create table EODDetailChi(
+	brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
+	eodDetailChiID int,
+	eodDetailChiTime date,
+	eodDetailChiCatalog varchar (30),
+	eodDetailChiPrice int,
+	eodDetailChiNote nvarchar(255)
 );
 go
 
 create table Account(
   accountID int identity(1,1) primary key,
-  accountUserName varchar(60),
-  accountPassWord varchar(60),
-  accountRole varchar(10),
-  accountFullname varchar(60)
+  accountUserName varchar(255),
+  accountPassWord varchar(255),
+  accountRole varchar(10)
 );
 go
 
 create table Customer(
   customerID int primary key identity(1,1),
-  customerName varchar(60),
+  customerName nvarchar(255),
   customerDOB date,
-  customerAddress varchar(60),
-  customerPhone int,
-  customerMail varchar(50),
+  customerAddress nvarchar(255),
+  customerPhone varchar(12),
+  customerMail varchar(255),
   customerGender varchar(6),
+  customerUserName varchar(255),
   customerImage image
 );
 go
@@ -103,10 +136,10 @@ create table Book(
   bookID int,
   bookDate date,
   bookTime varchar(10) ,
-  bookCustomerName varchar(50),
+  bookCustomerName nvarchar(255),
   bookCatalogies varchar(50),
   bookNote nvarchar(255),
-  bookDishName varchar(60),
+  bookDishName varchar(255),
   bookDishQuantity int,
   bookDishPrice int 
 );
@@ -125,12 +158,13 @@ go
 create table codeDiscount(
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
   codeID int primary key identity(1,1),
-  codeValue varchar(10),
+  codeValue varchar(255),
   codeQuantity int,
   discountPercent int
 );
 go
-
+drop table [Order]
+go
 create table [Order](
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
   orderID int,
@@ -158,3 +192,5 @@ create table [CusOrderMini](
   dishQuantity int
 );
 go
+
+
