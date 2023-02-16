@@ -5,12 +5,12 @@ use Project
 go
 
 create table Restaurant(
-  brandID int primary key
+  brandID int primary key,
   brandAddress nvarchar(255)
 );
 go
 
-insert into Restaurant values(1);
+insert into Restaurant values(1,'590, Cach Mang Thang Tam');
 
 create table Inventory(
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
