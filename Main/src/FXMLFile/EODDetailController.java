@@ -26,7 +26,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import jdbcDAO.*;
+
 /**
  * FXML Controller class
  *
@@ -63,7 +66,7 @@ public class EODDetailController implements Initializable {
     @FXML
     private TableColumn<EODChiDetailDB, String> colChiNote;
     @FXML
-    private Button btnLoad;
+    private BorderPane bpEODDetails;
 
     /**
      * Initializes the controller class.
@@ -171,8 +174,9 @@ public class EODDetailController implements Initializable {
 
     @FXML
     private void handleMouseAction(MouseEvent event) {
-        if(event.getSource()==btnLoad){
-
+        if (event.getSource() == btnClose) {
+            Stage stage = (Stage) bpEODDetails.getScene().getWindow();
+            stage.close();
         }
     }
 }

@@ -632,7 +632,12 @@
                         <PieChart fx:id="pChart" prefHeight="419.0" prefWidth="767.0" BorderPane.alignment="CENTER" />
                      </center>
                      <bottom>
-                        <Button id="button3" fx:id="btnDayReport" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Report" BorderPane.alignment="CENTER" />
+                        <VBox fx:id="btnShowReport" BorderPane.alignment="CENTER">
+                           <children>
+                              <Button id="button3" fx:id="btnDayReport" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Report" />
+                              <Button mnemonicParsing="false" text="Button" />
+                           </children>
+                        </VBox>
                      </bottom>
                   </BorderPane>
                </content>

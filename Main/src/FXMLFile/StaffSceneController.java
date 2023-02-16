@@ -154,7 +154,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private javafx.scene.control.TextField tfStaffSalary;
     @FXML
-    private Button btnStaffCreate;
+    public Button btnStaffCreate;
     @FXML
     private TableView<StaffDB> tvStaff;
     @FXML
@@ -171,7 +171,7 @@ public class StaffSceneController implements Initializable {
     private TableColumn<StaffDB, Integer> colStaffSalary;
     private Button btnBrowser;
     @FXML
-    private Button btnStaffClear;
+    public Button btnStaffClear;
     private FileChooser fileChooser;
     private File file;
     private Stage stage;
@@ -202,7 +202,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private Label lbStaffID;
     @FXML
-    private Button btnStaffUpdate;
+    public Button btnStaffUpdate;
     @FXML
     public Button btnStaffDelete;
     @FXML
@@ -220,13 +220,13 @@ public class StaffSceneController implements Initializable {
     @FXML
     private javafx.scene.control.TextField tfCodeQuantity;
     @FXML
-    private Button btnCodeClear;
+    public Button btnCodeClear;
     @FXML
-    private Button btnCodeCreate;
+    public Button btnCodeCreate;
     @FXML
-    private Button btnCodeUpdate;
+    public Button btnCodeUpdate;
     @FXML
-    private Button btnCodeDelete;
+    public Button btnCodeDelete;
     @FXML
     private TableView<InventoryDB> tvInventory;
     @FXML
@@ -248,17 +248,17 @@ public class StaffSceneController implements Initializable {
     @FXML
     private ComboBox<String> cbInventoryCatalogies;
     @FXML
-    private Button btnInventoryBrowser;
+    public Button btnInventoryBrowser;
     @FXML
-    private Button btnInventoryClear;
+    public Button btnInventoryClear;
     @FXML
-    private Button btnInventoryCreate;
+    public Button btnInventoryCreate;
     @FXML
-    private Button btnInventoryUpdate;
+    public Button btnInventoryUpdate;
     @FXML
     public Button btnInventoryDelete;
     @FXML
-    private Button btnStaffBrowser;
+    public Button btnStaffBrowser;
     @FXML
     private ImageView imgInventory;
     @FXML
@@ -300,15 +300,15 @@ public class StaffSceneController implements Initializable {
     @FXML
     private ComboBox<String> cbDishCatalogies;
     @FXML
-    private Button btnDishBrowser;
+    public Button btnDishBrowser;
     @FXML
-    private Button btnDishClear;
+    public Button btnDishClear;
     @FXML
-    private Button btnDishCreate;
+    public Button btnDishCreate;
     @FXML
-    private Button btnDishUpdate;
+    public Button btnDishUpdate;
     @FXML
-    private Button btnDishDelete;
+    public Button btnDishDelete;
     @FXML
     private ComboBox<String> cbDishStatus;
     @FXML
@@ -513,9 +513,9 @@ public class StaffSceneController implements Initializable {
     @FXML
     public Tab tabDisCode;
     @FXML
-    private Tab tabReceipts;
+    public Tab tabReceipts;
     @FXML
-    private Tab tabPayments;
+    public Tab tabPayments;
     @FXML
     public Tab tabReport;
     @FXML
@@ -603,7 +603,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private Button btnDeleteBook;
     @FXML
-    private Button btnInventoryAdd;
+    public Button btnInventoryAdd;
     @FXML
     private Button btnRefresh;
     @FXML
@@ -637,7 +637,7 @@ public class StaffSceneController implements Initializable {
     @FXML
     private Label lbInventoryCheck;
     @FXML
-    private Button btnInventoryRemove;
+    public Button btnInventoryRemove;
     @FXML
     private Label lbCodeCheck;
     @FXML
@@ -656,6 +656,8 @@ public class StaffSceneController implements Initializable {
     private Spinner<String> snBookTime;
     @FXML
     private Button btnEditBook;
+    @FXML
+    private VBox btnShowReport;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -1457,12 +1459,18 @@ public class StaffSceneController implements Initializable {
             if (checkDayReport() == true) {
                 alert("Please Check out all table");
             } else {
-//                insert("insert into EOD values(1,'" + lbTime.getText() + "'," + lbTotalReceipt.getText() + "," + lbTotalPayment.getText() + ")");
-//                insert("insert into EODDetailThu(brandID,eodDetailThuID,eodDetailThuTime,eoddetailThuCatalog,eoddetailThuPrice,eoddetailThuNote) select 1,thuID,Thu.thuDate,Thu.thuCatalog,Thu.thuPrice,Thu.thuNote from Thu");
-//                insert("insert into EODDetailChi(brandID,eodDetailChiID,eodDetailChiTime,eoddetailChiCatalog,eoddetailChiPrice,eoddetailChiNote) select 1,chiID,Chi.chiDate,Chi.chiCatalog,Chi.chiPrice,Chi.chiNote from Chi");
-//                
+                insert("insert into EOD values(1,'" + lbTime.getText() + "'," + lbTotalReceipt.getText() + "," + lbTotalPayment.getText() + ")");
+                insert("insert into EODDetailThu(brandID,eodDetailThuID,eodDetailThuTime,eoddetailThuCatalog,eoddetailThuPrice,eoddetailThuNote) select 1,thuID,Thu.thuDate,Thu.thuCatalog,Thu.thuPrice,Thu.thuNote from Thu");
+                insert("insert into EODDetailChi(brandID,eodDetailChiID,eodDetailChiTime,eoddetailChiCatalog,eoddetailChiPrice,eoddetailChiNote) select 1,chiID,Chi.chiDate,Chi.chiCatalog,Chi.chiPrice,Chi.chiNote from Chi");
+                delete("delete from table Thu");
+                delete("delete from table Chi");
+                showReceiptDB();
+                showPaymentDB();
                 modalBoxEOD("/FXMLFile/EOD.fxml", "EOD");
             }
+        }
+        if (event.getSource() == btnShowReport) {
+            modalBoxEOD("/FXMLFile/EOD.fxml", "EOD");
         }
         if (event.getSource() == btnEditBook) {
             modalBoxBookEdit("/FXMLFile/UpdateBook.fxml", "Update Book");

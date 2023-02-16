@@ -26,6 +26,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jdbcDAO.*;
@@ -36,7 +37,7 @@ import jdbcDAO.*;
  * @author Admin
  */
 public class EODController implements Initializable {
-    
+
     @FXML
     private TableColumn<EOD, Integer> colEODID;
     @FXML
@@ -49,6 +50,8 @@ public class EODController implements Initializable {
     private Button btnClose;
     @FXML
     public TableView<EOD> tvEOD;
+    @FXML
+    private BorderPane bpEOD;
 
     /**
      * Initializes the controller class.
@@ -56,8 +59,8 @@ public class EODController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         showReceiptDB();
-    }    
-    
+    }
+
     public static Connection getConnect() {
         Connection cn = null;
         String url = "jdbc:sqlserver://127.0.0.1:1433;database=Project";
@@ -73,7 +76,7 @@ public class EODController implements Initializable {
         }
         return cn;
     }
-    
+
     private void executeQuery(String sql) {
         Connection cn = getConnect();
         Statement st;
@@ -84,7 +87,7 @@ public class EODController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     public ObservableList<EOD> getEOD() {
         ObservableList<EOD> eod = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
@@ -105,7 +108,7 @@ public class EODController implements Initializable {
         }
         return eod;
     }
-    
+
     public void showReceiptDB() {
         ObservableList<EOD> list = getEOD();
         colEODID.setCellValueFactory(new PropertyValueFactory<EOD, Integer>("eodID"));
@@ -137,6 +140,10 @@ public class EODController implements Initializable {
     private void handleMouseAction(MouseEvent event) throws IOException {
         if (event.getSource() == tvEOD && event.getClickCount() == 2) {
             modalBoxEODDetail("/FXMLFile/EODDetail.fxml", "EODDetail");
+        }
+        if (event.getSource() == btnClose) {
+            Stage stage = (Stage) bpEOD.getScene().getWindow();
+            stage.close();
         }
     }
 }

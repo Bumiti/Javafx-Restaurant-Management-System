@@ -90,7 +90,7 @@
          <center>
             <StackPane prefHeight="500.0" prefWidth="900.0" BorderPane.alignment="CENTER">
                <children>
-                  <BorderPane fx:id="bpHomepage" prefHeight="500.0" prefWidth="900.0">
+                  <BorderPane fx:id="bpHomepage" prefHeight="500.0" prefWidth="900.0" visible="false">
                      <center>
                         <StackPane prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER">
                            <children>
@@ -121,7 +121,7 @@
                         <Button id="button3" fx:id="btnRight" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleClickAction" prefWidth="50.0" text="&gt;" textAlignment="CENTER" BorderPane.alignment="CENTER" />
                      </right>
                   </BorderPane>
-                  <BorderPane fx:id="bpMenu" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="900.0" visible="false" StackPane.alignment="CENTER">
+                  <BorderPane fx:id="bpMenu" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="900.0" StackPane.alignment="CENTER">
                      <center>
                         <StackPane prefHeight="500.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
                            <children>

@@ -138,7 +138,7 @@ public class LoginController implements Initializable {
         userRole.setName(lbRole.getText());
         StaffSceneController userStaffRole = loader.getController();
         userStaffRole.setRole(lbStaffRole1.getText());
-        
+
         Stage window = new Stage();
         Scene scene = new Scene(root);
         window.setScene(scene);
@@ -156,14 +156,19 @@ public class LoginController implements Initializable {
         StaffSceneController userStaffRole = loader.getController();
         userStaffRole.setRole(lbStaffRole1.getText());
         userStaffRole.btnInventoryDelete.setVisible(false);
+        userStaffRole.btnStaffCreate.setVisible(false);
         userStaffRole.btnStaffDelete.setVisible(false);
         userStaffRole.btnReceiptDelete.setVisible(false);
         userStaffRole.btnPaymentDelete.setVisible(false);
-        userStaffRole.tabReport.setClosable(false);
+        userStaffRole.tabReport.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
         userStaffRole.btnAccountDelete.setVisible(false);
         userStaffRole.tabLog.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
-        userStaffRole.tabDisCode.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.btnCodeCreate.setVisible(false);
+        userStaffRole.btnCodeUpdate.setVisible(false);
+        userStaffRole.btnCodeDelete.setVisible(false);
         userStaffRole.tabAccount.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.btnCodeClear.setVisible(false);
+
         
         Stage window = new Stage();
         Scene scene = new Scene(root);
@@ -181,13 +186,33 @@ public class LoginController implements Initializable {
         userRole.setName(lbRole.getText());
         StaffSceneController userStaffRole = loader.getController();
         userStaffRole.setRole(lbStaffRole1.getText());
-        userStaffRole.tabInventory.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
-        userStaffRole.tabStaff.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.btnInventoryAdd.setVisible(false);
+        userStaffRole.btnInventoryBrowser.setVisible(false);
+        userStaffRole.btnInventoryRemove.setVisible(false);
+        userStaffRole.btnInventoryCreate.setVisible(false);
+        userStaffRole.btnInventoryDelete.setVisible(false);
+        userStaffRole.btnInventoryUpdate.setVisible(false);
+        userStaffRole.btnInventoryClear.setVisible(false);
+        userStaffRole.btnStaffCreate.setVisible(false);
+        userStaffRole.btnStaffBrowser.setVisible(false);
+        userStaffRole.btnStaffClear.setVisible(false);
+        userStaffRole.btnStaffDelete.setVisible(false);
+        userStaffRole.btnStaffUpdate.setVisible(false);
+        userStaffRole.btnDishBrowser.setVisible(false);
+        userStaffRole.btnDishClear.setVisible(false);
+        userStaffRole.btnDishCreate.setVisible(false);
+        userStaffRole.btnDishDelete.setVisible(false);
+        userStaffRole.btnDishUpdate.setVisible(false);
+        userStaffRole.tabReceipts.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
+        userStaffRole.tabPayments.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
         userStaffRole.tabReport.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
         userStaffRole.tabAccount.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
-        userStaffRole.tabAccount.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
         userStaffRole.tabLog.setStyle("-fx-pref-width: 0;" + "-fx-opacity: 0;");
-
+        userStaffRole.btnCodeCreate.setVisible(false);
+        userStaffRole.btnCodeUpdate.setVisible(false);
+        userStaffRole.btnCodeDelete.setVisible(false);
+        userStaffRole.btnCodeClear.setVisible(false);
+        
         Stage window = new Stage();
         Scene scene = new Scene(root);
         window.setScene(scene);
@@ -208,8 +233,7 @@ public class LoginController implements Initializable {
         CustomerSceneController userRole = fXmlLoader.getController();
         userRole.setName(lbRole.getText());
         userRole.setUserName(lbUserName.getText());
-       
-        
+
         Stage primaryStage = new Stage();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

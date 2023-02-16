@@ -6,16 +6,11 @@ go
 
 create table Restaurant(
   brandID int primary key
+  brandAddress nvarchar(255)
 );
 go
 
 insert into Restaurant values(1);
-
-create table Brand(
-  brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
-  brandAddress nvarchar(255)
-);
-go
 
 create table Inventory(
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
@@ -86,10 +81,7 @@ create table EOD(
 	eodChi int
 );
 go
-select eodDetailThuID,eodDetailThuTime,eodDetailThuCatalog,eodDetailThuPrice,eodDetailThuNote from EODDetailThu where eodDetailThuTime ='2023-02-11'
-go
-select * from EODDetailThu
-go
+
 create table EODDetailThu(
 	brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
 	eodDetailThuID int,
@@ -163,8 +155,7 @@ create table codeDiscount(
   discountPercent int
 );
 go
-drop table [Order]
-go
+
 create table [Order](
   brandID int FOREIGN KEY REFERENCES Restaurant(brandID),
   orderID int,
