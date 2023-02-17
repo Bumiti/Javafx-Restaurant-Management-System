@@ -42,6 +42,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: white;
 }
 
+.text-area{
+    -fx-font-size : 18px;
+}
+
 #header{
     -fx-font-family: Times New Roman;
     -fx-text-fill: #3c3022;
