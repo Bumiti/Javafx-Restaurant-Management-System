@@ -15,6 +15,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-body-color: #f5f525;
 }
 
+.table-view{
+    -fx-font-size: 18px; 
+}
+.table-view .column-header {
+     -fx-background-color: transparent;
+     -fx-font-size:18px; 
+} 
 .spinner .increment-arrow-button:hover,
 
 .spinner .increment-arrow-button:hover:pressed,
@@ -85,7 +92,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: #F1A4B6;
     -fx-text-fill: #000000;
     -fx-background-radius: 10px;
-    -fx-pref-width: 150px;
+    -fx-pref-width: 175px;
     -fx-pref-height: 38px;
 }
 
@@ -241,6 +248,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 .label{
     -fx-font-weight: bold;
+    -fx-font-size: 15px;
 }
 
  

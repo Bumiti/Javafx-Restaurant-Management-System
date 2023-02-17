@@ -131,11 +131,17 @@ public class StaffChangePasswordController implements Initializable {
     private void handleButtonAction(ActionEvent event) {
         if (event.getSource() == btnOK) {
             if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfPassword.getText())) {
-                alert("Password must contain at least one digit [0-9].\n"
-                        + "Password must contain at least one lowercase Latin character [a-z].\n"
-                        + "Password must contain at least one uppercase Latin character [A-Z].\n"
-                        + "Password must contain at least one special character like ! @ # & ( ).\n"
-                        + "Password must contain a length of at least 8 characters and a maximum of 20 characters.");
+                alert("Password must contain at least 1 digit [0-9],\n"
+                        + "One lowercase [a-z],"
+                        + "One uppercase [A-Z],\n"
+                        + "One special character like !@#.\n"
+                        + "8-20 characters");
+            } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfConfirmPassword.getText())) {
+                alert("Confirm Password must contain at least 1 digit [0-9],\n"
+                        + "One lowercase [a-z],"
+                        + "One uppercase [A-Z],\n"
+                        + "One special character like !@#.\n"
+                        + "8-20 characters");
             } else if (!Pattern.matches(tfPassword.getText(), tfConfirmPassword.getText())) {
                 alert("Password not the same");
             } else {

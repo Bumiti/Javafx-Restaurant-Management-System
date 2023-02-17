@@ -289,26 +289,30 @@ public class SignUpController implements Initializable {
     @FXML
     private void handleButtonAction(MouseEvent event) {
         if (event.getSource() == btnAccountCreate) {
-            if (!Pattern.matches("\\X{1,}", tfSignUpFullName.getText()) || !Pattern.matches("\\w{1,} |\\w{1,}", tfSignUpFullName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfSignUpFullName.getText())) {
                 alert("Please input Fullname");
             } else if (tfSignUpDOB.getValue() == null) {
                 alert("Please input Day of Birth");
             } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfSignUpMail.getText())) {
                 alert("Mail wrong form");
-            } else if (!Pattern.matches("\\X{1,}|\\d{1,}|\\w{1,} |\\w{1,}", tfSignUpAddress.getText())) {
+            } else if (!Pattern.matches("\\X{1,}", tfSignUpAddress.getText())) {
                 alert("Please input Address");
             } else if (!Pattern.matches("\\d{8,12}", tfSignUpPhone.getText())) {
                 alert("Phone from 8-12");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}|\\d{1,}", tfSignUpUserName.getText())) {
+            } else if (!Pattern.matches("\\w{1,}", tfSignUpUserName.getText())) {
                 alert("Please input Username");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}|\\d{1,}", tfSignUpPassWord1.getText())) {
-                alert("Please input Password");
+            } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfSignUpPassWord1.getText())) {
+                alert("Password must contain at least 1 digit [0-9],\n"
+                        + "One lowercase [a-z],"
+                        + "One uppercase [A-Z],\n"
+                        + "One special character like !@#.\n"
+                        + "8-20 characters");
             } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfSignUpPassWord2.getText())) {
-                alert("Password must contain at least one digit [0-9].\n"
-                        + "Password must contain at least one lowercase Latin character [a-z].\n"
-                        + "Password must contain at least one uppercase Latin character [A-Z].\n"
-                        + "Password must contain at least one special character like ! @ # & ( ).\n"
-                        + "Password must contain a length of at least 8 characters and a maximum of 20 characters.");
+                alert("Confirm Password must contain at least 1 digit [0-9],\n"
+                        + "One lowercase [a-z],"
+                        + "One uppercase [A-Z],\n"
+                        + "One special character like !@#.\n"
+                        + "8-20 characters");
             } else if (!Pattern.matches(tfSignUpPassWord1.getText(), tfSignUpPassWord2.getText())) {
                 alert("Password is not same");
             } else if (imgCustomer.getImage() == null) {
@@ -372,7 +376,7 @@ public class SignUpController implements Initializable {
 
     @FXML
     private void hidePassword2() {
-        password1 = tfSignUpPassWord2.getPromptText();
+        password2 = tfSignUpPassWord2.getPromptText();
         tfSignUpPassWord2.setText(password2);
         tfSignUpPassWord2.setPromptText("Enter your Password again");
     }

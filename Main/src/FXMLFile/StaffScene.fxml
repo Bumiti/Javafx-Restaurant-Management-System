@@ -635,7 +635,7 @@
                         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                            <children>
                               <Button id="button3" fx:id="btnDayReport" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Report" />
-                              <Button id="button3" fx:id="btnShowReport" mnemonicParsing="false" text="Show Report" />
+                              <Button id="button3" fx:id="btnShowReport" mnemonicParsing="false" onMouseClicked="#handleMouseAction" text="Show Report" />
                            </children>
                         </VBox>
                      </bottom>

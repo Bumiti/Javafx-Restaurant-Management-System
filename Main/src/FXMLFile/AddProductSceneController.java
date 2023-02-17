@@ -126,7 +126,7 @@ public class AddProductSceneController implements Initializable {
     
     private void Timenow() {
         Thread thread = new Thread(() -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy hh:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             while (true) {
                 try {
                     Thread.sleep(1000);

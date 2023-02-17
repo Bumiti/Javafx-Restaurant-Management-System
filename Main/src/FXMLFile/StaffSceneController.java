@@ -716,28 +716,28 @@ public class StaffSceneController implements Initializable {
             clearStaff();
         }
         if (event.getSource() == btnStaffCreate) {
-            if (!Pattern.matches("\\w{1,} |\\w{1,}", tfStaffName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfStaffName.getText())) {
                 alert("Please fill Staff name");
             } else if (tfStaffDOB.getValue() == null) {
                 alert("Please fill Staff DOB in right form");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfStaffAddress.getText())) {
+            } else if (!Pattern.matches("\\X{1,}", tfStaffAddress.getText())) {
                 alert("Please fill Staff Address");
             } else if (cbStaffPossition.getValue() == null) {
                 alert("Please fill choose Staff possition");
-            } else if (!Pattern.matches("\\w{8,12}", tfStaffPhone.getText())) {
+            } else if (!Pattern.matches("\\d{8,12}", tfStaffPhone.getText())) {
                 alert("Please fill Staff phone in right form");
             } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfStaffMail.getText())) {
                 alert("Please fill Staff mail in right form");
             } else if (!Pattern.matches("\\d{1,}", tfStaffSalary.getText())) {
                 alert("Please fill Staff salary");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfStaffUsername.getText())) {
+            } else if (!Pattern.matches("\\w{1,}", tfStaffUsername.getText())) {
                 alert("Please fill Staff Username");
             } else if (imgStaffImage.getImage() == null) {
                 alert("Please Choose image");
             } else {
                 if (alertConFirm("Are you want to create new staff?") == true) {
                     insertStaff();
-                    insert("insert into Chi values(1,N'" + lbTime.getText() + "','Salary' , " + tfStaffSalary.getText() + ",'Salary for " + tfStaffName.getText() + "," + lbUser.getText() + " have edit')");
+                    //insert("insert into Chi values(1,N'" + lbTime.getText() + "','Salary' , " + tfStaffSalary.getText() + ",'Salary for " + tfStaffName.getText() + "," + lbUser.getText() + " have edit')");
                     clearStaff();
                     log("" + lbUser.getText() + " have create new staff!");
                     showLogDB();
@@ -747,29 +747,29 @@ public class StaffSceneController implements Initializable {
             }
         }
         if (event.getSource() == btnStaffUpdate) {
-            if (!Pattern.matches("\\w{1,} |\\w{1,}", tfStaffName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfStaffName.getText())) {
                 alert("Please fill Staff name");
             } else if (tfStaffDOB.getValue() == null) {
                 alert("Please fill Staff DOB in right form");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfStaffAddress.getText())) {
+            } else if (!Pattern.matches("\\X{1,}", tfStaffAddress.getText())) {
                 alert("Please fill Staff Address");
             } else if (cbStaffPossition.getValue() == null) {
                 alert("Please fill choose Staff possition");
-            } else if (!Pattern.matches("\\w{8,12}", tfStaffPhone.getText())) {
+            } else if (!Pattern.matches("\\d{8,12}", tfStaffPhone.getText())) {
                 alert("Please fill Staff phone in right form");
             } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfStaffMail.getText())) {
                 alert("Please fill Staff mail in right form");
             } else if (!Pattern.matches("\\d{1,}", tfStaffSalary.getText())) {
                 alert("Please fill Staff salary");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfStaffUsername.getText())) {
+            } else if (!Pattern.matches("\\w{1,}", tfStaffUsername.getText())) {
                 alert("Please fill Staff Username");
             } else if (imgStaffImage.getImage() == null) {
                 alert("Please Choose image");
             } else {
                 if (alertConFirm("Are you want to update staff?") == true) {
                     updateStaff();
-                    update("update Chi set chiPrice=" + tfStaffSalary.getText() + " where chiNote like 'Salary for " + tfStaffName.getText() + "%'");
-                    update("update Account set accountPhone=N'" + tfStaffPhone.getText() + "',accountMail=N'" + tfStaffMail.getText() + "' where accountPhone=N'" + tfStaffPhone.getText() + "'");
+                    //update("update Chi set chiPrice=" + tfStaffSalary.getText() + " where chiNote like 'Salary for " + tfStaffName.getText() + "%'");
+                    //update("update Account set accountPhone=N'" + tfStaffPhone.getText() + "',accountMail=N'" + tfStaffMail.getText() + "' where accountPhone=N'" + tfStaffPhone.getText() + "'");
                     clearStaff();
                     log("" + lbUser.getText() + " have update staff!");
                     showLogDB();
@@ -781,7 +781,7 @@ public class StaffSceneController implements Initializable {
         if (event.getSource() == btnStaffDelete) {
             if (alertConFirm("Are you want to delete staff?") == true) {
                 deleteStaff();
-                delete("delete from Chi where chiNote like 'Salary for " + tfStaffName.getText() + "%'");
+                //delete("delete from Chi where chiNote like 'Salary for " + tfStaffName.getText() + "%'");
                 clearCode();
                 log("" + lbUser.getText() + " have delete staff!");
                 showLogDB();
@@ -797,14 +797,14 @@ public class StaffSceneController implements Initializable {
             clearAccount();
         }
         if (event.getSource() == btnAccountCreate) {
-            if (!Pattern.matches("\\w{1,} |\\w{1,}|\\d{1,}", tfAccountUsername.getText())) {
+            if (!Pattern.matches("\\w{1,}", tfAccountUsername.getText())) {
                 alert("Please fill Account username");
             } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfAccountPassword.getText())) {
-                alert("Password must contain at least one digit [0-9].\n"
-                        + "Password must contain at least one lowercase Latin character [a-z].\n"
-                        + "Password must contain at least one uppercase Latin character [A-Z].\n"
-                        + "Password must contain at least one special character like ! @ # & ( ).\n"
-                        + "Password must contain a length of at least 8 characters and a maximum of 20 characters.");
+                alert("Password must contain at least 1 digit [0-9],\n"
+                        + "One lowercase [a-z],"
+                        + "One uppercase [A-Z],\n"
+                        + "One special character like !@#.\n"
+                        + "8-20 characters");
             } else if (cbAccountRole.getValue() == null) {
                 alert("Please fill Account role");
             } else {
@@ -819,7 +819,7 @@ public class StaffSceneController implements Initializable {
             }
         }
         if (event.getSource() == btnAccountUpdate) {
-            if (!Pattern.matches("\\w{1,} |\\w{1,}|\\d{1,}", tfAccountUsername.getText())) {
+            if (!Pattern.matches("\\w{1,}", tfAccountUsername.getText())) {
                 alert("Please fill Account username");
             } else if (!Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", tfAccountPassword.getText())) {
                 alert("Password must contain at least one digit [0-9].\n"
@@ -878,7 +878,7 @@ public class StaffSceneController implements Initializable {
         }
         if (event.getSource() == btnCodeUpdate) {
             CodeDB i = tvCodeDiscount.getSelectionModel().getSelectedItem();
-            if (!Pattern.matches("\\w{1,} |\\w{1,}", tfCodeValue.getText())) {
+            if (!Pattern.matches("\\w{1,}", tfCodeValue.getText())) {
                 alert("Please fill Code name");
             } else if (!Pattern.matches("\\d{1,}", tfCodeQuantity.getText())) {
                 alert("Please fill Code quantity");
@@ -916,9 +916,9 @@ public class StaffSceneController implements Initializable {
             clearInventory();
         }
         if (event.getSource() == btnInventoryCreate) {
-            if (!Pattern.matches("\\w{1,} |\\w{1,}", tfInventoryName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfInventoryName.getText())) {
                 alert("Please fill Product name");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfInventoryUnit.getText())) {
+            } else if (!Pattern.matches("\\X{1,}", tfInventoryUnit.getText())) {
                 alert("Please fill Product Unit");
             } else if (cbInventoryCatalogies.getValue() == null) {
                 alert("Please fill Product Catalogies");
@@ -937,9 +937,9 @@ public class StaffSceneController implements Initializable {
             }
         }
         if (event.getSource() == btnInventoryUpdate) {
-            if (!Pattern.matches("\\w{1,} |\\w{1,}", tfInventoryName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfInventoryName.getText())) {
                 alert("Please fill Product name");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfInventoryUnit.getText())) {
+            } else if (!Pattern.matches("\\X{1,}", tfInventoryUnit.getText())) {
                 alert("Please fill Product Unit");
             } else if (cbInventoryCatalogies.getValue() == null) {
                 alert("Please fill Product Catalogies");
@@ -1042,19 +1042,19 @@ public class StaffSceneController implements Initializable {
             clearCustomer();
         }
         if (event.getSource() == btnCustomerCreate) {
-            if (!Pattern.matches("\\X{1,}|\\w{1,} |\\w{1,}", tfCustomerName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfCustomerName.getText())) {
                 alert("Please fill Customer name");
             } else if (tfCustomerDOB.getValue() == null) {
                 alert("Please fill Customer DOB in right form");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfCustomerAddress.getText())) {
+            } else if (!Pattern.matches("\\X{1,}", tfCustomerAddress.getText())) {
                 alert("Please fill Customer Address");
-            } else if (!Pattern.matches("\\w{8,12}", tfCustomerPhone.getText())) {
+            } else if (!Pattern.matches("\\d{8,12}", tfCustomerPhone.getText())) {
                 alert("Please fill Customer phone in right form");
             } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfCustomerMail.getText())) {
                 alert("Please fill Customer mail in right form");
             } else if (cbCustomerGender.getValue() == null) {
                 alert("Please fill choose Customer gender");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfCustomerUserName.getText())) {
+            } else if (!Pattern.matches("\\w{1,}", tfCustomerUserName.getText())) {
                 alert("Please fill Customer Username");
             } else if (imgCustomer.getImage() == null) {
                 alert("Please Choose image");
@@ -1069,19 +1069,19 @@ public class StaffSceneController implements Initializable {
             }
         }
         if (event.getSource() == btnCustomerUpdate) {
-            if (!Pattern.matches("\\X{1,}|\\w{1,} |\\w{1,}", tfCustomerName.getText())) {
+            if (!Pattern.matches("\\X{1,}", tfCustomerName.getText())) {
                 alert("Please fill Customer name");
             } else if (tfCustomerDOB.getValue() == null) {
                 alert("Please fill Customer DOB in right form");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfCustomerAddress.getText())) {
+            } else if (!Pattern.matches("\\X{1,}", tfCustomerAddress.getText())) {
                 alert("Please fill Customer Address");
-            } else if (!Pattern.matches("\\w{8,12}", tfCustomerPhone.getText())) {
+            } else if (!Pattern.matches("\\d{8,12}", tfCustomerPhone.getText())) {
                 alert("Please fill Customer phone in right form");
             } else if (!Pattern.matches("\\w{3,30}@([a-z0-9]{3,10}\\.){1,2}[a-z]{2,3}", tfCustomerMail.getText())) {
                 alert("Please fill Customer mail in right form");
             } else if (cbCustomerGender.getValue() == null) {
                 alert("Please fill choose Customer gender");
-            } else if (!Pattern.matches("\\w{1,} |\\w{1,}", tfCustomerUserName.getText())) {
+            } else if (!Pattern.matches("\\w{1,}", tfCustomerUserName.getText())) {
                 alert("Please fill Customer Username");
             } else if (imgCustomer.getImage() == null) {
                 alert("Please Choose image");
@@ -1262,10 +1262,11 @@ public class StaffSceneController implements Initializable {
                     insert("insert into Thu values(1,N'" + lbTime.getText() + "',N'" + cbBillTable.getValue() + "'," + lbBillAfter.getText() + ",N'" + lbUser.getText() + " have check out." + taBillNote.getText() + "')");
                     delete("delete from [Order] where dishCatalogies=N'" + cbBillTable.getValue() + "'");
                     alertSuccess("Check out " + cbBillTable.getValue() + " Successfully!");
+                    lastCode();
                     update("update codeDiscount set codeQuantity -=1 where codeValue=N'" + tfBillDiscount.getText() + "'");
                     log("" + lbUser.getText() + " have check out " + cbBillTable.getValue() + " with discount code " + tfBillDiscount.getText() + "!");
-//                    showLogDB();
                     clearBill();
+                    showLogDB();
                     tvBill.getItems().clear();
                     showReceiptDB();
                     showOrderListDB();
@@ -2291,6 +2292,26 @@ public class StaffSceneController implements Initializable {
         cbAccountRole.setValue(null);
     }
 
+    private void lastCode() {
+        String sql = "select codeQuantity from codeDiscount where codeValue='" + tfBillDiscount.getText() + "'";
+        Connection cn = getConnect();
+        Statement st;
+        try {
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                int codeQty = rs.getInt("codeQuantity");
+                if (codeQty == 1) {
+                    delete("delete from codeDiscount where codeValue='" + tfBillDiscount.getText() + "'");
+                    log(""+tfBillDiscount.getText()+"has been expires");
+                }
+            }
+            //close?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static ObservableList<CodeDB> getCodeDB() {
         ObservableList<CodeDB> codeList = FXCollections.observableArrayList();
         java.sql.Connection cn = getConnect();
@@ -2302,6 +2323,7 @@ public class StaffSceneController implements Initializable {
             rs = st.executeQuery(sql);
             CodeDB c = null;
             while (rs.next()) {
+                int codeqty = rs.getInt("codeQuantity");
                 c = new CodeDB(rs.getInt("codeID"), rs.getString("codeValue"), rs.getInt("codeQuantity"), rs.getInt("discountPercent"));
                 codeList.add(c);
             }
@@ -2995,7 +3017,7 @@ public class StaffSceneController implements Initializable {
             st2 = cn.createStatement();
             ResultSet rs1 = st1.executeQuery(sql1);
             ResultSet rs2 = st2.executeQuery(sql2);
-            if (Pattern.matches("\\w{1,} |\\w{1,}", tfBillDiscount.getText())) {
+            if (Pattern.matches("\\w{1,}", tfBillDiscount.getText())) {
                 if (rs2.next() && rs1.next()) {
                     int totalBill = rs1.getInt("billTotal");
                     int discountTotal = rs2.getInt("discountPercent");

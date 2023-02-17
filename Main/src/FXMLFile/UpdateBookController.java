@@ -393,7 +393,7 @@ public class UpdateBookController implements Initializable {
                 String sqlUpdate = "update [Book] set bookDishQuantity+=" + snOrderDishQuantity.getValue() + " where bookDishName=N'" + o.getMenuDishName() + "' and bookCustomerName='" + lbUserName.getText() + "' and bookID=" + lbOrderID.getText() + "";
                 executeQuery(sqlUpdate);
             } else {
-                String sqInsert = ("insert into Book(brandID,bookID,bookDate,bookTime,bookCustomerName,bookCatalogies,bookNote,bookDishName,bookDishQuantity,bookDishPrice) select 1," + lbOrderID.getText() + ",N'" + lbDate.getText() + "',N'" + lbTime.getText() + "',N'" + lbUserName.getText() + "',N'" + cbOrderCatalogies.getValue() + "' ,N'" + taOrderNote.getText() + "',N'" + o.getMenuDishName() + "'," + o.getMenuDishPrice() + "," + snOrderDishQuantity.getValue() + "");
+                String sqInsert = ("insert into Book(brandID,bookID,bookDate,bookTime,bookCustomerName,bookCatalogies,bookNote,bookDishName,bookDishQuantity,bookDishPrice) select 1," + lbOrderID.getText() + ",N'" + lbDate.getText() + "',N'" + lbTime.getText() + "',N'" + lbUserName.getText() + "',N'" + cbOrderCatalogies.getValue() + "' ,N'" + taOrderNote.getText() + "',N'" + o.getMenuDishName() + "'," + snOrderDishQuantity.getValue() + "," + o.getMenuDishPrice() + "");
                 executeQuery(sqInsert);
             }
             //close?
